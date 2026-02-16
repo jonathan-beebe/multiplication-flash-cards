@@ -167,35 +167,40 @@ function App() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
       {!isPlaying ? (
-        <div className="w-full max-w-md text-center">
+        <div className="flex w-full max-w-md flex-col items-center text-center">
           <h1 className="mb-8 text-4xl font-bold text-slate-900 dark:text-slate-100">
-            Multiplication Flash Cards
+            Multiplication Flash{'\u00A0'}Cards
           </h1>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex w-full max-w-xs flex-col items-center gap-6">
             <button
-              className="rounded-xl bg-indigo-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:active:bg-indigo-600"
+              className="w-full rounded-xl bg-indigo-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:active:bg-indigo-600"
               onClick={handleStart}
             >
-              Start
+              Start Learning
             </button>
-            <button
-              className="rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
-              onClick={() => handleStartDrill(1)}
-            >
-              1 min
-            </button>
-            <button
-              className="rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
-              onClick={() => handleStartDrill(3)}
-            >
-              3 min
-            </button>
-            <button
-              className="rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
-              onClick={() => handleStartDrill(5)}
-            >
-              5 min
-            </button>
+            <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
+              Drills
+            </h2>
+            <div className="flex w-full flex-col gap-4">
+              <button
+                className="w-full rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
+                onClick={() => handleStartDrill(1)}
+              >
+                1 min
+              </button>
+              <button
+                className="w-full rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
+                onClick={() => handleStartDrill(3)}
+              >
+                3 min
+              </button>
+              <button
+                className="w-full rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
+                onClick={() => handleStartDrill(5)}
+              >
+                5 min
+              </button>
+            </div>
           </div>
         </div>
       ) : (
