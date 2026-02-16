@@ -53,12 +53,14 @@ interface DrillProps {
 
 function Drill({ durationMinutes }: DrillProps) {
   const [question, setQuestion] = useState<Question>(generateQuestion);
+  const [nextQuestion, setNextQuestion] = useState<Question | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set());
   const [showCorrect, setShowCorrect] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(durationMinutes * 60);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
   const [isDrillComplete, setIsDrillComplete] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const choices = useMemo(() => {
     return generateChoices(question.a, question.b);
@@ -88,8 +90,8 @@ function Drill({ durationMinutes }: DrillProps) {
         setCorrectCount((prev) => prev + 1);
         setShowCorrect(true);
         setTimeout(() => {
-          setQuestion(generateQuestion());
-          setWrongAnswers(new Set());
+          setNextQuestion(generateQuestion());
+          setIsAnimating(true);
           setShowCorrect(false);
         }, 300);
       } else {
@@ -102,13 +104,26 @@ function Drill({ durationMinutes }: DrillProps) {
     [correctAnswer, wrongAnswers]
   );
 
+  const handleTransitionEnd = useCallback(
+    (e: React.TransitionEvent) => {
+      if (e.propertyName !== "transform") return;
+      setQuestion(nextQuestion!);
+      setNextQuestion(null);
+      setWrongAnswers(new Set());
+      setIsAnimating(false);
+    },
+    [nextQuestion]
+  );
+
   const handleRestart = useCallback(() => {
     setQuestion(generateQuestion());
+    setNextQuestion(null);
     setWrongAnswers(new Set());
     setCorrectCount(0);
     setWrongCount(0);
     setTimeRemaining(durationMinutes * 60);
     setIsDrillComplete(false);
+    setIsAnimating(false);
   }, [durationMinutes]);
 
   if (isDrillComplete) {
@@ -151,15 +166,38 @@ function Drill({ durationMinutes }: DrillProps) {
     );
   }
 
+  const backQuestion = nextQuestion ?? question;
+
+  const cardClasses =
+    "card flex items-center justify-center rounded-2xl border-2 border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800";
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
       <NavBar />
       <div className="flex w-full flex-col items-center gap-8">
-        <div className="flex h-[350px] w-[250px] items-center justify-center rounded-2xl border-2 border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
-          <div className="text-center">
-            <span className="text-5xl font-bold text-slate-900 dark:text-slate-100">
-              {question.a} × {question.b}
-            </span>
+        <div className="card-stack">
+          {/* Back card: next question, zooms in from 80% */}
+          <div
+            className={`${cardClasses}${isAnimating ? " card-zoom-in" : ""}`}
+            style={{ zIndex: 1, transform: isAnimating ? undefined : "scale(0.8)" }}
+          >
+            <div className="text-center">
+              <span className="text-5xl font-bold text-slate-900 dark:text-slate-100">
+                {backQuestion.a} × {backQuestion.b}
+              </span>
+            </div>
+          </div>
+          {/* Front card: current question, slides out right */}
+          <div
+            className={`${cardClasses}${isAnimating ? " card-slide-out" : ""}`}
+            style={{ zIndex: 2 }}
+            onTransitionEnd={isAnimating ? handleTransitionEnd : undefined}
+          >
+            <div className="text-center">
+              <span className="text-5xl font-bold text-slate-900 dark:text-slate-100">
+                {question.a} × {question.b}
+              </span>
+            </div>
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-3">

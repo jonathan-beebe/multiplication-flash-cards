@@ -19,3 +19,25 @@ body {
     @apply bg-slate-900 text-slate-100;
   }
 }
+
+/* Card transition animation */
+.card-stack {
+  position: relative;
+  height: 350px;
+  width: 250px;
+}
+
+.card-stack .card {
+  position: absolute;
+  inset: 0;
+}
+
+.card-slide-out {
+  transform: translateX(calc(50vw + 100%)) rotate(6deg);
+  transition: transform 300ms ease-in-out;
+}
+
+.card-zoom-in {
+  transform: scale(1) !important;
+  transition: transform 300ms ease-in-out;
+}
