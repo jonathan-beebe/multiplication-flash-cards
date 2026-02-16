@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 
 interface Question {
   a: number;
@@ -47,6 +47,11 @@ function App() {
   const [question, setQuestion] = useState<Question | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set());
   const [showCorrect, setShowCorrect] = useState(false);
+  const [drillDuration, setDrillDuration] = useState<number | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [wrongCount, setWrongCount] = useState(0);
+  const [isDrillComplete, setIsDrillComplete] = useState(false);
 
   const choices = useMemo(() => {
     if (!question) return [];
@@ -55,15 +60,61 @@ function App() {
 
   const correctAnswer = question ? question.a * question.b : 0;
 
+  // Timer countdown effect
+  useEffect(() => {
+    if (!isPlaying || drillDuration === null || timeRemaining <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          setIsDrillComplete(true);
+          setIsPlaying(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isPlaying, drillDuration, timeRemaining]);
+
   const handleStart = useCallback(() => {
     setQuestion(generateQuestion());
     setWrongAnswers(new Set());
+    setCorrectCount(0);
+    setWrongCount(0);
+    setDrillDuration(null);
     setIsPlaying(true);
+  }, []);
+
+  const handleStartDrill = useCallback((durationMinutes: number) => {
+    setQuestion(generateQuestion());
+    setWrongAnswers(new Set());
+    setCorrectCount(0);
+    setWrongCount(0);
+    setDrillDuration(durationMinutes);
+    setTimeRemaining(durationMinutes * 60);
+    setIsDrillComplete(false);
+    setIsPlaying(true);
+  }, []);
+
+  const handleRestartDrill = useCallback(() => {
+    if (drillDuration !== null) {
+      handleStartDrill(drillDuration);
+    }
+  }, [drillDuration, handleStartDrill]);
+
+  const handleGoHome = useCallback(() => {
+    setIsPlaying(false);
+    setIsDrillComplete(false);
+    setDrillDuration(null);
+    setQuestion(null);
   }, []);
 
   const handleAnswer = useCallback(
     (answer: number) => {
       if (answer === correctAnswer) {
+        setCorrectCount((prev) => prev + 1);
         setShowCorrect(true);
         setTimeout(() => {
           setQuestion(generateQuestion());
@@ -71,11 +122,55 @@ function App() {
           setShowCorrect(false);
         }, 300);
       } else {
+        if (!wrongAnswers.has(answer)) {
+          setWrongCount((prev) => prev + 1);
+        }
         setWrongAnswers((prev) => new Set(prev).add(answer));
       }
     },
-    [correctAnswer]
+    [correctAnswer, wrongAnswers]
   );
+
+  // Completion screen
+  if (isDrillComplete) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <div className="flex flex-col items-center gap-8 text-center">
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+            Drill Complete!
+          </h1>
+          <div className="flex flex-col gap-4 rounded-2xl border-2 border-slate-200 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+            <div className="text-2xl text-slate-700 dark:text-slate-300">
+              <span className="font-bold text-green-600 dark:text-green-400">
+                {correctCount}
+              </span>{" "}
+              correct
+            </div>
+            <div className="text-2xl text-slate-700 dark:text-slate-300">
+              <span className="font-bold text-red-600 dark:text-red-400">
+                {wrongCount}
+              </span>{" "}
+              wrong
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <button
+              className="rounded-xl bg-indigo-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:active:bg-indigo-600"
+              onClick={handleRestartDrill}
+            >
+              Restart
+            </button>
+            <button
+              className="rounded-xl bg-slate-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-slate-500 active:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-400 dark:active:bg-slate-600"
+              onClick={handleGoHome}
+            >
+              Home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
@@ -84,12 +179,32 @@ function App() {
           <h1 className="mb-8 text-4xl font-bold text-slate-900 dark:text-slate-100">
             Multiplication Flash Cards
           </h1>
-          <button
-            className="rounded-xl bg-indigo-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:active:bg-indigo-600"
-            onClick={handleStart}
-          >
-            Start
-          </button>
+          <div className="flex flex-wrap justify-center gap-4">
+            <button
+              className="rounded-xl bg-indigo-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:active:bg-indigo-600"
+              onClick={handleStart}
+            >
+              Start
+            </button>
+            <button
+              className="rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
+              onClick={() => handleStartDrill(1)}
+            >
+              1 min
+            </button>
+            <button
+              className="rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
+              onClick={() => handleStartDrill(3)}
+            >
+              3 min
+            </button>
+            <button
+              className="rounded-xl bg-amber-600 px-6 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600"
+              onClick={() => handleStartDrill(5)}
+            >
+              5 min
+            </button>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-8">
