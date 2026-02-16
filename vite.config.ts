@@ -7,6 +7,17 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   base: '/multiplication-flash-cards/',
   plugins: [
+    {
+      name: 'redirect-trailing-slash',
+      configureServer(server) {
+        server.middlewares.use((req, _res, next) => {
+          if (req.url === '/multiplication-flash-cards') {
+            req.url = '/multiplication-flash-cards/';
+          }
+          next();
+        });
+      },
+    },
     react(),
     tailwindcss(),
     VitePWA({
