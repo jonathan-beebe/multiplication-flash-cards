@@ -13,7 +13,7 @@ function generateQuestion(): Question {
 }
 
 function generateChoices(a: number, b: number): number[] {
-  // Generate choices from a×(b-1), a×b, a×(b+1)
+  // Generate 3 choices from a×(b-1), a×b, a×(b+1)
   // Handle edge cases at boundaries (0 and 12)
   let offsets: number[];
   if (b === 0) {
@@ -24,22 +24,14 @@ function generateChoices(a: number, b: number): number[] {
     offsets = [-1, 0, 1];
   }
 
-  const baseChoices = offsets.map((offset) => a * (b + offset));
-  const choicesSet = new Set(baseChoices);
-
-  // Add two random numbers from 0-144 that aren't already in choices
-  while (choicesSet.size < 5) {
-    const randomNum = Math.floor(Math.random() * 145);
-    choicesSet.add(randomNum);
-  }
+  const choices = offsets.map((offset) => a * (b + offset));
 
   // Shuffle the array (Fisher-Yates)
-  const shuffled = Array.from(choicesSet);
-  for (let i = shuffled.length - 1; i > 0; i--) {
+  for (let i = choices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    [choices[i], choices[j]] = [choices[j], choices[i]];
   }
-  return shuffled;
+  return choices;
 }
 
 function App() {
@@ -134,8 +126,8 @@ function App() {
   // Completion screen
   if (isDrillComplete) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
-        <div className="flex flex-col items-center gap-8 text-center">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
+        <div className="flex w-full max-w-md flex-col items-center gap-8 text-center">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
             Drill Complete!
           </h1>
@@ -173,9 +165,9 @@ function App() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
       {!isPlaying ? (
-        <div className="text-center">
+        <div className="w-full max-w-md text-center">
           <h1 className="mb-8 text-4xl font-bold text-slate-900 dark:text-slate-100">
             Multiplication Flash Cards
           </h1>
@@ -207,7 +199,7 @@ function App() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex w-full flex-col items-center gap-8">
           {/* Flash Card */}
           <div className="flex h-[350px] w-[250px] items-center justify-center rounded-2xl border-2 border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
             <div className="text-center">
@@ -218,7 +210,7 @@ function App() {
           </div>
 
           {/* Multiple Choice Buttons */}
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-3">
             {choices.map((choice) => {
               const isWrong = wrongAnswers.has(choice);
               const isCorrect = showCorrect && choice === correctAnswer;
