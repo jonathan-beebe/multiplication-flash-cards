@@ -7,10 +7,11 @@ interface Question {
   b: number;
 }
 
-function generateQuestion(): Question {
+function generateQuestion(min: number = 3, max: number = 12): Question {
+  const range = max - min + 1;
   return {
-    a: Math.floor(Math.random() * 13),
-    b: Math.floor(Math.random() * 13),
+    a: Math.floor(Math.random() * range) + min,
+    b: Math.floor(Math.random() * range) + min,
   };
 }
 
@@ -20,7 +21,7 @@ function generateChoices(a: number, b: number): number[] {
 
   // Try to add adjacent answers (a × (b±1))
   const adjacentOptions = [];
-  if (b > 0) adjacentOptions.push(a * (b - 1));
+  if (b > 3) adjacentOptions.push(a * (b - 1));
   if (b < 12) adjacentOptions.push(a * (b + 1));
 
   for (const adj of adjacentOptions) {
@@ -29,9 +30,9 @@ function generateChoices(a: number, b: number): number[] {
     }
   }
 
-  // Fill remaining slots with random numbers 0-144
+  // Fill remaining slots with random numbers 9-144
   while (choices.size < 3) {
-    const random = Math.floor(Math.random() * 145);
+    const random = Math.floor(Math.random() * 136) + 9;
     if (!choices.has(random)) {
       choices.add(random);
     }

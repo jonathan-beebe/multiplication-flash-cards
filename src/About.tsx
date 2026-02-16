@@ -10,7 +10,7 @@ function About() {
         </h1>
         <p className="text-lg text-slate-700 dark:text-slate-300">
           A simple flash card app to help kids practice their multiplication
-          tables for the numbers 0–12.
+          tables for the numbers 3–12.
         </p>
         <p className="text-lg text-slate-700 dark:text-slate-300">
           If you have any comments, bug reports, or feature requests, please
