@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import Card from "./Card";
+import QuizButton from "./QuizButton";
 
 export interface Question {
   a: number;
@@ -122,22 +123,13 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
           const isCorrect = showCorrect && choice === correctAnswer;
           const fadeOut = (showCorrect || isAnimating) && !isCorrect;
           return (
-            <button
+            <QuizButton
               key={choice}
+              value={choice}
               onClick={() => handleAnswer(choice)}
               disabled={isWrong || showCorrect || isAnimating}
-              className={`min-w-[72px] rounded-xl px-6 py-4 text-xl tabular-nums font-semibold shadow-lg transition-opacity duration-150 ${
-                fadeOut ? "opacity-0" : ""
-              } ${
-                isCorrect
-                  ? "bg-green-500 text-white dark:bg-green-600"
-                  : isWrong
-                    ? "cursor-not-allowed bg-red-500 text-white dark:bg-red-600"
-                    : "bg-slate-200 text-slate-900 hover:bg-slate-300 active:bg-slate-400 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:active:bg-slate-500"
-              }`}
-            >
-              {choice}
-            </button>
+              state={isCorrect ? "correct" : isWrong ? "wrong" : fadeOut ? "fade-out" : "default"}
+            />
           );
         })}
       </div>

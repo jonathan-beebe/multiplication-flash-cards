@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  --color-correct: light-dark(var(--color-green-500), var(--color-green-600));
+  --color-wrong: light-dark(var(--color-red-500), var(--color-red-600));
+}
+
 /* System font stack */
 html {
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
