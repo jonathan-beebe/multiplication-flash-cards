@@ -46,6 +46,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [question, setQuestion] = useState<Question | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set());
+  const [showCorrect, setShowCorrect] = useState(false);
 
   const choices = useMemo(() => {
     if (!question) return [];
@@ -63,8 +64,12 @@ function App() {
   const handleAnswer = useCallback(
     (answer: number) => {
       if (answer === correctAnswer) {
-        setQuestion(generateQuestion());
-        setWrongAnswers(new Set());
+        setShowCorrect(true);
+        setTimeout(() => {
+          setQuestion(generateQuestion());
+          setWrongAnswers(new Set());
+          setShowCorrect(false);
+        }, 300);
       } else {
         setWrongAnswers((prev) => new Set(prev).add(answer));
       }
@@ -101,15 +106,18 @@ function App() {
           <div className="flex gap-4">
             {choices.map((choice) => {
               const isWrong = wrongAnswers.has(choice);
+              const isCorrect = showCorrect && choice === correctAnswer;
               return (
                 <button
                   key={choice}
                   onClick={() => handleAnswer(choice)}
-                  disabled={isWrong}
+                  disabled={isWrong || showCorrect}
                   className={`min-w-[72px] rounded-xl px-6 py-4 text-xl font-semibold shadow-lg transition-colors ${
-                    isWrong
-                      ? "cursor-not-allowed bg-red-500 text-white dark:bg-red-600"
-                      : "bg-slate-200 text-slate-900 hover:bg-slate-300 active:bg-slate-400 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:active:bg-slate-500"
+                    isCorrect
+                      ? "bg-green-500 text-white dark:bg-green-600"
+                      : isWrong
+                        ? "cursor-not-allowed bg-red-500 text-white dark:bg-red-600"
+                        : "bg-slate-200 text-slate-900 hover:bg-slate-300 active:bg-slate-400 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:active:bg-slate-500"
                   }`}
                 >
                   {choice}
