@@ -15,22 +15,35 @@ function generateQuestion(): Question {
 }
 
 function generateChoices(a: number, b: number): number[] {
-  let offsets: number[];
-  if (b === 0) {
-    offsets = [0, 1, 2];
-  } else if (b === 12) {
-    offsets = [-2, -1, 0];
-  } else {
-    offsets = [-1, 0, 1];
+  const correct = a * b;
+  const choices = new Set<number>([correct]);
+
+  // Try to add adjacent answers (a × (b±1))
+  const adjacentOptions = [];
+  if (b > 0) adjacentOptions.push(a * (b - 1));
+  if (b < 12) adjacentOptions.push(a * (b + 1));
+
+  for (const adj of adjacentOptions) {
+    if (choices.size < 3 && !choices.has(adj)) {
+      choices.add(adj);
+    }
   }
 
-  const choices = offsets.map((offset) => a * (b + offset));
+  // Fill remaining slots with random numbers 0-144
+  while (choices.size < 3) {
+    const random = Math.floor(Math.random() * 145);
+    if (!choices.has(random)) {
+      choices.add(random);
+    }
+  }
 
-  for (let i = choices.length - 1; i > 0; i--) {
+  // Shuffle the array (Fisher-Yates)
+  const result = Array.from(choices);
+  for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [choices[i], choices[j]] = [choices[j], choices[i]];
+    [result[i], result[j]] = [result[j], result[i]];
   }
-  return choices;
+  return result;
 }
 
 interface DrillProps {
