@@ -24,7 +24,22 @@ function generateChoices(a: number, b: number): number[] {
     offsets = [-1, 0, 1];
   }
 
-  return offsets.map((offset) => a * (b + offset)).sort((x, y) => x - y);
+  const baseChoices = offsets.map((offset) => a * (b + offset));
+  const choicesSet = new Set(baseChoices);
+
+  // Add two random numbers from 0-144 that aren't already in choices
+  while (choicesSet.size < 5) {
+    const randomNum = Math.floor(Math.random() * 145);
+    choicesSet.add(randomNum);
+  }
+
+  // Shuffle the array (Fisher-Yates)
+  const shuffled = Array.from(choicesSet);
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
 
 function App() {
