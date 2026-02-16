@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Card from "./Card";
 import NavBar from "./NavBar";
 
 interface Question {
@@ -168,37 +169,26 @@ function Drill({ durationMinutes }: DrillProps) {
 
   const backQuestion = nextQuestion ?? question;
 
-  const cardClasses =
-    "card flex items-center justify-center rounded-2xl border-2 border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800";
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
       <NavBar />
       <div className="flex w-full flex-col items-center gap-8">
         <div className="card-stack">
           {/* Back card: next question, zooms in from 80% */}
-          <div
-            className={`${cardClasses}${isAnimating ? " card-zoom-in" : ""}`}
+          <Card
+            a={backQuestion.a}
+            b={backQuestion.b}
+            className={isAnimating ? "card-zoom-in" : undefined}
             style={{ zIndex: 1, transform: isAnimating ? undefined : "scale(0.8)" }}
-          >
-            <div className="text-center">
-              <span className="text-5xl font-bold text-slate-900 dark:text-slate-100">
-                {backQuestion.a} × {backQuestion.b}
-              </span>
-            </div>
-          </div>
+          />
           {/* Front card: current question, slides out right */}
-          <div
-            className={`${cardClasses}${isAnimating ? " card-slide-out" : ""}`}
+          <Card
+            a={question.a}
+            b={question.b}
+            className={isAnimating ? "card-slide-out" : undefined}
             style={{ zIndex: 2 }}
             onTransitionEnd={isAnimating ? handleTransitionEnd : undefined}
-          >
-            <div className="text-center">
-              <span className="text-5xl font-bold text-slate-900 dark:text-slate-100">
-                {question.a} × {question.b}
-              </span>
-            </div>
-          </div>
+          />
         </div>
         <div className={`flex flex-wrap justify-center gap-3 transition-opacity duration-150 ${isAnimating ? "opacity-0" : "opacity-100"}`}>
           {choices.map((choice) => {
