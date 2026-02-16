@@ -4,6 +4,8 @@
 
 A simple flash card app to help kids practice their multiplication tables for the numbers 3–12.
 
+![App demo](docs/demo.gif)
+
 ## Install as an App
 
 You can install this as an app on your device for easy access — no app store needed.
