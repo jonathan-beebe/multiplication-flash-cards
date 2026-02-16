@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 interface Question {
@@ -202,6 +203,12 @@ function App() {
                 5 min
               </button>
             </div>
+            <Link
+              to="/about"
+              className="mt-4 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+            >
+              About
+            </Link>
           </div>
         </div>
       ) : (
