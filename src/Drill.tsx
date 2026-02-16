@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import NavBar from "./NavBar";
 
 interface Question {
   a: number;
@@ -152,14 +152,8 @@ function Drill({ durationMinutes }: DrillProps) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
+      <NavBar />
       <div className="flex w-full flex-col items-center gap-8">
-        <Link
-          to="/"
-          className="fixed left-4 top-4 flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
-        >
-          <ChevronLeftIcon className="h-4 w-4" />
-          Home
-        </Link>
         <div className="flex h-[350px] w-[250px] items-center justify-center rounded-2xl border-2 border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
           <div className="text-center">
             <span className="text-5xl font-bold text-slate-900 dark:text-slate-100">

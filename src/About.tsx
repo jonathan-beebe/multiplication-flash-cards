@@ -1,18 +1,10 @@
 import { Link } from "react-router-dom";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import NavBar from "./NavBar";
 
 function About() {
   return (
     <div className="flex min-h-screen justify-center bg-slate-50 px-4 pb-16 pt-16 dark:bg-slate-900">
-      <div className="fixed left-0 top-0 flex h-12 w-full items-center bg-slate-50/50 backdrop-blur-sm dark:bg-slate-900/50">
-        <Link
-          to="/"
-          className="ml-4 flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
-        >
-          <ChevronLeftIcon className="h-4 w-4" />
-          Home
-        </Link>
-      </div>
+      <NavBar />
       <div className="flex w-full max-w-md flex-col gap-6 text-left">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
           About
