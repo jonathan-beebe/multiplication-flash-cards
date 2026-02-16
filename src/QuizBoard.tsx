@@ -6,7 +6,7 @@ export interface Question {
   b: number;
 }
 
-function generateQuestion(min: number = 3, max: number = 12): Question {
+export function generateQuestion(min: number = 3, max: number = 12): Question {
   const range = max - min + 1;
   return {
     a: Math.floor(Math.random() * range) + min,
@@ -14,7 +14,7 @@ function generateQuestion(min: number = 3, max: number = 12): Question {
   };
 }
 
-function generateChoices(a: number, b: number): number[] {
+export function generateChoices(a: number, b: number): number[] {
   const correct = a * b;
   const choices = new Set<number>([correct]);
 
@@ -126,7 +126,7 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
               key={choice}
               onClick={() => handleAnswer(choice)}
               disabled={isWrong || showCorrect || isAnimating}
-              className={`min-w-[72px] rounded-xl px-6 py-4 text-xl font-semibold shadow-lg transition-opacity duration-150 ${
+              className={`min-w-[72px] rounded-xl px-6 py-4 text-xl tabular-nums font-semibold shadow-lg transition-opacity duration-150 ${
                 fadeOut ? "opacity-0" : ""
               } ${
                 isCorrect
