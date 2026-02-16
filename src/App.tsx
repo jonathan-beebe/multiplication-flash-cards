@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 interface Question {
   a: number;
@@ -205,6 +206,13 @@ function App() {
         </div>
       ) : (
         <div className="flex w-full flex-col items-center gap-8">
+          <button
+            onClick={handleGoHome}
+            className="fixed left-4 top-4 flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+          >
+            <ChevronLeftIcon className="h-4 w-4" />
+            Home
+          </button>
           {/* Flash Card */}
           <div className="flex h-[350px] w-[250px] items-center justify-center rounded-2xl border-2 border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
             <div className="text-center">
