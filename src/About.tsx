@@ -3,7 +3,7 @@ import NavBar from "./NavBar";
 
 function About() {
   return (
-    <div className="flex min-h-screen justify-center bg-slate-50 px-4 pb-16 pt-16 dark:bg-slate-900">
+    <div className="flex min-h-screen justify-center overflow-auto bg-slate-50 px-4 pb-8 pt-16 dark:bg-slate-900">
       <NavBar />
       <div className="flex w-full max-w-md flex-col gap-6 text-left">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
