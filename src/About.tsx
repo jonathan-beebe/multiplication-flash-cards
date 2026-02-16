@@ -3,7 +3,7 @@ import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 function About() {
   return (
-    <div className="flex min-h-screen justify-center bg-slate-50 px-4 pt-16 dark:bg-slate-900">
+    <div className="flex min-h-screen justify-center bg-slate-50 px-4 pb-16 pt-16 dark:bg-slate-900">
       <Link
         to="/"
         className="fixed left-4 top-4 flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
@@ -39,6 +39,51 @@ function About() {
             GitHub
           </a>
           .
+        </p>
+
+        <h2 className="mt-4 text-2xl font-bold text-slate-900 dark:text-slate-100">
+          Install as an App
+        </h2>
+        <p className="text-lg text-slate-700 dark:text-slate-300">
+          You can install this as an app on your device for easy access — no app
+          store needed.
+        </p>
+
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+          iPhone or iPad
+        </h3>
+        <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
+          <li>Open this page in Safari</li>
+          <li>Tap the Share button (square with an arrow pointing up)</li>
+          <li>Scroll down and tap Add to Home Screen</li>
+          <li>Tap Add</li>
+        </ol>
+
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+          Android
+        </h3>
+        <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
+          <li>Open this page in Chrome</li>
+          <li>Tap the three-dot menu in the top right</li>
+          <li>Tap Add to Home Screen or Install App</li>
+          <li>Tap Add</li>
+        </ol>
+
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+          Desktop (Chrome, Edge)
+        </h3>
+        <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
+          <li>
+            Look for the install icon in the address bar (a computer with a down
+            arrow), or click the three-dot menu and choose Install
+            Multiplication Flash Cards
+          </li>
+          <li>Click Install</li>
+        </ol>
+
+        <p className="text-lg text-slate-700 dark:text-slate-300">
+          Once installed, the app will appear on your home screen or in your
+          apps list, and works offline.
         </p>
       </div>
     </div>
