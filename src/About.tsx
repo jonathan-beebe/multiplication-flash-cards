@@ -3,7 +3,7 @@ import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 function About() {
   return (
-    <div className="flex min-h-screen bg-slate-50 px-4 pt-16 dark:bg-slate-900">
+    <div className="flex min-h-screen justify-center bg-slate-50 px-4 pt-16 dark:bg-slate-900">
       <Link
         to="/"
         className="fixed left-4 top-4 flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
