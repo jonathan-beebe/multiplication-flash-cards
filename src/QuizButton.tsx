@@ -10,7 +10,7 @@ export default function QuizButton({ value, onClick, disabled, state }: QuizButt
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`min-w-[72px] rounded-xl px-6 py-4 text-xl tabular-nums font-semibold shadow-lg transition-opacity duration-150 ${
+      className={`min-w-[72px] rounded-xl px-6 py-4 text-xl tabular-nums font-semibold shadow-lg transition-all duration-150 active:scale-90 active:shadow-sm disabled:active:scale-100 disabled:active:shadow-lg ${
         state === "fade-out" ? "opacity-0" : ""
       } ${
         state === "correct"
