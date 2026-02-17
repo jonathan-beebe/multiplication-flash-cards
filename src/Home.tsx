@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-4 dark:bg-slate-900">
+    <div className="flex min-h-screen items-center justify-center px-4 py-4 bg-background">
       <div className="flex w-full max-w-md flex-col items-center text-center">
-        <h1 className="mb-8 text-4xl font-bold text-slate-900 dark:text-slate-100">
+        <h1 className="mb-8 text-4xl font-bold text-text">
           Multiplication Flash{"\u00A0"}Cards
         </h1>
         <div className="flex w-full max-w-xs flex-col items-center gap-6">

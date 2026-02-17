@@ -2,10 +2,10 @@ import NavBar from "./NavBar";
 
 function About() {
   return (
-    <div className="flex min-h-screen justify-center overflow-auto bg-slate-50 px-4 pb-8 pt-16 dark:bg-slate-900">
+    <div className="flex min-h-screen justify-center overflow-auto bg-background px-4 pb-8 pt-16">
       <NavBar />
       <div className="flex w-full max-w-md flex-col gap-6 text-left">
-        <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+        <h1 className="text-4xl font-bold text-text">
           About
         </h1>
         <p className="text-lg text-slate-700 dark:text-slate-300">
@@ -34,7 +34,7 @@ function About() {
           .
         </p>
 
-        <h2 className="mt-4 text-2xl font-bold text-slate-900 dark:text-slate-100">
+        <h2 className="mt-4 text-2xl font-bold text-text">
           Install as an App
         </h2>
         <p className="text-lg text-slate-700 dark:text-slate-300">
@@ -42,7 +42,7 @@ function About() {
           store needed.
         </p>
 
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+        <h3 className="text-xl font-semibold text-text">
           iPhone or iPad
         </h3>
         <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
@@ -52,7 +52,7 @@ function About() {
           <li>Tap Add</li>
         </ol>
 
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+        <h3 className="text-xl font-semibold text-text">
           Android
         </h3>
         <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
@@ -62,7 +62,7 @@ function About() {
           <li>Tap Add</li>
         </ol>
 
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+        <h3 className="text-xl font-semibold text-text">
           Desktop (Chrome, Edge)
         </h3>
         <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">

@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: light-dark(var(--color-slate-100), var(--color-slate-900));
+  --color-text: light-dark(var(--color-slate-900), var(--color-slate-100));
+  --color-correct: light-dark(var(--color-green-500), var(--color-green-600));
+  --color-wrong: light-dark(var(--color-red-500), var(--color-red-600));
+}
+
 /* System font stack */
 html {
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -17,5 +24,35 @@ body {
 @media (prefers-color-scheme: dark) {
   body {
     @apply bg-slate-900 text-slate-100;
+  }
+}
+
+/* Card transition animation */
+.card-stack {
+  position: relative;
+  height: 350px;
+  width: 250px;
+}
+
+.card-stack .card {
+  position: absolute;
+  inset: 0;
+}
+
+.card-slide-out {
+  transition: transform 300ms ease-in-out;
+}
+
+.card-zoom-in {
+  transform: scale(1) !important;
+  transition: transform 300ms ease-in-out;
+}
+
+@keyframes drill-timer {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }
