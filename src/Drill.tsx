@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "./NavBar";
 import QuizBoard from "./QuizBoard";
+import DrillTimerBar from "./DrillTimerBar";
 
 interface DrillProps {
   durationMinutes: number;
@@ -88,6 +89,10 @@ function Drill({ durationMinutes }: DrillProps) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <DrillTimerBar key={resetKey} durationSeconds={durationMinutes * 60} />
+      <div className="fixed top-2 right-4 z-10 text-xs tabular-nums text-slate-400 dark:text-slate-500">
+        {Math.floor(timeRemaining / 60)}:{String(timeRemaining % 60).padStart(2, "0")}
+      </div>
       <NavBar />
       <QuizBoard
         key={resetKey}

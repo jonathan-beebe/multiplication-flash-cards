@@ -47,3 +47,12 @@ body {
   transform: scale(1) !important;
   transition: transform 300ms ease-in-out;
 }
+
+@keyframes drill-timer {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
