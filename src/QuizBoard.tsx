@@ -58,6 +58,7 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set());
   const [showCorrect, setShowCorrect] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [slideRotation, setSlideRotation] = useState(0);
 
   const choices = useMemo(() => {
     return generateChoices(question.a, question.b);
@@ -72,6 +73,7 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
         setShowCorrect(true);
         setTimeout(() => {
           setNextQuestion(generateQuestion());
+          setSlideRotation(Math.random() * 70 - 35);
           setIsAnimating(true);
           setShowCorrect(false);
         }, 300);
@@ -113,7 +115,12 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
           a={question.a}
           b={question.b}
           className={isAnimating ? "card-slide-out" : undefined}
-          style={{ zIndex: 2 }}
+          style={{
+            zIndex: 2,
+            ...(isAnimating && {
+              transform: `translateX(calc(50vw + 100%)) rotate(${slideRotation}deg)`,
+            }),
+          }}
           onTransitionEnd={isAnimating ? handleTransitionEnd : undefined}
         />
       </div>

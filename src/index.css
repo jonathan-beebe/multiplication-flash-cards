@@ -40,7 +40,6 @@ body {
 }
 
 .card-slide-out {
-  transform: translateX(calc(50vw + 100%)) rotate(6deg);
   transition: transform 300ms ease-in-out;
 }
 
