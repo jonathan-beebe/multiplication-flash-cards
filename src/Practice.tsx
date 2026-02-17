@@ -3,7 +3,7 @@ import QuizBoard from "./QuizBoard";
 
 function Practice() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 dark:bg-slate-900">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <NavBar />
       <QuizBoard />
     </div>

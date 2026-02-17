@@ -27,7 +27,7 @@ function Card({ a, b, className, style, onTransitionEnd }: CardProps) {
       onTransitionEnd={onTransitionEnd}
     >
       <div className="text-center">
-        <span className="text-5xl tabular-nums font-bold text-slate-900 dark:text-slate-100">
+        <span className="text-5xl tabular-nums font-bold text-text">
           {a} × {b}
         </span>
       </div>

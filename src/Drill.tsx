@@ -48,9 +48,9 @@ function Drill({ durationMinutes }: DrillProps) {
 
   if (isDrillComplete) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
+      <div className="flex min-h-screen items-center justify-center px-4 bg-background">
         <div className="flex w-full max-w-md flex-col items-center gap-8 text-center">
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-4xl font-bold text-text">
             Drill Complete!
           </h1>
           <div className="flex flex-col gap-4 rounded-2xl border-2 border-slate-200 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800">
@@ -87,7 +87,7 @@ function Drill({ durationMinutes }: DrillProps) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-900">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <NavBar />
       <QuizBoard
         key={resetKey}
