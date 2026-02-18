@@ -1,12 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 interface DrillCompleteProps {
-  correctCount: number;
-  wrongCount: number;
-  onRestart?: () => void;
+  correctCount?: number;
+  wrongCount?: number;
 }
 
-function DrillComplete({ correctCount, wrongCount, onRestart }: DrillCompleteProps) {
+function DrillComplete({ correctCount: propCorrect, wrongCount: propWrong }: DrillCompleteProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const correctCount = propCorrect ?? location.state?.correctCount ?? 0;
+  const wrongCount = propWrong ?? location.state?.wrongCount ?? 0;
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4 bg-background">
       <div className="flex w-full max-w-md flex-col items-center gap-8 text-center">
@@ -34,10 +38,10 @@ function DrillComplete({ correctCount, wrongCount, onRestart }: DrillCompletePro
           </div>
         </div>
         <div className="flex gap-4">
-          {onRestart && (
+          {location.state && (
             <button
               className="rounded-xl bg-indigo-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:active:bg-indigo-600"
-              onClick={onRestart}
+              onClick={() => navigate("..", { relative: "path", replace: true })}
             >
               Restart
             </button>
