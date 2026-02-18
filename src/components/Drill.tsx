@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
-import NavBar from "./NavBar";
-import QuizBoard from "./QuizBoard";
-import DrillTimerBar from "./DrillTimerBar";
-import DrillComplete from "./DrillComplete";
+import NavBar from "@/components/NavBar";
+import QuizBoard from "@/components/QuizBoard";
+import DrillTimerBar from "@/components/DrillTimerBar";
+import DrillComplete from "@/components/DrillComplete";
 
 interface DrillProps {
   durationMinutes: number;

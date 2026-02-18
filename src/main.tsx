@@ -2,11 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
-import Home from './Home.tsx'
-import Practice from './Practice.tsx'
-import Drill from './Drill.tsx'
-import About from './About.tsx'
-import DrillComplete from './DrillComplete.tsx'
+import Home from '@/components/Home.tsx'
+import Practice from '@/components/Practice.tsx'
+import Drill from '@/components/Drill.tsx'
+import About from '@/components/About.tsx'
+import DrillComplete from '@/components/DrillComplete.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

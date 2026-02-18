@@ -1,5 +1,5 @@
-import NavBar from "./NavBar";
-import QuizBoard from "./QuizBoard";
+import NavBar from "@/components/NavBar";
+import QuizBoard from "@/components/QuizBoard";
 
 function Practice() {
   return (

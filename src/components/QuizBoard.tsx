@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
-import Card from "./Card";
-import QuizButton from "./QuizButton";
+import Card from "@/components/Card";
+import QuizButton from "@/components/QuizButton";
 
 export interface Question {
   a: number;
