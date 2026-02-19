@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import HomeButton from "@/components/HomeButton";
 
 function Home() {
+  useEffect(() => {
+    document.title = "Multiplication Flash Cards";
+  }, []);
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-4 bg-background">
       <div className="flex w-full max-w-md flex-col items-center text-center">
@@ -28,7 +33,7 @@ function Home() {
           </div>
           <Link
             to="/about"
-            className="mt-4 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+            className="mt-4 text-sm text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
           >
             About
           </Link>

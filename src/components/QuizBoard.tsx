@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import Card from "@/components/Card";
 import QuizButton from "@/components/QuizButton";
 
@@ -59,6 +59,15 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
   const [showCorrect, setShowCorrect] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideRotation, setSlideRotation] = useState(0);
+  const [announcement, setAnnouncement] = useState("");
+  const announceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const choicesRef = useRef<HTMLDivElement>(null);
+
+  const announce = useCallback((text: string) => {
+    setAnnouncement("");
+    if (announceTimer.current) clearTimeout(announceTimer.current);
+    announceTimer.current = setTimeout(() => setAnnouncement(text), 50);
+  }, []);
 
   const choices = useMemo(() => {
     return generateChoices(question.a, question.b);
@@ -80,28 +89,42 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
       } else {
         if (!wrongAnswers.has(answer)) {
           onWrong?.();
+          announce(`${answer} is incorrect. Try again.`);
         }
         setWrongAnswers((prev) => new Set(prev).add(answer));
       }
     },
-    [correctAnswer, wrongAnswers, onCorrect, onWrong]
+    [correctAnswer, wrongAnswers, onCorrect, onWrong, announce]
   );
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
       if (e.propertyName !== "transform") return;
-      setQuestion(nextQuestion!);
+      const next = nextQuestion!;
+      setQuestion(next);
       setNextQuestion(null);
       setWrongAnswers(new Set());
       setIsAnimating(false);
+      announce(`Correct! Next question: ${next.a} times ${next.b}`);
+      setTimeout(() => {
+        choicesRef.current?.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
+      }, 0);
     },
-    [nextQuestion]
+    [nextQuestion, announce]
   );
 
   const backQuestion = nextQuestion ?? question;
 
   return (
     <div className="flex w-full flex-col items-center gap-8">
+      <span
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {announcement}
+      </span>
       <div className="card-stack">
         {/* Back card: next question, zooms in from 80% */}
         <Card
@@ -124,7 +147,10 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
           onTransitionEnd={isAnimating ? handleTransitionEnd : undefined}
         />
       </div>
-      <div className={`flex flex-wrap justify-center gap-3 transition-opacity duration-150 ${isAnimating ? "opacity-0" : "opacity-100"}`}>
+      <div
+        ref={choicesRef}
+        className={`flex flex-wrap justify-center gap-3 transition-opacity duration-150 ${isAnimating ? "opacity-0" : "opacity-100"}`}
+      >
         {choices.map((choice) => {
           const isWrong = wrongAnswers.has(choice);
           const isCorrect = showCorrect && choice === correctAnswer;

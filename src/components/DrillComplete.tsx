@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 interface DrillCompleteProps {
@@ -8,6 +9,10 @@ interface DrillCompleteProps {
 function DrillComplete({ correctCount: propCorrect, wrongCount: propWrong }: DrillCompleteProps) {
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Drill Complete — Multiplication Flash Cards";
+  }, []);
   const correctCount = propCorrect ?? location.state?.correctCount ?? 0;
   const wrongCount = propWrong ?? location.state?.wrongCount ?? 0;
 

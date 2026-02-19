@@ -56,3 +56,9 @@ body {
     transform: scaleX(0);
   }
 }
+
+/* Focus visible indicator for all interactive elements (WCAG 2.4.7) */
+:focus-visible {
+  outline: 3px solid #4f46e5;
+  outline-offset: 3px;
+}

@@ -1,6 +1,11 @@
+import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
 
 function About() {
+  useEffect(() => {
+    document.title = "About — Multiplication Flash Cards";
+  }, []);
+
   return (
     <div className="flex min-h-screen justify-center overflow-auto bg-background px-4 pb-8 pt-16">
       <NavBar />

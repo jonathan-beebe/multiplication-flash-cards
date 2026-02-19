@@ -73,7 +73,7 @@ describe("QuizBoard", () => {
     render(<QuizBoard onCorrect={onCorrect} />);
 
     const correctAnswer = getCorrectAnswer();
-    const correctButton = screen.getByRole("button", { name: String(correctAnswer) });
+    const correctButton = screen.getByRole("button", { name: `Answer: ${correctAnswer}` });
     await userEvent.click(correctButton);
 
     expect(onCorrect).toHaveBeenCalledOnce();

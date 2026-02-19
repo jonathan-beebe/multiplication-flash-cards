@@ -27,9 +27,10 @@ function Card({ a, b, className, style, onTransitionEnd }: CardProps) {
       onTransitionEnd={onTransitionEnd}
     >
       <div className="text-center">
-        <span className="text-5xl tabular-nums font-bold text-text">
+        <span className="text-5xl tabular-nums font-bold text-text" aria-hidden="true">
           {a} × {b}
         </span>
+        <span className="sr-only">{a} times {b}</span>
       </div>
     </div>
   );

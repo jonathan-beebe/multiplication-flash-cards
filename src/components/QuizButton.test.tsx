@@ -8,7 +8,7 @@ const defaults = { value: 42, onClick: () => {}, disabled: false, state: "defaul
 describe("QuizButton", () => {
   it("renders the value as button text", () => {
     render(<QuizButton {...defaults} />);
-    expect(screen.getByRole("button", { name: "42" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Answer: 42" })).toBeInTheDocument();
   });
 
   it("calls onClick when clicked", async () => {
