@@ -22,7 +22,7 @@ function About() {
           email me at{" "}
           <a
             href="mailto:jonathan-beebe@outlook.com"
-            className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
           >
             jonathan-beebe@outlook.com
           </a>
@@ -32,7 +32,7 @@ function About() {
           This app is open source. You can see how it was built on{" "}
           <a
             href="https://github.com/jonathan-beebe/multiplication-flash-cards"
-            className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
           >
             GitHub
           </a>

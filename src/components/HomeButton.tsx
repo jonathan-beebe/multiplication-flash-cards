@@ -9,9 +9,9 @@ interface HomeButtonProps {
 
 const colorClasses = {
   indigo:
-    "bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:active:bg-indigo-600",
+    "bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-500 dark:active:bg-indigo-600",
   amber:
-    "bg-amber-600 hover:bg-amber-500 active:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 dark:active:bg-amber-600",
+    "bg-amber-700 hover:bg-amber-800 active:bg-amber-900 dark:bg-amber-700 dark:hover:bg-amber-600 dark:active:bg-amber-600",
 };
 
 export default function HomeButton({ to, color, children, 'aria-label': ariaLabel }: HomeButtonProps) {

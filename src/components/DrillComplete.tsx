@@ -45,7 +45,7 @@ function DrillComplete({ correctCount: propCorrect, wrongCount: propWrong }: Dri
         <div className="flex gap-4">
           {location.state && (
             <button
-              className="rounded-xl bg-indigo-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:active:bg-indigo-600"
+              className="rounded-xl bg-indigo-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-indigo-500 active:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-500 dark:active:bg-indigo-600"
               onClick={() => navigate("..", { relative: "path", replace: true })}
             >
               Restart
@@ -53,7 +53,7 @@ function DrillComplete({ correctCount: propCorrect, wrongCount: propWrong }: Dri
           )}
           <Link
             to="/"
-            className="rounded-xl bg-slate-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-slate-500 active:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-400 dark:active:bg-slate-600"
+            className="rounded-xl bg-slate-600 px-8 py-4 text-xl font-semibold text-white shadow-lg transition-colors hover:bg-slate-500 active:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-500 dark:active:bg-slate-600"
           >
             Home
           </Link>
