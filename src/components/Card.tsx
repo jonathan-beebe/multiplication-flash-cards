@@ -6,6 +6,7 @@ interface CardProps {
   className?: string;
   style?: React.CSSProperties;
   onTransitionEnd?: React.TransitionEventHandler<HTMLDivElement>;
+  'aria-hidden'?: boolean | "true" | "false";
 }
 
 const baseClasses =
@@ -19,12 +20,13 @@ const baseClasses =
     "dark:border-t-slate-600/60 dark:border-l-slate-600/60 dark:border-b-slate-900/80 dark:border-r-slate-900/80 dark:border-none",
   );
 
-function Card({ a, b, className, style, onTransitionEnd }: CardProps) {
+function Card({ a, b, className, style, onTransitionEnd, 'aria-hidden': ariaHidden }: CardProps) {
   return (
     <div
       className={`${baseClasses}${className ? ` ${className}` : ""}`}
       style={style}
       onTransitionEnd={onTransitionEnd}
+      aria-hidden={ariaHidden}
     >
       <div className="text-center">
         <span className="text-5xl tabular-nums font-bold text-text" aria-hidden="true">

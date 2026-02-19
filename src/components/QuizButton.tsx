@@ -18,7 +18,7 @@ export default function QuizButton({ value, onClick, disabled, state }: QuizButt
           ? "bg-correct text-white"
           : state === "wrong"
             ? "cursor-not-allowed bg-wrong text-white line-through"
-            : "bg-slate-200 text-slate-900 hover:bg-slate-300 active:bg-slate-400 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:active:bg-slate-500"
+            : "border border-slate-500 dark:border-slate-400 bg-slate-200 text-slate-900 hover:bg-slate-300 active:bg-slate-400 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:active:bg-slate-500"
       }`}
     >
       {value}

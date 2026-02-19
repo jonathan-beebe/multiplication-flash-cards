@@ -55,6 +55,7 @@ function Drill({ durationMinutes }: DrillProps) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <DrillTimerBar durationSeconds={durationMinutes * 60} />
       <div className="fixed top-2 right-4 z-10 text-xs tabular-nums text-slate-600 dark:text-slate-400">
+        <span className="sr-only">Time remaining: </span>
         {Math.floor(timeRemaining / 60)}:{String(timeRemaining % 60).padStart(2, "0")}
       </div>
       <NavBar />

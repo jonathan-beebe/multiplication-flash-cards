@@ -126,10 +126,12 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
         {announcement}
       </span>
       <div className="card-stack">
-        {/* Back card: next question, zooms in from 80% */}
+        {/* Back card: next question, zooms in from 80% — hidden from screen readers;
+            the aria-live region announces the new question when transition completes */}
         <Card
           a={backQuestion.a}
           b={backQuestion.b}
+          aria-hidden={true}
           className={isAnimating ? "card-zoom-in" : undefined}
           style={{ zIndex: 1, transform: isAnimating ? undefined : "scale(0.8)" }}
         />

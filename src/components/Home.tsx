@@ -21,13 +21,13 @@ function Home() {
             Drills
           </h2>
           <div className="flex w-full flex-col gap-4">
-            <HomeButton to="/1-minute-drill" color="amber">
+            <HomeButton to="/1-minute-drill" color="amber" aria-label="1 minute drill">
               1 min
             </HomeButton>
-            <HomeButton to="/3-minute-drill" color="amber">
+            <HomeButton to="/3-minute-drill" color="amber" aria-label="3 minute drill">
               3 min
             </HomeButton>
-            <HomeButton to="/5-minute-drill" color="amber">
+            <HomeButton to="/5-minute-drill" color="amber" aria-label="5 minute drill">
               5 min
             </HomeButton>
           </div>
