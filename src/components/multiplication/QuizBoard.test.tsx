@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import QuizBoard, { generateQuestion, generateChoices } from "@/components/QuizBoard";
+import QuizBoard, { generateQuestion, generateChoices } from "@/components/multiplication/QuizBoard";
 
 describe("generateQuestion", () => {
   it("returns a and b within default range 3-12", () => {

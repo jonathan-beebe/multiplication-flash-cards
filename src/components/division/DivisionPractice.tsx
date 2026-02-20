@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import NavBar from "@/components/NavBar";
-import AreaModelProblem from "@/components/AreaModelProblem";
+import AreaModelProblem from "@/components/division/AreaModelProblem";
 import { LEVELS } from "@/lib/divisionProblem";
 import type { Level } from "@/lib/divisionProblem";
 

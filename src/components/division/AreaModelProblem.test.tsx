@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
-import AreaModelProblem from "@/components/AreaModelProblem";
+import AreaModelProblem from "@/components/division/AreaModelProblem";
 
 // Deterministic problem: 72 ÷ 3 = 24
 // Two-section path: enter 20 (area=60, remaining=12) → enter 4 (area=12, remaining=0) → summing

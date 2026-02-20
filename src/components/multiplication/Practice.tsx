@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
-import QuizBoard from "@/components/QuizBoard";
+import QuizBoard from "@/components/multiplication/QuizBoard";
 
 function Practice() {
   useEffect(() => {

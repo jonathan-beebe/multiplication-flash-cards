@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom'
-import Home from '@/components/Home.tsx'
-import Practice from '@/components/Practice.tsx'
-import Drill from '@/components/Drill.tsx'
-import About from '@/components/About.tsx'
-import DrillComplete from '@/components/DrillComplete.tsx'
-import DivisionPractice from '@/components/DivisionPractice.tsx'
+import Home from '@/pages/Home.tsx'
+import About from '@/pages/About.tsx'
+import Practice from '@/components/multiplication/Practice.tsx'
+import Drill from '@/components/multiplication/Drill.tsx'
+import DrillComplete from '@/components/multiplication/DrillComplete.tsx'
+import DivisionPractice from '@/components/division/DivisionPractice.tsx'
 
 export function AppRoutes() {
   return (

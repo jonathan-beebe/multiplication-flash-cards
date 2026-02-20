@@ -5,7 +5,7 @@ import {
   validatePartialQuotient,
 } from "@/lib/divisionProblem";
 import type { Level, Problem, Section } from "@/lib/divisionProblem";
-import AreaModelRect from "@/components/AreaModelRect";
+import AreaModelRect from "@/components/division/AreaModelRect";
 
 type Phase = "building" | "summing" | "done";
 

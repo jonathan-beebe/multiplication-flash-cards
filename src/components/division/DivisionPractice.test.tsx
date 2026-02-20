@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import DivisionPractice from "@/components/DivisionPractice";
+import DivisionPractice from "@/components/division/DivisionPractice";
 
 vi.mock("@/lib/divisionProblem", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/divisionProblem")>();

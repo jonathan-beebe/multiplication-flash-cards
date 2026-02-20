@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import AreaModelRect from "@/components/AreaModelRect";
+import AreaModelRect from "@/components/division/AreaModelRect";
 
 const baseProps = {
   divisor: 3,
