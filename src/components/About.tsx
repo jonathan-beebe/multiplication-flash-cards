@@ -83,6 +83,10 @@ function About() {
           Once installed, the app will appear on your home screen or in your
           apps list, and works offline.
         </p>
+
+        <p className="text-xs tabular-nums text-slate-400 dark:text-slate-600 mt-4">
+          version {__COMMIT_HASH__}
+        </p>
       </div>
     </div>
   );
