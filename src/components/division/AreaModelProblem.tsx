@@ -62,6 +62,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
     if (isNaN(value)) {
       triggerShake();
       setInputError("Enter a whole number");
+      inputRef.current?.focus();
       return;
     }
 
@@ -69,6 +70,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
     if (!result.valid) {
       triggerShake();
       setInputError(result.error);
+      inputRef.current?.focus();
       return;
     }
 
@@ -78,6 +80,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
 
     setInputValue("");
     setInputError(null);
+    inputRef.current?.focus();
 
     if (newRemaining === 0) {
       // Single section → skip summing, answer is the partial quotient itself.
@@ -115,10 +118,12 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
     if (isNaN(value)) {
       triggerShake();
       setInputError("Enter a whole number");
+      inputRef.current?.focus();
       return;
     }
 
     setInputValue("");
+    inputRef.current?.focus();
 
     if (value === problem.quotient) {
       setInputError(null);
