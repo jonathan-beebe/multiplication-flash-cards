@@ -36,10 +36,16 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
   const [announcement, setAnnouncement] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Focus the input whenever the phase changes (building or summing).
+  // Focus the input whenever the phase changes (building or summing),
+  // or the "Next problem" button when done. The delay prevents the Enter
+  // keyup from immediately activating the newly focused button.
   useEffect(() => {
-    if (phase !== "done") {
+    if (phase === "done") {
+      const id = setTimeout(() => nextButtonRef.current?.focus(), 50);
+      return () => clearTimeout(id);
+    } else {
       const id = setTimeout(() => inputRef.current?.focus(), 50);
       return () => clearTimeout(id);
     }
@@ -269,8 +275,8 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
             {problem.quotient.toLocaleString()} ✓
           </p>
           <button
+            ref={nextButtonRef}
             onClick={handleNext}
-            autoFocus
             className="rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-8 py-3 text-lg shadow-md transition-all"
           >
             Next problem →
