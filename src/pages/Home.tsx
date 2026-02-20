@@ -8,7 +8,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-4 bg-background">
+    <main className="flex min-h-screen items-center justify-center px-4 py-4 bg-background">
       <div className="flex w-full max-w-md flex-col items-center text-center">
         <h1 className="mb-8 text-4xl font-bold text-text">
           Multiplication Flash{"\u00A0"}Cards
@@ -49,7 +49,7 @@ function Home() {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

@@ -15,7 +15,7 @@ export default function DivisionPractice() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-background px-4 pt-20 pb-12">
+    <main className="flex min-h-screen flex-col items-center bg-background px-4 pt-20 pb-12">
       <NavBar />
 
       <div className="w-full max-w-xl flex flex-col items-center gap-8">
@@ -53,6 +53,6 @@ export default function DivisionPractice() {
         {/* Problem area — keyed on level so state resets when level changes */}
         <AreaModelProblem key={level} level={level} />
       </div>
-    </div>
+    </main>
   );
 }

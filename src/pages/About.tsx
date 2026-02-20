@@ -7,7 +7,7 @@ function About() {
   }, []);
 
   return (
-    <div className="flex min-h-screen justify-center overflow-auto bg-background px-4 pb-8 pt-16">
+    <main className="flex min-h-screen justify-center overflow-auto bg-background px-4 pb-8 pt-16">
       <NavBar />
       <div className="flex w-full max-w-md flex-col gap-6 text-left">
         <h1 className="text-4xl font-bold text-text">
@@ -88,7 +88,7 @@ function About() {
           version {__COMMIT_HASH__}
         </p>
       </div>
-    </div>
+    </main>
   );
 }
 

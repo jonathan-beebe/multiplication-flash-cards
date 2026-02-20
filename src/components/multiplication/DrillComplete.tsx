@@ -17,7 +17,7 @@ function DrillComplete({ correctCount: propCorrect, wrongCount: propWrong }: Dri
   const wrongCount = propWrong ?? location.state?.wrongCount ?? 0;
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 bg-background">
+    <main className="flex min-h-screen items-center justify-center px-4 bg-background">
       <div className="flex w-full max-w-md flex-col items-center gap-8 text-center">
         <h1 className="text-4xl font-bold text-text">
           Drill Complete!
@@ -59,7 +59,7 @@ function DrillComplete({ correctCount: propCorrect, wrongCount: propWrong }: Dri
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
