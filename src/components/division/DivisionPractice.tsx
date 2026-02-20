@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import clsx from "clsx";
 import NavBar from "@/components/NavBar";
 import AreaModelProblem from "@/components/division/AreaModelProblem";
@@ -7,8 +8,23 @@ import type { Level } from "@/lib/divisionProblem";
 
 const LEVEL_IDS: Level[] = [1, 2, 3, 4];
 
+function parseLevel(param: string | undefined): Level {
+  const match = param?.match(/^level-(\d+)$/);
+  const n = match ? Number(match[1]) : NaN;
+  if (n >= 1 && n <= 4) return n as Level;
+  return 1;
+}
+
 export default function DivisionPractice() {
-  const [level, setLevel] = useState<Level>(1);
+  const { level: levelParam } = useParams<{ level: string }>();
+  const navigate = useNavigate();
+  const level = parseLevel(levelParam);
+
+  useEffect(() => {
+    if (levelParam !== undefined && levelParam !== `level-${level}`) {
+      navigate("/division-practice/level-1", { replace: true });
+    }
+  }, [levelParam, level, navigate]);
 
   useEffect(() => {
     document.title = "Division Practice — Multiplication Flash Cards";
@@ -33,9 +49,9 @@ export default function DivisionPractice() {
           aria-label="Select difficulty level"
         >
           {LEVEL_IDS.map((l) => (
-            <button
+            <Link
               key={l}
-              onClick={() => setLevel(l)}
+              to={`/division-practice/level-${l}`}
               aria-pressed={level === l}
               title={LEVELS[l].description}
               className={clsx(
@@ -46,7 +62,7 @@ export default function DivisionPractice() {
               )}
             >
               {LEVELS[l].label}
-            </button>
+            </Link>
           ))}
         </div>
 

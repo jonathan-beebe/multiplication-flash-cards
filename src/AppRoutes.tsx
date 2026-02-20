@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from '@/pages/Home.tsx'
 import About from '@/pages/About.tsx'
 import Practice from '@/components/multiplication/Practice.tsx'
@@ -17,7 +17,8 @@ export function AppRoutes() {
       <Route path="/3-minute-drill/success" element={<DrillComplete />} />
       <Route path="/5-minute-drill" element={<Drill durationMinutes={5} />} />
       <Route path="/5-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/division-practice" element={<DivisionPractice />} />
+      <Route path="/division-practice" element={<Navigate to="/division-practice/level-1" replace />} />
+      <Route path="/division-practice/:level" element={<DivisionPractice />} />
       <Route path="/about" element={<About />} />
       <Route path="/demo/drill-complete" element={<DrillComplete correctCount={42} wrongCount={8} />} />
     </Routes>

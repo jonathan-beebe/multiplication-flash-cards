@@ -173,7 +173,60 @@ describe("App user journeys", () => {
     });
   });
 
-  // ─── 5. About flow ────────────────────────────────────────────────
+  // ─── 5. Division practice flow ─────────────────────────────────────
+  describe("Division practice flow", () => {
+    it("/division-practice redirects to /division-practice/level-1", () => {
+      render(
+        <MemoryRouter initialEntries={["/division-practice"]}>
+          <AppRoutes />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByRole("heading", { name: /division practice/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "true");
+    });
+
+    it("/division-practice/level-3 renders with Level 3 selected", () => {
+      render(
+        <MemoryRouter initialEntries={["/division-practice/level-3"]}>
+          <AppRoutes />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-pressed", "true");
+      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
+    });
+
+    it("clicking a level link updates the selected level", () => {
+      render(
+        <MemoryRouter initialEntries={["/division-practice/level-1"]}>
+          <AppRoutes />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "true");
+
+      fireEvent.click(screen.getByRole("link", { name: /level 2/i }));
+
+      expect(screen.getByRole("link", { name: /level 2/i })).toHaveAttribute("aria-pressed", "true");
+      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
+    });
+
+    it("division practice → Home via NavBar", () => {
+      render(
+        <MemoryRouter initialEntries={["/division-practice/level-1"]}>
+          <AppRoutes />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByRole("heading", { name: /division practice/i })).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole("link", { name: /home/i }));
+      expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
+    });
+  });
+
+  // ─── 6. About flow ────────────────────────────────────────────────
   describe("About flow", () => {
     it("Home → About → Home", () => {
       render(

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import DivisionPractice from "@/components/division/DivisionPractice";
 
 vi.mock("@/lib/divisionProblem", async (importOriginal) => {
@@ -19,10 +19,12 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-function renderPage() {
+function renderPage(initialLevel = 1) {
   render(
-    <MemoryRouter>
-      <DivisionPractice />
+    <MemoryRouter initialEntries={[`/division-practice/level-${initialLevel}`]}>
+      <Routes>
+        <Route path="/division-practice/:level" element={<DivisionPractice />} />
+      </Routes>
     </MemoryRouter>
   );
 }
@@ -38,35 +40,35 @@ describe("DivisionPractice", () => {
     expect(screen.getByText(/area model method/i)).toBeInTheDocument();
   });
 
-  it("renders all four level buttons", () => {
+  it("renders all four level links", () => {
     renderPage();
-    expect(screen.getByRole("button", { name: /level 1/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /level 2/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /level 3/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /level 4/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /level 1/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /level 2/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /level 3/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /level 4/i })).toBeInTheDocument();
   });
 
   it("selects Level 1 by default", () => {
     renderPage();
-    expect(screen.getByRole("button", { name: /level 1/i })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: /level 2/i })).toHaveAttribute("aria-pressed", "false");
-    expect(screen.getByRole("button", { name: /level 3/i })).toHaveAttribute("aria-pressed", "false");
-    expect(screen.getByRole("button", { name: /level 4/i })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("link", { name: /level 2/i })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("link", { name: /level 4/i })).toHaveAttribute("aria-pressed", "false");
   });
 
   it("selects the clicked level and deselects the previous one", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: /level 3/i }));
-    expect(screen.getByRole("button", { name: /level 3/i })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(screen.getByRole("link", { name: /level 3/i }));
+    expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
   });
 
   it("only one level is selected at a time", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: /level 2/i }));
+    fireEvent.click(screen.getByRole("link", { name: /level 2/i }));
     const pressed = screen
-      .getAllByRole("button", { name: /level \d/i })
-      .filter((btn) => btn.getAttribute("aria-pressed") === "true");
+      .getAllByRole("link", { name: /level \d/i })
+      .filter((el) => el.getAttribute("aria-pressed") === "true");
     expect(pressed).toHaveLength(1);
     expect(pressed[0]).toHaveTextContent(/level 2/i);
   });
@@ -83,7 +85,7 @@ describe("DivisionPractice", () => {
     // Confirm building phase is active
     expect(screen.getByRole("textbox", { name: /partial quotient/i })).toBeInTheDocument();
     // Switch level
-    fireEvent.click(screen.getByRole("button", { name: /level 4/i }));
+    fireEvent.click(screen.getByRole("link", { name: /level 4/i }));
     act(() => vi.advanceTimersByTime(50));
     // New AreaModelProblem instance should start in building phase
     expect(screen.getByRole("textbox", { name: /partial quotient/i })).toBeInTheDocument();
@@ -92,5 +94,11 @@ describe("DivisionPractice", () => {
   it("sets the document title to include 'Division'", () => {
     renderPage();
     expect(document.title).toMatch(/division/i);
+  });
+
+  it("renders the correct level when navigated to directly", () => {
+    renderPage(3);
+    expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
   });
 });
