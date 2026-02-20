@@ -31,6 +31,7 @@ function Home() {
               5 min
             </HomeButton>
           </div>
+          {/* Division button — hidden until feature is ready to ship
           <div className="w-full border-t border-slate-200 dark:border-slate-700 pt-6 flex flex-col items-center gap-4">
             <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
               Division
@@ -39,6 +40,7 @@ function Home() {
               Explore Division
             </HomeButton>
           </div>
+          */}
           <Link
             to="/about"
             className="mt-4 text-sm text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
