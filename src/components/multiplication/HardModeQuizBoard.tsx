@@ -56,7 +56,7 @@ export default function HardModeQuizBoard() {
         setNextQuestion(next);
         setSlideRotation(Math.random() * 70 - 35);
         setIsAnimating(true);
-        setShowCorrect(false);
+        setInputValue("");
       }, 300);
     } else {
       triggerShake();
@@ -74,6 +74,7 @@ export default function HardModeQuizBoard() {
       setNextQuestion(null);
       setInputValue("");
       setInputError(null);
+      setShowCorrect(false);
       setIsAnimating(false);
       setTimeout(() => inputRef.current?.focus(), 50);
     },
@@ -118,49 +119,50 @@ export default function HardModeQuizBoard() {
         />
       </div>
 
-      <div className={`flex flex-col items-center gap-3 transition-opacity duration-150 ${isAnimating ? "opacity-0" : "opacity-100"}`}>
+      <div className="flex flex-col items-center gap-3">
+        <div className={`flex gap-3 justify-center ${isShaking ? "shake" : ""}`}>
+          <input
+            ref={inputRef}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              setInputError(null);
+            }}
+            onKeyDown={handleKeyDown}
+            disabled={showCorrect || isAnimating}
+            aria-label="Enter your answer"
+            aria-describedby={inputError ? "input-error" : showCorrect ? "correct-msg" : undefined}
+            className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 tabular-nums"
+          />
+          <button
+            onClick={handleSubmit}
+            disabled={showCorrect || isAnimating}
+            className="rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all disabled:opacity-50"
+          >
+            Check
+          </button>
+        </div>
+
         {showCorrect && (
-          <p className="text-2xl font-bold text-green-600 dark:text-green-400 py-2 border-2 border-transparent">
+          <p
+            id="correct-msg"
+            className="text-center text-sm font-bold text-green-600 dark:text-green-400"
+          >
             Correct!
           </p>
         )}
 
-        {!showCorrect && (
-          <>
-            <div className={`flex gap-3 justify-center ${isShaking ? "shake" : ""}`}>
-              <input
-                ref={inputRef}
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e.target.value);
-                  setInputError(null);
-                }}
-                onKeyDown={handleKeyDown}
-                aria-label="Enter your answer"
-                aria-describedby={inputError ? "input-error" : undefined}
-                className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 tabular-nums"
-              />
-              <button
-                onClick={handleSubmit}
-                className="rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all"
-              >
-                Check
-              </button>
-            </div>
-
-            {inputError && (
-              <p
-                id="input-error"
-                className="text-center text-sm font-medium text-red-600 dark:text-red-400"
-                role="alert"
-              >
-                {inputError}
-              </p>
-            )}
-          </>
+        {inputError && (
+          <p
+            id="input-error"
+            className="text-center text-sm font-medium text-red-600 dark:text-red-400"
+            role="alert"
+          >
+            {inputError}
+          </p>
         )}
       </div>
     </div>
