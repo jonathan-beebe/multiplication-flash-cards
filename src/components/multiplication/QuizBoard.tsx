@@ -50,10 +50,13 @@ export function generateChoices(a: number, b: number): number[] {
 interface QuizBoardProps {
   onCorrect?: () => void;
   onWrong?: () => void;
+  getNextQuestion?: () => Question;
+  onAnswer?: (question: Question, wrongAnswers: number[]) => void;
 }
 
-export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
-  const [question, setQuestion] = useState<Question>(generateQuestion);
+export default function QuizBoard({ onCorrect, onWrong, getNextQuestion, onAnswer }: QuizBoardProps) {
+  const nextQ = getNextQuestion ?? generateQuestion;
+  const [question, setQuestion] = useState<Question>(() => nextQ());
   const [nextQuestion, setNextQuestion] = useState<Question | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set());
   const [showCorrect, setShowCorrect] = useState(false);
@@ -78,10 +81,11 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
   const handleAnswer = useCallback(
     (answer: number) => {
       if (answer === correctAnswer) {
+        onAnswer?.(question, [...wrongAnswers]);
         onCorrect?.();
         setShowCorrect(true);
         setTimeout(() => {
-          setNextQuestion(generateQuestion());
+          setNextQuestion(nextQ());
           setSlideRotation(Math.random() * 70 - 35);
           setIsAnimating(true);
           setShowCorrect(false);
@@ -94,7 +98,7 @@ export default function QuizBoard({ onCorrect, onWrong }: QuizBoardProps) {
         setWrongAnswers((prev) => new Set(prev).add(answer));
       }
     },
-    [correctAnswer, wrongAnswers, onCorrect, onWrong, announce]
+    [correctAnswer, wrongAnswers, onCorrect, onWrong, onAnswer, question, nextQ, announce]
   );
 
   const handleTransitionEnd = useCallback(

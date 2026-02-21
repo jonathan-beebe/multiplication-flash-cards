@@ -2,7 +2,9 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import QuizBoard from "@/components/multiplication/QuizBoard";
+import type { Question } from "@/components/multiplication/QuizBoard";
 import DrillTimerBar from "@/components/multiplication/DrillTimerBar";
+import { useMultiplicationGameEngine } from "@/lib/useMultiplicationGameEngine";
 
 interface DrillProps {
   durationMinutes: number;
@@ -10,11 +12,13 @@ interface DrillProps {
 
 function Drill({ durationMinutes }: DrillProps) {
   const navigate = useNavigate();
+  const engine = useMultiplicationGameEngine();
   const [timeRemaining, setTimeRemaining] = useState(durationMinutes * 60);
 
   useEffect(() => {
     document.title = `${durationMinutes} Minute Drill — Multiplication Flash Cards`;
-  }, [durationMinutes]);
+    engine.start();
+  }, [durationMinutes, engine, engine.start]);
 
   const correctCountRef = useRef(0);
   const wrongCountRef = useRef(0);
@@ -51,6 +55,13 @@ function Drill({ durationMinutes }: DrillProps) {
     wrongCountRef.current += 1;
   }, []);
 
+  const handleAnswer = useCallback(
+    (question: Question, wrongAnswers: number[]) => {
+      engine.recordResult(question, wrongAnswers);
+    },
+    [engine]
+  );
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4">
       <DrillTimerBar durationSeconds={durationMinutes * 60} />
@@ -62,6 +73,8 @@ function Drill({ durationMinutes }: DrillProps) {
       <QuizBoard
         onCorrect={handleCorrect}
         onWrong={handleWrong}
+        getNextQuestion={engine.getNextQuestion}
+        onAnswer={handleAnswer}
       />
     </main>
   );

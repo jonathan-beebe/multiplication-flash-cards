@@ -3,8 +3,15 @@ import Card from "@/components/Card";
 import { generateQuestion } from "@/components/multiplication/QuizBoard";
 import type { Question } from "@/components/multiplication/QuizBoard";
 
-export default function HardModeQuizBoard() {
-  const [question, setQuestion] = useState<Question>(generateQuestion);
+interface HardModeQuizBoardProps {
+  getNextQuestion?: () => Question;
+  onAnswer?: (question: Question, wrongAnswers: number[]) => void;
+}
+
+export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardModeQuizBoardProps = {}) {
+  const nextQ = getNextQuestion ?? generateQuestion;
+  const [question, setQuestion] = useState<Question>(() => nextQ());
+  const wrongGuessesRef = useRef<number[]>([]);
   const [nextQuestion, setNextQuestion] = useState<Question | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
@@ -49,24 +56,26 @@ export default function HardModeQuizBoard() {
     }
 
     if (value === correctAnswer) {
+      onAnswer?.(question, [...wrongGuessesRef.current]);
       setInputError(null);
       setShowCorrect(true);
       lockedRef.current = true;
       announce(`Correct! ${question.a} times ${question.b} equals ${correctAnswer}.`);
       setTimeout(() => {
-        const next = generateQuestion();
+        const next = nextQ();
         setNextQuestion(next);
         setSlideRotation(Math.random() * 70 - 35);
         setIsAnimating(true);
       }, 300);
     } else {
+      wrongGuessesRef.current.push(value);
       triggerShake();
       setInputValue("");
       setInputError("Try again");
       announce(`${value} is incorrect. Try again.`);
       inputRef.current?.focus();
     }
-  }, [inputValue, correctAnswer, isAnimating, showCorrect, question, announce]);
+  }, [inputValue, correctAnswer, isAnimating, showCorrect, question, announce, onAnswer, nextQ]);
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
@@ -79,6 +88,7 @@ export default function HardModeQuizBoard() {
       setShowCorrect(false);
       setIsAnimating(false);
       lockedRef.current = false;
+      wrongGuessesRef.current = [];
       setTimeout(() => inputRef.current?.focus(), 50);
     },
     [nextQuestion]
