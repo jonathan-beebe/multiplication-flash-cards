@@ -65,7 +65,7 @@ describe("App user journeys", () => {
       );
 
       expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
-      expect(screen.getByRole("heading", { name: /multiplication practice/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /practice multiplication/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /multiple choice/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /hard mode/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /1 min/i })).toBeInTheDocument();
