@@ -134,9 +134,6 @@ export default function HardModeQuizBoard() {
               setInputValue(e.target.value);
               setInputError(null);
             }}
-            onBlur={() => {
-              if (lockedRef.current) inputRef.current?.focus();
-            }}
             onKeyDown={handleKeyDown}
             aria-label="Enter your answer"
             aria-describedby={inputError ? "input-error" : showCorrect ? "correct-msg" : undefined}
@@ -149,7 +146,7 @@ export default function HardModeQuizBoard() {
               handleSubmit();
             }}
             onClick={handleSubmit}
-            className="rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all disabled:opacity-50"
+            className="rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all"
           >
             Check
           </button>
