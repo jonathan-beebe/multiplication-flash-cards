@@ -65,7 +65,9 @@ describe("App user journeys", () => {
       );
 
       expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /start learning/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /practice multiplication/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /multiple choice/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /hard mode/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /1 min/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /3 min/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /5 min/i })).toBeInTheDocument();
@@ -82,8 +84,8 @@ describe("App user journeys", () => {
         </MemoryRouter>,
       );
 
-      // Navigate to practice
-      fireEvent.click(screen.getByRole("link", { name: /start learning/i }));
+      // Navigate to practice (multiple choice)
+      fireEvent.click(screen.getByRole("link", { name: /multiple choice/i }));
 
       // A multiplication question should be visible
       const q1 = readQuestion();

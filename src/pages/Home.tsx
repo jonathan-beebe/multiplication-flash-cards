@@ -14,9 +14,17 @@ function Home() {
           Multiplication Flash{"\u00A0"}Cards
         </h1>
         <div className="flex w-full max-w-xs flex-col items-center gap-6">
-          <HomeButton to="/practice" color="indigo">
-            Start Learning
-          </HomeButton>
+          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
+            Practice Multiplication
+          </h2>
+          <div className="flex w-full flex-col gap-4">
+            <HomeButton to="/practice/multiple-choice" color="indigo">
+              Multiple Choice
+            </HomeButton>
+            <HomeButton to="/practice/hard-mode" color="indigo">
+              Hard Mode
+            </HomeButton>
+          </div>
           <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
             Drills
           </h2>
