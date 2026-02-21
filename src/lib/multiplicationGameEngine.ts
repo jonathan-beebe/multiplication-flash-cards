@@ -268,3 +268,47 @@ export function strugglingQuestions(
 export function allResults(state: GameState): readonly QuestionResult[] {
   return state.sessions.flatMap((s) => s.results);
 }
+
+// ---------------------------------------------------------------------------
+// Persistence
+// ---------------------------------------------------------------------------
+
+const STORAGE_KEY = "multiplication-game-state";
+
+/** Serialize game state to a JSON string. */
+export function serializeGameState(state: GameState): string {
+  return JSON.stringify(state);
+}
+
+/** Deserialize a JSON string back to GameState, falling back to empty state on invalid data. */
+export function deserializeGameState(json: string): GameState {
+  try {
+    const parsed = JSON.parse(json);
+    if (!parsed || !Array.isArray(parsed.sessions)) {
+      return createGameState();
+    }
+    return parsed as GameState;
+  } catch {
+    return createGameState();
+  }
+}
+
+/** Load game state from localStorage, returning empty state if unavailable. */
+export function loadGameState(): GameState {
+  try {
+    const json = localStorage.getItem(STORAGE_KEY);
+    if (!json) return createGameState();
+    return deserializeGameState(json);
+  } catch {
+    return createGameState();
+  }
+}
+
+/** Save game state to localStorage. */
+export function saveGameState(state: GameState): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, serializeGameState(state));
+  } catch {
+    // Silently ignore storage errors (quota exceeded, private browsing, etc.)
+  }
+}

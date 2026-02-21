@@ -1,6 +1,5 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import {
-  createGameState,
   startSession,
   recordResult,
   getCurrentSession,
@@ -8,6 +7,8 @@ import {
   strugglingQuestions,
   allResults,
   getNextQuestion,
+  loadGameState,
+  saveGameState,
   type GameState,
   type Question,
   type PeriodSummary,
@@ -29,10 +30,28 @@ const defaultDeps: GameEngineDeps = {
 
 export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
   const { now, generateId, random } = { ...defaultDeps, ...deps };
-  const [state, setState] = useState<GameState>(createGameState);
+  const [state, setState] = useState<GameState>(loadGameState);
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    saveGameState(state);
+  }, [state]);
 
   const start = useCallback(() => {
-    setState((s) => startSession(s, generateId(), now()));
+    setState((s) => {
+      // If the current session is empty (no results), reuse it instead of
+      // creating another one. This prevents duplicates from React Strict Mode
+      // double-mounting while still allowing new sessions when there's real data.
+      if (s.currentSessionId !== null) {
+        const current = s.sessions.find((sess) => sess.id === s.currentSessionId);
+        if (current && current.results.length === 0) return s;
+      }
+      return startSession(s, generateId(), now());
+    });
   }, [generateId, now]);
 
   const record = useCallback(

@@ -13,8 +13,11 @@ import {
   strugglingQuestions,
   allResults,
   toDateStr,
+  serializeGameState,
+  deserializeGameState,
   type Question,
   type QuestionResult,
+  type GameState,
 } from "./multiplicationGameEngine";
 
 // ---------------------------------------------------------------------------
@@ -328,5 +331,49 @@ describe("allResults", () => {
 
     const results = allResults(state);
     expect(results).toHaveLength(3);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Serialization / Deserialization
+// ---------------------------------------------------------------------------
+
+describe("serializeGameState / deserializeGameState", () => {
+  it("round-trips a state with sessions and results", () => {
+    let state = startSession(createGameState(), "s1", 1000);
+    state = recordResult(state, { a: 3, b: 4 }, [], 1001);
+    state = recordResult(state, { a: 5, b: 6 }, [29], 1002);
+    state = startSession(state, "s2", 2000);
+    state = recordResult(state, { a: 7, b: 8 }, [], 2001);
+
+    const json = serializeGameState(state);
+    const restored = deserializeGameState(json);
+
+    expect(restored).toEqual(state);
+    expect(restored.sessions).toHaveLength(2);
+    expect(restored.currentSessionId).toBe("s2");
+    expect(allResults(restored)).toHaveLength(3);
+  });
+
+  it("round-trips an empty state", () => {
+    const state = createGameState();
+    const json = serializeGameState(state);
+    const restored = deserializeGameState(json);
+    expect(restored).toEqual(state);
+  });
+
+  it("returns empty state for invalid JSON", () => {
+    const restored = deserializeGameState("not valid json");
+    expect(restored).toEqual(createGameState());
+  });
+
+  it("returns empty state for JSON missing sessions array", () => {
+    const restored = deserializeGameState('{"currentSessionId": null}');
+    expect(restored).toEqual(createGameState());
+  });
+
+  it("returns empty state for JSON with non-array sessions", () => {
+    const restored = deserializeGameState('{"sessions": "oops", "currentSessionId": null}');
+    expect(restored).toEqual(createGameState());
   });
 });
