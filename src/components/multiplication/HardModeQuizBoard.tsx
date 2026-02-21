@@ -16,6 +16,7 @@ export default function HardModeQuizBoard() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const announceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lockedRef = useRef(false);
 
   useEffect(() => {
     const id = setTimeout(() => inputRef.current?.focus(), 50);
@@ -50,13 +51,13 @@ export default function HardModeQuizBoard() {
     if (value === correctAnswer) {
       setInputError(null);
       setShowCorrect(true);
+      lockedRef.current = true;
       announce(`Correct! ${question.a} times ${question.b} equals ${correctAnswer}.`);
       setTimeout(() => {
         const next = generateQuestion();
         setNextQuestion(next);
         setSlideRotation(Math.random() * 70 - 35);
         setIsAnimating(true);
-        setInputValue("");
       }, 300);
     } else {
       triggerShake();
@@ -76,6 +77,7 @@ export default function HardModeQuizBoard() {
       setInputError(null);
       setShowCorrect(false);
       setIsAnimating(false);
+      lockedRef.current = false;
       setTimeout(() => inputRef.current?.focus(), 50);
     },
     [nextQuestion]
@@ -97,7 +99,7 @@ export default function HardModeQuizBoard() {
       >
         {announcement}
       </span>
-      <div className="card-stack">
+      <div className="card-stack" style={{ height: 250 }}>
         <Card
           a={backQuestion.a}
           b={backQuestion.b}
@@ -128,18 +130,25 @@ export default function HardModeQuizBoard() {
             pattern="[0-9]*"
             value={inputValue}
             onChange={(e) => {
+              if (lockedRef.current) return;
               setInputValue(e.target.value);
               setInputError(null);
             }}
+            onBlur={() => {
+              if (lockedRef.current) inputRef.current?.focus();
+            }}
             onKeyDown={handleKeyDown}
-            disabled={showCorrect || isAnimating}
             aria-label="Enter your answer"
             aria-describedby={inputError ? "input-error" : showCorrect ? "correct-msg" : undefined}
             className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 tabular-nums"
           />
           <button
+            onMouseDown={(e) => e.preventDefault()}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
             onClick={handleSubmit}
-            disabled={showCorrect || isAnimating}
             className="rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all disabled:opacity-50"
           >
             Check

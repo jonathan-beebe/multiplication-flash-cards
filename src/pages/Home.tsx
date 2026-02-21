@@ -8,14 +8,14 @@ function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-4 bg-background">
+    <main className="flex min-h-screen items-center justify-center px-4 py-4 pb-12 bg-background">
       <div className="flex w-full max-w-md flex-col items-center text-center">
         <h1 className="mb-8 text-4xl font-bold text-text">
           Multiplication Flash{"\u00A0"}Cards
         </h1>
         <div className="flex w-full max-w-xs flex-col items-center gap-6">
           <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
-            Practice Multiplication
+            Multiplication Practice
           </h2>
           <div className="flex w-full flex-col gap-4">
             <HomeButton to="/practice/multiple-choice" color="indigo">
@@ -26,7 +26,7 @@ function Home() {
             </HomeButton>
           </div>
           <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
-            Drills
+            Multiplication Drills
           </h2>
           <div className="flex w-full flex-col gap-4">
             <HomeButton to="/1-minute-drill" color="amber" aria-label="1 minute drill">
@@ -39,14 +39,24 @@ function Home() {
               5 min
             </HomeButton>
           </div>
-          <div className="w-full border-t border-slate-200 dark:border-slate-700 pt-6 flex flex-col items-center gap-4">
-            <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
-              Division
-            </h2>
+        </div>
+
+        <hr className="my-8 w-full border-slate-200 dark:border-slate-700" />
+
+        <h1 className="mb-8 text-4xl font-bold text-text">
+          Division
+        </h1>
+        <div className="flex w-full max-w-xs flex-col items-center gap-6">
+          <div className="w-full flex flex-col items-center gap-4">
             <HomeButton to="/division-practice" color="teal">
               Explore Division
             </HomeButton>
           </div>
+        </div>
+
+        <hr className="my-8 w-full border-slate-200 dark:border-slate-700" />
+
+        <div className="flex w-full max-w-xs flex-col items-center gap-6">
           <Link
             to="/about"
             className="mt-4 text-sm text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
@@ -54,6 +64,7 @@ function Home() {
             About
           </Link>
         </div>
+
       </div>
     </main>
   );
