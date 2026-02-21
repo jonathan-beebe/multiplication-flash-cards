@@ -28,13 +28,13 @@ describe("QuizButton", () => {
   describe("state styling", () => {
     it("applies green background for correct state", () => {
       render(<QuizButton {...defaults} state="correct" />);
-      expect(screen.getByRole("button")).toHaveClass("bg-correct");
+      expect(screen.getByRole("button")).toHaveClass("bg-green-700");
     });
 
     it("applies red background and not-allowed cursor for wrong state", () => {
       render(<QuizButton {...defaults} state="wrong" />);
       const btn = screen.getByRole("button");
-      expect(btn).toHaveClass("bg-wrong");
+      expect(btn).toHaveClass("bg-red-500");
       expect(btn).toHaveClass("cursor-not-allowed");
     });
 
@@ -47,7 +47,7 @@ describe("QuizButton", () => {
       render(<QuizButton {...defaults} state="default" />);
       const btn = screen.getByRole("button");
       expect(btn).toHaveClass("bg-slate-200");
-      expect(btn).not.toHaveClass("bg-correct", "bg-wrong", "opacity-0");
+      expect(btn).not.toHaveClass("bg-green-700", "bg-red-500", "opacity-0");
     });
   });
 });
