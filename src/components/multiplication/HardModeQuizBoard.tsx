@@ -120,7 +120,7 @@ export default function HardModeQuizBoard() {
 
       <div className={`flex flex-col items-center gap-3 transition-opacity duration-150 ${isAnimating ? "opacity-0" : "opacity-100"}`}>
         {showCorrect && (
-          <p className="text-lg font-bold text-green-600 dark:text-green-400">
+          <p className="text-2xl font-bold text-green-600 dark:text-green-400 py-2 border-2 border-transparent">
             Correct!
           </p>
         )}
