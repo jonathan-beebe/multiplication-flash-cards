@@ -7,14 +7,6 @@ export interface Question {
   b: number;
 }
 
-export function generateQuestion(min: number = 3, max: number = 12): Question {
-  const range = max - min + 1;
-  return {
-    a: Math.floor(Math.random() * range) + min,
-    b: Math.floor(Math.random() * range) + min,
-  };
-}
-
 export function generateChoices(a: number, b: number): number[] {
   const correct = a * b;
   const choices = new Set<number>([correct]);
@@ -48,15 +40,14 @@ export function generateChoices(a: number, b: number): number[] {
 }
 
 interface QuizBoardProps {
+  getNextQuestion: () => Question;
   onCorrect?: () => void;
   onWrong?: () => void;
-  getNextQuestion?: () => Question;
   onAnswer?: (question: Question, wrongAnswers: number[]) => void;
 }
 
-export default function QuizBoard({ onCorrect, onWrong, getNextQuestion, onAnswer }: QuizBoardProps) {
-  const nextQ = getNextQuestion ?? generateQuestion;
-  const [question, setQuestion] = useState<Question>(() => nextQ());
+export default function QuizBoard({ getNextQuestion, onCorrect, onWrong, onAnswer }: QuizBoardProps) {
+  const [question, setQuestion] = useState<Question>(() => getNextQuestion());
   const [nextQuestion, setNextQuestion] = useState<Question | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set());
   const [showCorrect, setShowCorrect] = useState(false);
@@ -85,7 +76,7 @@ export default function QuizBoard({ onCorrect, onWrong, getNextQuestion, onAnswe
         onCorrect?.();
         setShowCorrect(true);
         setTimeout(() => {
-          setNextQuestion(nextQ());
+          setNextQuestion(getNextQuestion());
           setSlideRotation(Math.random() * 70 - 35);
           setIsAnimating(true);
           setShowCorrect(false);
@@ -98,7 +89,7 @@ export default function QuizBoard({ onCorrect, onWrong, getNextQuestion, onAnswe
         setWrongAnswers((prev) => new Set(prev).add(answer));
       }
     },
-    [correctAnswer, wrongAnswers, onCorrect, onWrong, onAnswer, question, nextQ, announce]
+    [correctAnswer, wrongAnswers, onCorrect, onWrong, onAnswer, question, getNextQuestion,announce]
   );
 
   const handleTransitionEnd = useCallback(

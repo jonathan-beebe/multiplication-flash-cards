@@ -1,29 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import QuizBoard, { generateQuestion, generateChoices } from "@/components/multiplication/QuizBoard";
+import QuizBoard, { generateChoices } from "@/components/multiplication/QuizBoard";
 
-describe("generateQuestion", () => {
-  it("returns a and b within default range 3-12", () => {
-    for (let i = 0; i < 50; i++) {
-      const q = generateQuestion();
-      expect(q.a).toBeGreaterThanOrEqual(3);
-      expect(q.a).toBeLessThanOrEqual(12);
-      expect(q.b).toBeGreaterThanOrEqual(3);
-      expect(q.b).toBeLessThanOrEqual(12);
-    }
-  });
-
-  it("respects custom min/max", () => {
-    for (let i = 0; i < 50; i++) {
-      const q = generateQuestion(5, 7);
-      expect(q.a).toBeGreaterThanOrEqual(5);
-      expect(q.a).toBeLessThanOrEqual(7);
-      expect(q.b).toBeGreaterThanOrEqual(5);
-      expect(q.b).toBeLessThanOrEqual(7);
-    }
-  });
-});
+/** Simple question generator for tests. */
+function mockGetNextQuestion() {
+  const min = 3, max = 12, range = max - min + 1;
+  return {
+    a: Math.floor(Math.random() * range) + min,
+    b: Math.floor(Math.random() * range) + min,
+  };
+}
 
 describe("generateChoices", () => {
   it("returns exactly 3 choices", () => {
@@ -56,13 +43,13 @@ describe("QuizBoard", () => {
   }
 
   it("renders a question and 3 choice buttons", () => {
-    render(<QuizBoard />);
+    render(<QuizBoard getNextQuestion={mockGetNextQuestion} />);
     const buttons = screen.getAllByRole("button");
     expect(buttons).toHaveLength(3);
   });
 
   it("renders the multiplication expression on the cards", () => {
-    render(<QuizBoard />);
+    render(<QuizBoard getNextQuestion={mockGetNextQuestion} />);
     // Card stack has a front and back card, both showing "a × b"
     const cards = screen.getAllByText(/\d+\s*×\s*\d+/);
     expect(cards.length).toBeGreaterThanOrEqual(2);
@@ -70,7 +57,7 @@ describe("QuizBoard", () => {
 
   it("calls onCorrect when the right answer is clicked", async () => {
     const onCorrect = vi.fn();
-    render(<QuizBoard onCorrect={onCorrect} />);
+    render(<QuizBoard getNextQuestion={mockGetNextQuestion} onCorrect={onCorrect} />);
 
     const correctAnswer = getCorrectAnswer();
     const correctButton = screen.getByRole("button", { name: `Answer: ${correctAnswer}` });
@@ -81,7 +68,7 @@ describe("QuizBoard", () => {
 
   it("calls onWrong when a wrong answer is clicked", async () => {
     const onWrong = vi.fn();
-    render(<QuizBoard onWrong={onWrong} />);
+    render(<QuizBoard getNextQuestion={mockGetNextQuestion} onWrong={onWrong} />);
 
     const correctAnswer = getCorrectAnswer();
     const wrongButton = screen.getAllByRole("button")
@@ -92,7 +79,7 @@ describe("QuizBoard", () => {
   });
 
   it("disables a wrong answer button after clicking it", async () => {
-    render(<QuizBoard />);
+    render(<QuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const correctAnswer = getCorrectAnswer();
     const wrongButton = screen.getAllByRole("button")
@@ -104,7 +91,7 @@ describe("QuizBoard", () => {
 
   it("does not call onWrong twice for the same wrong answer", async () => {
     const onWrong = vi.fn();
-    render(<QuizBoard onWrong={onWrong} />);
+    render(<QuizBoard getNextQuestion={mockGetNextQuestion} onWrong={onWrong} />);
 
     const correctAnswer = getCorrectAnswer();
     const wrongButton = screen.getAllByRole("button")

@@ -1,16 +1,14 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import Card from "@/components/Card";
-import { generateQuestion } from "@/components/multiplication/QuizBoard";
 import type { Question } from "@/components/multiplication/QuizBoard";
 
 interface HardModeQuizBoardProps {
-  getNextQuestion?: () => Question;
+  getNextQuestion: () => Question;
   onAnswer?: (question: Question, wrongAnswers: number[]) => void;
 }
 
-export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardModeQuizBoardProps = {}) {
-  const nextQ = getNextQuestion ?? generateQuestion;
-  const [question, setQuestion] = useState<Question>(() => nextQ());
+export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardModeQuizBoardProps) {
+  const [question, setQuestion] = useState<Question>(() => getNextQuestion());
   const wrongGuessesRef = useRef<number[]>([]);
   const [nextQuestion, setNextQuestion] = useState<Question | null>(null);
   const [inputValue, setInputValue] = useState("");
@@ -62,7 +60,7 @@ export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardMod
       lockedRef.current = true;
       announce(`Correct! ${question.a} times ${question.b} equals ${correctAnswer}.`);
       setTimeout(() => {
-        const next = nextQ();
+        const next = getNextQuestion();
         setNextQuestion(next);
         setSlideRotation(Math.random() * 70 - 35);
         setIsAnimating(true);
@@ -75,7 +73,7 @@ export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardMod
       announce(`${value} is incorrect. Try again.`);
       inputRef.current?.focus();
     }
-  }, [inputValue, correctAnswer, isAnimating, showCorrect, question, announce, onAnswer, nextQ]);
+  }, [inputValue, correctAnswer, isAnimating, showCorrect, question, announce, onAnswer, getNextQuestion]);
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {

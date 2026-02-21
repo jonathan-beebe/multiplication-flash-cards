@@ -15,7 +15,6 @@ import {
   toDateStr,
   type Question,
   type QuestionResult,
-  type GameState,
 } from "./multiplicationGameEngine";
 
 // ---------------------------------------------------------------------------

@@ -10,12 +10,14 @@ function HardModePractice() {
   useEffect(() => {
     document.title = "Hard Mode — Multiplication Flash Cards";
     engine.start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [engine.start]);
 
   const handleAnswer = useCallback(
     (question: Question, wrongAnswers: number[]) => {
       engine.recordResult(question, wrongAnswers);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [engine.recordResult]
   );
 

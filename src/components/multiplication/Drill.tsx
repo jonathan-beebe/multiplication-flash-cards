@@ -18,7 +18,8 @@ function Drill({ durationMinutes }: DrillProps) {
   useEffect(() => {
     document.title = `${durationMinutes} Minute Drill — Multiplication Flash Cards`;
     engine.start();
-  }, [durationMinutes, engine, engine.start]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [durationMinutes, engine.start]);
 
   const correctCountRef = useRef(0);
   const wrongCountRef = useRef(0);
@@ -59,7 +60,8 @@ function Drill({ durationMinutes }: DrillProps) {
     (question: Question, wrongAnswers: number[]) => {
       engine.recordResult(question, wrongAnswers);
     },
-    [engine]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [engine.recordResult]
   );
 
   return (

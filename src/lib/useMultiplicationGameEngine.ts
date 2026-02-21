@@ -65,13 +65,16 @@ export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
     [state],
   );
 
-  return {
-    start,
-    recordResult: record,
-    getNextQuestion: nextQuestion,
-    currentSession,
-    currentSummary,
-    struggling,
-    state,
-  };
+  return useMemo(
+    () => ({
+      start,
+      recordResult: record,
+      getNextQuestion: nextQuestion,
+      currentSession,
+      currentSummary,
+      struggling,
+      state,
+    }),
+    [start, record, nextQuestion, currentSession, currentSummary, struggling, state],
+  );
 }

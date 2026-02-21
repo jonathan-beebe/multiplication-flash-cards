@@ -2,6 +2,15 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import HardModeQuizBoard from "@/components/multiplication/HardModeQuizBoard";
 
+/** Simple question generator for tests. */
+function mockGetNextQuestion() {
+  const min = 3, max = 12, range = max - min + 1;
+  return {
+    a: Math.floor(Math.random() * range) + min,
+    b: Math.floor(Math.random() * range) + min,
+  };
+}
+
 /** Read the correct answer from the rendered card stack. */
 function getCorrectAnswer(): number {
   const els = screen.getAllByText(/\d+\s*×\s*\d+/);
@@ -45,7 +54,7 @@ afterEach(() => {
 
 describe("HardModeQuizBoard", () => {
   it("renders a question, an input, and a Check button", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const cards = screen.getAllByText(/\d+\s*×\s*\d+/);
     expect(cards.length).toBeGreaterThanOrEqual(2);
@@ -54,7 +63,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("auto-focuses the input on mount", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     act(() => {
       vi.advanceTimersByTime(50);
@@ -64,7 +73,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("shows 'Try again' error for a wrong answer via Check button", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const input = screen.getByLabelText(/enter your answer/i);
     const wrongAnswer = getCorrectAnswer() + 1;
@@ -76,7 +85,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("shows 'Try again' error for a wrong answer via Enter key", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const input = screen.getByLabelText(/enter your answer/i);
     const wrongAnswer = getCorrectAnswer() + 1;
@@ -88,7 +97,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("shows 'Enter a number' error when submitting empty input", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     clickCheck();
 
@@ -96,7 +105,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("clears error when user types after a wrong answer", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const input = screen.getByLabelText(/enter your answer/i);
     const wrongAnswer = getCorrectAnswer() + 1;
@@ -110,7 +119,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("shows 'Correct!' text for a correct answer", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const input = screen.getByLabelText(/enter your answer/i);
     const correctAnswer = getCorrectAnswer();
@@ -122,7 +131,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("transitions to a new question after correct answer", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const input = screen.getByLabelText(/enter your answer/i);
     const correctAnswer = getCorrectAnswer();
@@ -139,7 +148,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("re-focuses input after card transition completes", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const input = screen.getByLabelText(/enter your answer/i);
     const correctAnswer = getCorrectAnswer();
@@ -157,7 +166,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("announces correct answer to screen readers", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const input = screen.getByLabelText(/enter your answer/i);
     const correctAnswer = getCorrectAnswer();
@@ -174,7 +183,7 @@ describe("HardModeQuizBoard", () => {
   });
 
   it("announces wrong answer to screen readers", () => {
-    render(<HardModeQuizBoard />);
+    render(<HardModeQuizBoard getNextQuestion={mockGetNextQuestion} />);
 
     const input = screen.getByLabelText(/enter your answer/i);
     const wrongAnswer = getCorrectAnswer() + 1;
