@@ -146,24 +146,19 @@ export default function HardModeQuizBoard() {
           </button>
         </div>
 
-        {showCorrect && (
-          <p
-            id="correct-msg"
-            className="text-center text-sm font-bold text-green-600 dark:text-green-400"
-          >
-            Correct!
-          </p>
-        )}
-
-        {inputError && (
-          <p
-            id="input-error"
-            className="text-center text-sm font-medium text-red-600 dark:text-red-400"
-            role="alert"
-          >
-            {inputError}
-          </p>
-        )}
+        <p
+          id={inputError ? "input-error" : "correct-msg"}
+          className={`text-center text-sm font-medium min-h-[1.25rem] ${
+            showCorrect
+              ? "font-bold text-green-600 dark:text-green-400"
+              : inputError
+                ? "text-red-600 dark:text-red-400"
+                : ""
+          }`}
+          role={inputError ? "alert" : undefined}
+        >
+          {showCorrect ? "Correct!" : inputError ?? "\u00A0"}
+        </p>
       </div>
     </div>
   );
