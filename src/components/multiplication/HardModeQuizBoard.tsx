@@ -61,6 +61,7 @@ export default function HardModeQuizBoard() {
       }, 300);
     } else {
       triggerShake();
+      setInputValue("");
       setInputError("Try again");
       announce(`${value} is incorrect. Try again.`);
       inputRef.current?.focus();
@@ -99,7 +100,7 @@ export default function HardModeQuizBoard() {
       >
         {announcement}
       </span>
-      <div className="card-stack" style={{ height: 250 }}>
+      <div className="card-stack" style={{ height: 150 }}>
         <Card
           a={backQuestion.a}
           b={backQuestion.b}
@@ -146,7 +147,8 @@ export default function HardModeQuizBoard() {
               handleSubmit();
             }}
             onClick={handleSubmit}
-            className="rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all"
+            disabled={showCorrect || isAnimating}
+            className="rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all disabled:opacity-50"
           >
             Check
           </button>
