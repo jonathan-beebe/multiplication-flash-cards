@@ -6,9 +6,9 @@ import {
   summarize,
   strugglingQuestions,
   allResults,
-  getNextQuestion,
   loadGameState,
   saveGameState,
+  multiplicationGenerator,
   type GameState,
   type Question,
   type PeriodSummary,
@@ -30,7 +30,9 @@ const defaultDeps: GameEngineDeps = {
 
 export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
   const { now, generateId, random } = { ...defaultDeps, ...deps };
-  const [state, setState] = useState<GameState>(loadGameState);
+  const [state, setState] = useState<GameState<Question>>(() =>
+    loadGameState(multiplicationGenerator),
+  );
   const isInitialMount = useRef(true);
 
   useEffect(() => {
@@ -38,14 +40,14 @@ export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
       isInitialMount.current = false;
       return;
     }
-    saveGameState(state);
+    saveGameState(state, multiplicationGenerator);
   }, [state]);
 
   const start = useCallback(() => {
     setState((s) => {
       // If the current session is empty (no results), reuse it instead of
       // creating another one. This prevents duplicates from React Strict Mode
-      // double-mounting while still allowing new sessions when there's real data.
+      // double-mount while still allowing new sessions when there's real data.
       if (s.currentSessionId !== null) {
         const current = s.sessions.find((sess) => sess.id === s.currentSessionId);
         if (current && current.results.length === 0) return s;
@@ -55,21 +57,21 @@ export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
   }, [generateId, now]);
 
   const record = useCallback(
-    (question: Question, wrongAnswers: readonly number[]) => {
-      setState((s) => recordResult(s, question, wrongAnswers));
+    (question: Question, correct: boolean) => {
+      setState((s) => recordResult(s, question, correct));
     },
     [],
   );
 
   const nextQuestion = useCallback(
-    (previousResults?: readonly import("./multiplicationGameEngine").QuestionResult[]) => {
+    (previousResults?: readonly import("./gameEngine").QuestionResult<Question>[]) => {
       const results = previousResults ?? allResults(state);
-      return getNextQuestion(results, random());
+      return multiplicationGenerator.getNextQuestion(results, random());
     },
     [state, random],
   );
 
-  const currentSession: Session | null = useMemo(
+  const currentSession: Session<Question> | null = useMemo(
     () => getCurrentSession(state),
     [state],
   );
@@ -79,8 +81,8 @@ export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
     [currentSession],
   );
 
-  const struggling: QuestionStats[] = useMemo(
-    () => strugglingQuestions(allResults(state), 2, 10),
+  const struggling: QuestionStats<Question>[] = useMemo(
+    () => strugglingQuestions(allResults(state), multiplicationGenerator, 2, 10),
     [state],
   );
 

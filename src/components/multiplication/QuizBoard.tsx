@@ -43,7 +43,7 @@ interface QuizBoardProps {
   getNextQuestion: () => Question;
   onCorrect?: () => void;
   onWrong?: () => void;
-  onAnswer?: (question: Question, wrongAnswers: number[]) => void;
+  onAnswer?: (question: Question, correct: boolean) => void;
 }
 
 export default function QuizBoard({ getNextQuestion, onCorrect, onWrong, onAnswer }: QuizBoardProps) {
@@ -72,7 +72,7 @@ export default function QuizBoard({ getNextQuestion, onCorrect, onWrong, onAnswe
   const handleAnswer = useCallback(
     (answer: number) => {
       if (answer === correctAnswer) {
-        onAnswer?.(question, [...wrongAnswers]);
+        onAnswer?.(question, wrongAnswers.size === 0);
         onCorrect?.();
         setShowCorrect(true);
         setTimeout(() => {

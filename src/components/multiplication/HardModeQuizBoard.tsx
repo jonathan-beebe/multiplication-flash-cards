@@ -4,7 +4,7 @@ import type { Question } from "@/components/multiplication/QuizBoard";
 
 interface HardModeQuizBoardProps {
   getNextQuestion: () => Question;
-  onAnswer?: (question: Question, wrongAnswers: number[]) => void;
+  onAnswer?: (question: Question, correct: boolean) => void;
 }
 
 export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardModeQuizBoardProps) {
@@ -54,7 +54,7 @@ export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardMod
     }
 
     if (value === correctAnswer) {
-      onAnswer?.(question, [...wrongGuessesRef.current]);
+      onAnswer?.(question, wrongGuessesRef.current.length === 0);
       setInputError(null);
       setShowCorrect(true);
       lockedRef.current = true;

@@ -57,8 +57,8 @@ function Drill({ durationMinutes }: DrillProps) {
   }, []);
 
   const handleAnswer = useCallback(
-    (question: Question, wrongAnswers: number[]) => {
-      engine.recordResult(question, wrongAnswers);
+    (question: Question, correct: boolean) => {
+      engine.recordResult(question, correct);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [engine.recordResult]
