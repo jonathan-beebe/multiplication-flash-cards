@@ -2,12 +2,19 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import QuizBoard from "@/components/multiplication/QuizBoard";
-import type { Question } from "@/components/multiplication/QuizBoard";
+import Card from "@/components/Card";
+import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
 import DrillTimerBar from "@/components/multiplication/DrillTimerBar";
+import type { Question } from "@/lib/multiplicationGenerator";
+import { multiplicationGenerator } from "@/lib/multiplicationGenerator";
 import { useMultiplicationGameEngine } from "@/lib/useMultiplicationGameEngine";
 
 interface DrillProps {
   durationMinutes: number;
+}
+
+function renderQuestion(q: Question, animProps: CardAnimationProps) {
+  return <Card a={q.a} b={q.b} {...animProps} />;
 }
 
 function Drill({ durationMinutes }: DrillProps) {
@@ -73,9 +80,11 @@ function Drill({ durationMinutes }: DrillProps) {
       </div>
       <NavBar />
       <QuizBoard
+        generator={multiplicationGenerator}
         onCorrect={handleCorrect}
         onWrong={handleWrong}
         getNextQuestion={engine.getNextQuestion}
+        renderQuestion={renderQuestion}
         onAnswer={handleAnswer}
       />
     </main>

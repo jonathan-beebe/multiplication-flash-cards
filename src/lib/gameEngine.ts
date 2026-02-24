@@ -38,6 +38,8 @@ export interface QuestionGenerator<Q> {
   parseQuestionKey(key: string): Q;
   getNextQuestion(previousResults: readonly QuestionResult<Q>[], randomValue: number): Q;
   evaluate(question: Q, answer: number): boolean;
+  generateChoices(question: Q): number[];
+  displayText(question: Q): string;
 }
 
 // ---------------------------------------------------------------------------

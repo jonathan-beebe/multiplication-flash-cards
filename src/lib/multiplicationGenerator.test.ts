@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { multiplicationGenerator, type Question } from "./multiplicationGenerator";
 import type { QuestionResult } from "./gameEngine";
 
-const { questionKey, parseQuestionKey, getNextQuestion, evaluate } = multiplicationGenerator;
+const { questionKey, parseQuestionKey, getNextQuestion, evaluate, generateChoices, displayText } = multiplicationGenerator;
 
 // ---------------------------------------------------------------------------
 // questionKey
@@ -95,6 +95,49 @@ describe("getNextQuestion", () => {
     }
     // 3x3 should appear noticeably more often than 1/55 ≈ 1.8%
     expect(count3x3).toBeGreaterThan(3);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// evaluate
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// generateChoices
+// ---------------------------------------------------------------------------
+
+describe("generateChoices", () => {
+  it("returns exactly 3 choices", () => {
+    expect(generateChoices({ a: 4, b: 5 })).toHaveLength(3);
+  });
+
+  it("always includes the correct answer", () => {
+    for (let i = 0; i < 50; i++) {
+      const q = { a: 6, b: 7 };
+      const choices = generateChoices(q);
+      expect(choices).toContain(q.a * q.b);
+    }
+  });
+
+  it("returns unique values", () => {
+    for (let i = 0; i < 50; i++) {
+      const choices = generateChoices({ a: 8, b: 9 });
+      expect(new Set(choices).size).toBe(3);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// displayText
+// ---------------------------------------------------------------------------
+
+describe("displayText", () => {
+  it("returns screen-reader-friendly text", () => {
+    expect(displayText({ a: 3, b: 7 })).toBe("3 times 7");
+  });
+
+  it("works with reversed factors", () => {
+    expect(displayText({ a: 7, b: 3 })).toBe("7 times 3");
   });
 });
 

@@ -1,63 +1,95 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import QuizBoard, { generateChoices } from "@/components/multiplication/QuizBoard";
+import QuizBoard from "@/components/multiplication/QuizBoard";
+import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
+import type { QuestionGenerator } from "@/lib/gameEngine";
 
-/** Simple question generator for tests. */
-function mockGetNextQuestion() {
-  const min = 3, max = 12, range = max - min + 1;
-  return {
-    a: Math.floor(Math.random() * range) + min,
-    b: Math.floor(Math.random() * range) + min,
-  };
+interface MockQuestion {
+  left: number;
+  right: number;
 }
 
-describe("generateChoices", () => {
-  it("returns exactly 3 choices", () => {
-    expect(generateChoices(4, 5)).toHaveLength(3);
-  });
+const mockGenerator: QuestionGenerator<MockQuestion> = {
+  questionKey: (q) => `${q.left}+${q.right}`,
+  parseQuestionKey: (key) => {
+    const [l, r] = key.split("+");
+    return { left: Number(l), right: Number(r) };
+  },
+  getNextQuestion: () => ({ left: 2, right: 3 }),
+  evaluate: (q, answer) => answer === q.left + q.right,
+  generateChoices: (q) => {
+    const correct = q.left + q.right;
+    return [correct, correct + 1, correct + 2];
+  },
+  displayText: (q) => `${q.left} plus ${q.right}`,
+};
 
-  it("always includes the correct answer", () => {
-    for (let i = 0; i < 50; i++) {
-      const a = 6, b = 7;
-      const choices = generateChoices(a, b);
-      expect(choices).toContain(a * b);
-    }
-  });
+function renderQuestion(q: MockQuestion, animProps: CardAnimationProps) {
+  return (
+    <div
+      className={animProps.className}
+      style={animProps.style}
+      onTransitionEnd={animProps.onTransitionEnd}
+      aria-hidden={animProps["aria-hidden"]}
+    >
+      <span aria-hidden="true">{q.left} + {q.right}</span>
+      <span className="sr-only">{q.left} plus {q.right}</span>
+    </div>
+  );
+}
 
-  it("returns unique values", () => {
-    for (let i = 0; i < 50; i++) {
-      const choices = generateChoices(8, 9);
-      expect(new Set(choices).size).toBe(3);
-    }
-  });
-});
+let questionIndex = 0;
+function mockGetNextQuestion(): MockQuestion {
+  questionIndex++;
+  return { left: 2 + questionIndex, right: 3 + questionIndex };
+}
 
 describe("QuizBoard", () => {
-  /** Read the correct answer from the rendered card stack. */
   function getCorrectAnswer(): number {
-    // Both front and back cards show "a × b"; grab the first match
-    const els = screen.getAllByText(/\d+\s*×\s*\d+/);
-    const match = els[0].textContent!.match(/(\d+)\s*×\s*(\d+)/)!;
-    return Number(match[1]) * Number(match[2]);
+    const els = screen.getAllByText(/\d+\s*\+\s*\d+/);
+    const match = els[0].textContent!.match(/(\d+)\s*\+\s*(\d+)/)!;
+    return Number(match[1]) + Number(match[2]);
   }
 
+  beforeEach(() => {
+    questionIndex = 0;
+  });
+
   it("renders a question and 3 choice buttons", () => {
-    render(<QuizBoard getNextQuestion={mockGetNextQuestion} />);
+    render(
+      <QuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+      />
+    );
     const buttons = screen.getAllByRole("button");
     expect(buttons).toHaveLength(3);
   });
 
-  it("renders the multiplication expression on the cards", () => {
-    render(<QuizBoard getNextQuestion={mockGetNextQuestion} />);
-    // Card stack has a front and back card, both showing "a × b"
-    const cards = screen.getAllByText(/\d+\s*×\s*\d+/);
+  it("renders the question expression via renderQuestion", () => {
+    render(
+      <QuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+      />
+    );
+    const cards = screen.getAllByText(/\d+\s*\+\s*\d+/);
     expect(cards.length).toBeGreaterThanOrEqual(2);
   });
 
   it("calls onCorrect when the right answer is clicked", async () => {
     const onCorrect = vi.fn();
-    render(<QuizBoard getNextQuestion={mockGetNextQuestion} onCorrect={onCorrect} />);
+    render(
+      <QuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+        onCorrect={onCorrect}
+      />
+    );
 
     const correctAnswer = getCorrectAnswer();
     const correctButton = screen.getByRole("button", { name: `Answer: ${correctAnswer}` });
@@ -68,7 +100,14 @@ describe("QuizBoard", () => {
 
   it("calls onWrong when a wrong answer is clicked", async () => {
     const onWrong = vi.fn();
-    render(<QuizBoard getNextQuestion={mockGetNextQuestion} onWrong={onWrong} />);
+    render(
+      <QuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+        onWrong={onWrong}
+      />
+    );
 
     const correctAnswer = getCorrectAnswer();
     const wrongButton = screen.getAllByRole("button")
@@ -79,7 +118,13 @@ describe("QuizBoard", () => {
   });
 
   it("disables a wrong answer button after clicking it", async () => {
-    render(<QuizBoard getNextQuestion={mockGetNextQuestion} />);
+    render(
+      <QuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+      />
+    );
 
     const correctAnswer = getCorrectAnswer();
     const wrongButton = screen.getAllByRole("button")
@@ -91,14 +136,21 @@ describe("QuizBoard", () => {
 
   it("does not call onWrong twice for the same wrong answer", async () => {
     const onWrong = vi.fn();
-    render(<QuizBoard getNextQuestion={mockGetNextQuestion} onWrong={onWrong} />);
+    render(
+      <QuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+        onWrong={onWrong}
+      />
+    );
 
     const correctAnswer = getCorrectAnswer();
     const wrongButton = screen.getAllByRole("button")
       .find((btn) => btn.textContent !== String(correctAnswer))!;
 
     await userEvent.click(wrongButton);
-    await userEvent.click(wrongButton); // second click on same button (disabled, won't fire)
+    await userEvent.click(wrongButton);
 
     expect(onWrong).toHaveBeenCalledOnce();
   });

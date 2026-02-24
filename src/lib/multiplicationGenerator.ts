@@ -135,9 +135,48 @@ function evaluate(question: Question, answer: number): boolean {
   return answer === question.a * question.b;
 }
 
+function generateChoices(question: Question): number[] {
+  const { a, b } = question;
+  const correct = a * b;
+  const choices = new Set<number>([correct]);
+
+  // Try to add adjacent answers (a × (b±1))
+  const adjacentOptions = [];
+  if (b > 3) adjacentOptions.push(a * (b - 1));
+  if (b < 12) adjacentOptions.push(a * (b + 1));
+
+  for (const adj of adjacentOptions) {
+    if (choices.size < 3 && !choices.has(adj)) {
+      choices.add(adj);
+    }
+  }
+
+  // Fill remaining slots with random numbers 9-144
+  while (choices.size < 3) {
+    const random = Math.floor(Math.random() * 136) + 9;
+    if (!choices.has(random)) {
+      choices.add(random);
+    }
+  }
+
+  // Shuffle the array (Fisher-Yates)
+  const result = Array.from(choices);
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function displayText(question: Question): string {
+  return `${question.a} times ${question.b}`;
+}
+
 export const multiplicationGenerator: QuestionGenerator<Question> = {
   questionKey,
   parseQuestionKey,
   getNextQuestion,
   evaluate,
+  generateChoices,
+  displayText,
 };

@@ -1,16 +1,18 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import Card from "@/components/Card";
-import type { Question } from "@/components/multiplication/QuizBoard";
+import type { QuestionGenerator } from "@/lib/gameEngine";
+import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
 
-interface HardModeQuizBoardProps {
-  getNextQuestion: () => Question;
-  onAnswer?: (question: Question, correct: boolean) => void;
+interface HardModeQuizBoardProps<Q> {
+  generator: QuestionGenerator<Q>;
+  getNextQuestion: () => Q;
+  renderQuestion: (question: Q, animProps: CardAnimationProps) => React.ReactNode;
+  onAnswer?: (question: Q, correct: boolean) => void;
 }
 
-export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardModeQuizBoardProps) {
-  const [question, setQuestion] = useState<Question>(() => getNextQuestion());
+export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, renderQuestion, onAnswer }: HardModeQuizBoardProps<Q>) {
+  const [question, setQuestion] = useState<Q>(() => getNextQuestion());
   const wrongGuessesRef = useRef<number[]>([]);
-  const [nextQuestion, setNextQuestion] = useState<Question | null>(null);
+  const [nextQuestion, setNextQuestion] = useState<Q | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
@@ -39,8 +41,6 @@ export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardMod
     setTimeout(() => setIsShaking(false), 400);
   }
 
-  const correctAnswer = question.a * question.b;
-
   const handleSubmit = useCallback(() => {
     if (isAnimating || showCorrect) return;
 
@@ -53,12 +53,12 @@ export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardMod
       return;
     }
 
-    if (value === correctAnswer) {
+    if (generator.evaluate(question, value)) {
       onAnswer?.(question, wrongGuessesRef.current.length === 0);
       setInputError(null);
       setShowCorrect(true);
       lockedRef.current = true;
-      announce(`Correct! ${question.a} times ${question.b} equals ${correctAnswer}.`);
+      announce(`Correct! ${generator.displayText(question)} equals ${value}.`);
       setTimeout(() => {
         const next = getNextQuestion();
         setNextQuestion(next);
@@ -73,7 +73,7 @@ export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardMod
       announce(`${value} is incorrect. Try again.`);
       inputRef.current?.focus();
     }
-  }, [inputValue, correctAnswer, isAnimating, showCorrect, question, announce, onAnswer, getNextQuestion]);
+  }, [inputValue, isAnimating, showCorrect, question, announce, onAnswer, getNextQuestion, generator]);
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
@@ -109,25 +109,21 @@ export default function HardModeQuizBoard({ getNextQuestion, onAnswer }: HardMod
         {announcement}
       </span>
       <div className="card-stack" style={{ height: 150 }}>
-        <Card
-          a={backQuestion.a}
-          b={backQuestion.b}
-          aria-hidden={true}
-          className={isAnimating ? "card-zoom-in" : undefined}
-          style={{ zIndex: 1, transform: isAnimating ? undefined : "scale(0.8)" }}
-        />
-        <Card
-          a={question.a}
-          b={question.b}
-          className={isAnimating ? "card-slide-out" : undefined}
-          style={{
+        {renderQuestion(backQuestion, {
+          'aria-hidden': true,
+          className: isAnimating ? "card-zoom-in" : undefined,
+          style: { zIndex: 1, transform: isAnimating ? undefined : "scale(0.8)" },
+        })}
+        {renderQuestion(question, {
+          className: isAnimating ? "card-slide-out" : undefined,
+          style: {
             zIndex: 2,
             ...(isAnimating && {
               transform: `translateX(calc(50vw + 100%)) rotate(${slideRotation}deg)`,
             }),
-          }}
-          onTransitionEnd={isAnimating ? handleTransitionEnd : undefined}
-        />
+          },
+          onTransitionEnd: isAnimating ? handleTransitionEnd : undefined,
+        })}
       </div>
 
       <div className="flex flex-col items-center gap-3">
