@@ -173,6 +173,7 @@ function displayText(question: Question): string {
 }
 
 export const multiplicationGenerator: QuestionGenerator<Question> = {
+  storageKey: "multiplication-game-state",
   questionKey,
   parseQuestionKey,
   getNextQuestion,

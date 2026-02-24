@@ -34,6 +34,7 @@ export interface PeriodSummary {
 }
 
 export interface QuestionGenerator<Q> {
+  storageKey: string;
   questionKey(q: Q): string;
   parseQuestionKey(key: string): Q;
   getNextQuestion(previousResults: readonly QuestionResult<Q>[], randomValue: number): Q;
@@ -257,12 +258,10 @@ export function deserializeGameState<Q>(
   }
 }
 
-const STORAGE_KEY = "multiplication-game-state";
-
 /** Load game state from localStorage, returning empty state if unavailable. */
 export function loadGameState<Q>(generator: QuestionGenerator<Q>): GameState<Q> {
   try {
-    const json = localStorage.getItem(STORAGE_KEY);
+    const json = localStorage.getItem(generator.storageKey);
     if (!json) return createGameState<Q>();
     return deserializeGameState(json, generator);
   } catch {
@@ -276,7 +275,7 @@ export function saveGameState<Q>(
   generator: QuestionGenerator<Q>,
 ): void {
   try {
-    localStorage.setItem(STORAGE_KEY, serializeGameState(state, generator));
+    localStorage.setItem(generator.storageKey, serializeGameState(state, generator));
   } catch {
     // Silently ignore storage errors (quota exceeded, private browsing, etc.)
   }

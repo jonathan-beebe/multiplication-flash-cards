@@ -26,6 +26,7 @@ interface NumQuestion {
 }
 
 const testGenerator: QuestionGenerator<NumQuestion> = {
+  storageKey: "test-game-state",
   questionKey: (q) => String(q.value),
   parseQuestionKey: (key) => ({ value: Number(key) }),
   getNextQuestion: (_prev, rand) => ({ value: Math.floor(rand * 10) }),
