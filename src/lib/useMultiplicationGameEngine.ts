@@ -56,9 +56,9 @@ export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
 
   const record = useCallback(
     (question: Question, wrongAnswers: readonly number[]) => {
-      setState((s) => recordResult(s, question, wrongAnswers, now()));
+      setState((s) => recordResult(s, question, wrongAnswers));
     },
-    [now],
+    [],
   );
 
   const nextQuestion = useCallback(

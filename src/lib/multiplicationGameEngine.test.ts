@@ -15,6 +15,7 @@ import {
   toDateStr,
   serializeGameState,
   deserializeGameState,
+  parseQuestionKey,
   type Question,
   type QuestionResult,
   type GameState,
@@ -54,7 +55,7 @@ describe("getNextQuestion", () => {
   it("avoids repeating the last question", () => {
     const lastQ: Question = { a: 5, b: 6 };
     const results: QuestionResult[] = [
-      { question: lastQ, wrongAnswers: [], timestamp: 1000 },
+      { question: lastQ, wrongAnswers: [] },
     ];
     // Run many times — should never get 5x6 or 6x5 back
     for (let i = 0; i < 50; i++) {
@@ -77,19 +78,16 @@ describe("getNextQuestion", () => {
       results.push({
         question: { a: 3, b: 3 },
         wrongAnswers: [10],
-        timestamp: 1000 + i,
       });
     }
     // Add some correct answers for other questions
     results.push({
       question: { a: 4, b: 5 },
       wrongAnswers: [],
-      timestamp: 2000,
     });
     results.push({
       question: { a: 6, b: 7 },
       wrongAnswers: [],
-      timestamp: 2001,
     });
 
     // Sample many times and check that 3x3 appears more often
@@ -144,31 +142,30 @@ describe("startSession", () => {
 describe("recordResult", () => {
   it("appends a result to the current session", () => {
     let state = startSession(createGameState(), "s1", 1000);
-    state = recordResult(state, { a: 3, b: 4 }, [], 1001);
+    state = recordResult(state, { a: 3, b: 4 }, []);
     const session = state.sessions[0];
     expect(session.results).toHaveLength(1);
     expect(session.results[0].question).toEqual({ a: 3, b: 4 });
     expect(session.results[0].wrongAnswers).toEqual([]);
-    expect(session.results[0].timestamp).toBe(1001);
   });
 
   it("records wrong answers", () => {
     let state = startSession(createGameState(), "s1", 1000);
-    state = recordResult(state, { a: 7, b: 8 }, [54, 55], 1001);
+    state = recordResult(state, { a: 7, b: 8 }, [54, 55]);
     expect(state.sessions[0].results[0].wrongAnswers).toEqual([54, 55]);
   });
 
   it("throws if no active session", () => {
     expect(() => {
-      recordResult(createGameState(), { a: 3, b: 4 }, [], 1000);
+      recordResult(createGameState(), { a: 3, b: 4 }, []);
     }).toThrow("No active session");
   });
 
   it("only appends to the current session", () => {
     let state = startSession(createGameState(), "s1", 1000);
-    state = recordResult(state, { a: 3, b: 4 }, [], 1001);
+    state = recordResult(state, { a: 3, b: 4 }, []);
     state = startSession(state, "s2", 2000);
-    state = recordResult(state, { a: 5, b: 6 }, [], 2001);
+    state = recordResult(state, { a: 5, b: 6 }, []);
     expect(state.sessions[0].results).toHaveLength(1);
     expect(state.sessions[1].results).toHaveLength(1);
   });
@@ -176,7 +173,7 @@ describe("recordResult", () => {
   it("is immutable", () => {
     let state = startSession(createGameState(), "s1", 1000);
     const before = state;
-    state = recordResult(state, { a: 3, b: 4 }, [], 1001);
+    state = recordResult(state, { a: 3, b: 4 }, []);
     expect(before.sessions[0].results).toHaveLength(0);
   });
 });
@@ -209,9 +206,9 @@ describe("summarize", () => {
 
   it("computes correct summary", () => {
     const results: QuestionResult[] = [
-      { question: { a: 3, b: 4 }, wrongAnswers: [], timestamp: 1000 },
-      { question: { a: 5, b: 6 }, wrongAnswers: [29], timestamp: 1001 },
-      { question: { a: 7, b: 8 }, wrongAnswers: [], timestamp: 1002 },
+      { question: { a: 3, b: 4 }, wrongAnswers: [] },
+      { question: { a: 5, b: 6 }, wrongAnswers: [29] },
+      { question: { a: 7, b: 8 }, wrongAnswers: [] },
     ];
     const s = summarize(results);
     expect(s.totalQuestions).toBe(3);
@@ -224,8 +221,8 @@ describe("summarize", () => {
 describe("sessionSummary", () => {
   it("summarizes a session's results", () => {
     let state = startSession(createGameState(), "s1", 1000);
-    state = recordResult(state, { a: 3, b: 4 }, [], 1001);
-    state = recordResult(state, { a: 5, b: 6 }, [29], 1002);
+    state = recordResult(state, { a: 3, b: 4 }, []);
+    state = recordResult(state, { a: 5, b: 6 }, [29]);
     const s = sessionSummary(state.sessions[0]);
     expect(s.totalQuestions).toBe(2);
     expect(s.firstTryCorrect).toBe(1);
@@ -246,11 +243,11 @@ describe("daySummary", () => {
     const jan16 = new Date(2025, 0, 16, 10, 0, 0).getTime();
 
     let state = startSession(createGameState(), "s1", jan15);
-    state = recordResult(state, { a: 3, b: 4 }, [], jan15 + 1000);
-    state = recordResult(state, { a: 5, b: 6 }, [29], jan15 + 2000);
+    state = recordResult(state, { a: 3, b: 4 }, []);
+    state = recordResult(state, { a: 5, b: 6 }, [29]);
 
     state = startSession(state, "s2", jan16);
-    state = recordResult(state, { a: 7, b: 8 }, [], jan16 + 1000);
+    state = recordResult(state, { a: 7, b: 8 }, []);
 
     const s = daySummary(state, "2025-01-15");
     expect(s.totalQuestions).toBe(2);
@@ -261,9 +258,9 @@ describe("daySummary", () => {
 describe("questionStats", () => {
   it("groups by normalized question key", () => {
     const results: QuestionResult[] = [
-      { question: { a: 3, b: 7 }, wrongAnswers: [], timestamp: 1000 },
-      { question: { a: 7, b: 3 }, wrongAnswers: [20], timestamp: 1001 },
-      { question: { a: 3, b: 7 }, wrongAnswers: [], timestamp: 1002 },
+      { question: { a: 3, b: 7 }, wrongAnswers: [] },
+      { question: { a: 7, b: 3 }, wrongAnswers: [20] },
+      { question: { a: 3, b: 7 }, wrongAnswers: [] },
     ];
     const stats = questionStats(results);
     expect(stats).toHaveLength(1);
@@ -283,14 +280,14 @@ describe("strugglingQuestions", () => {
   it("returns questions sorted by success rate ascending", () => {
     const results: QuestionResult[] = [
       // 3x4: 1/2 correct
-      { question: { a: 3, b: 4 }, wrongAnswers: [], timestamp: 1000 },
-      { question: { a: 3, b: 4 }, wrongAnswers: [11], timestamp: 1001 },
+      { question: { a: 3, b: 4 }, wrongAnswers: [] },
+      { question: { a: 3, b: 4 }, wrongAnswers: [11] },
       // 5x6: 0/2 correct
-      { question: { a: 5, b: 6 }, wrongAnswers: [29], timestamp: 1002 },
-      { question: { a: 5, b: 6 }, wrongAnswers: [31], timestamp: 1003 },
+      { question: { a: 5, b: 6 }, wrongAnswers: [29] },
+      { question: { a: 5, b: 6 }, wrongAnswers: [31] },
       // 7x8: 2/2 correct
-      { question: { a: 7, b: 8 }, wrongAnswers: [], timestamp: 1004 },
-      { question: { a: 7, b: 8 }, wrongAnswers: [], timestamp: 1005 },
+      { question: { a: 7, b: 8 }, wrongAnswers: [] },
+      { question: { a: 7, b: 8 }, wrongAnswers: [] },
     ];
     const struggling = strugglingQuestions(results);
     expect(struggling[0].question).toEqual({ a: 5, b: 6 });
@@ -301,9 +298,9 @@ describe("strugglingQuestions", () => {
 
   it("filters by minimum attempts", () => {
     const results: QuestionResult[] = [
-      { question: { a: 3, b: 4 }, wrongAnswers: [11], timestamp: 1000 },
-      { question: { a: 5, b: 6 }, wrongAnswers: [29], timestamp: 1001 },
-      { question: { a: 5, b: 6 }, wrongAnswers: [31], timestamp: 1002 },
+      { question: { a: 3, b: 4 }, wrongAnswers: [11] },
+      { question: { a: 5, b: 6 }, wrongAnswers: [29] },
+      { question: { a: 5, b: 6 }, wrongAnswers: [31] },
     ];
     const struggling = strugglingQuestions(results, 2);
     expect(struggling).toHaveLength(1);
@@ -312,9 +309,9 @@ describe("strugglingQuestions", () => {
 
   it("respects limit", () => {
     const results: QuestionResult[] = [
-      { question: { a: 3, b: 4 }, wrongAnswers: [11], timestamp: 1000 },
-      { question: { a: 5, b: 6 }, wrongAnswers: [29], timestamp: 1001 },
-      { question: { a: 7, b: 8 }, wrongAnswers: [55], timestamp: 1002 },
+      { question: { a: 3, b: 4 }, wrongAnswers: [11] },
+      { question: { a: 5, b: 6 }, wrongAnswers: [29] },
+      { question: { a: 7, b: 8 }, wrongAnswers: [55] },
     ];
     const struggling = strugglingQuestions(results, 1, 2);
     expect(struggling).toHaveLength(2);
@@ -324,13 +321,31 @@ describe("strugglingQuestions", () => {
 describe("allResults", () => {
   it("flattens results across all sessions", () => {
     let state = startSession(createGameState(), "s1", 1000);
-    state = recordResult(state, { a: 3, b: 4 }, [], 1001);
+    state = recordResult(state, { a: 3, b: 4 }, []);
     state = startSession(state, "s2", 2000);
-    state = recordResult(state, { a: 5, b: 6 }, [], 2001);
-    state = recordResult(state, { a: 7, b: 8 }, [], 2002);
+    state = recordResult(state, { a: 5, b: 6 }, []);
+    state = recordResult(state, { a: 7, b: 8 }, []);
 
     const results = allResults(state);
     expect(results).toHaveLength(3);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// parseQuestionKey
+// ---------------------------------------------------------------------------
+
+describe("parseQuestionKey", () => {
+  it("parses a question key into a Question", () => {
+    expect(parseQuestionKey("9x11")).toEqual({ a: 9, b: 11 });
+  });
+
+  it("handles equal factors", () => {
+    expect(parseQuestionKey("5x5")).toEqual({ a: 5, b: 5 });
+  });
+
+  it("preserves factor order from key", () => {
+    expect(parseQuestionKey("3x7")).toEqual({ a: 3, b: 7 });
   });
 });
 
@@ -339,20 +354,52 @@ describe("allResults", () => {
 // ---------------------------------------------------------------------------
 
 describe("serializeGameState / deserializeGameState", () => {
+  it("produces v2 compact format with right/wrong arrays", () => {
+    let state = startSession(createGameState(), "s1", 1000);
+    state = recordResult(state, { a: 3, b: 4 }, []);
+    state = recordResult(state, { a: 6, b: 5 }, [29]);
+    state = recordResult(state, { a: 7, b: 9 }, []);
+
+    const json = serializeGameState(state);
+    const parsed = JSON.parse(json);
+
+    expect(parsed.v).toBe(2);
+    expect(parsed.sessions).toHaveLength(1);
+    expect(parsed.sessions[0].i).toBe("s1");
+    expect(parsed.sessions[0].t).toBe(1000);
+    expect(parsed.sessions[0].r).toEqual(["3x4", "7x9"]);
+    expect(parsed.sessions[0].w).toEqual(["5x6"]);
+    expect(parsed.currentSessionId).toBe("s1");
+  });
+
   it("round-trips a state with sessions and results", () => {
     let state = startSession(createGameState(), "s1", 1000);
-    state = recordResult(state, { a: 3, b: 4 }, [], 1001);
-    state = recordResult(state, { a: 5, b: 6 }, [29], 1002);
+    state = recordResult(state, { a: 3, b: 4 }, []);
+    state = recordResult(state, { a: 5, b: 6 }, [29]);
     state = startSession(state, "s2", 2000);
-    state = recordResult(state, { a: 7, b: 8 }, [], 2001);
+    state = recordResult(state, { a: 7, b: 8 }, []);
 
     const json = serializeGameState(state);
     const restored = deserializeGameState(json);
 
-    expect(restored).toEqual(state);
     expect(restored.sessions).toHaveLength(2);
     expect(restored.currentSessionId).toBe("s2");
     expect(allResults(restored)).toHaveLength(3);
+  });
+
+  it("round-trips preserving summarize behavior", () => {
+    let state = startSession(createGameState(), "s1", 1000);
+    state = recordResult(state, { a: 3, b: 4 }, []);
+    state = recordResult(state, { a: 5, b: 6 }, [29]);
+    state = recordResult(state, { a: 7, b: 8 }, []);
+
+    const originalSummary = summarize(allResults(state));
+
+    const json = serializeGameState(state);
+    const restored = deserializeGameState(json);
+    const restoredSummary = summarize(allResults(restored));
+
+    expect(restoredSummary).toEqual(originalSummary);
   });
 
   it("round-trips an empty state", () => {
@@ -376,4 +423,5 @@ describe("serializeGameState / deserializeGameState", () => {
     const restored = deserializeGameState('{"sessions": "oops", "currentSessionId": null}');
     expect(restored).toEqual(createGameState());
   });
+
 });

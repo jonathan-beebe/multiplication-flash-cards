@@ -10,7 +10,6 @@ export interface Question {
 export interface QuestionResult {
   question: Question;
   wrongAnswers: readonly number[];
-  timestamp: number;
 }
 
 export interface Session {
@@ -150,13 +149,12 @@ export function recordResult(
   state: GameState,
   question: Question,
   wrongAnswers: readonly number[],
-  now: number,
 ): GameState {
   if (state.currentSessionId === null) {
     throw new Error("No active session");
   }
 
-  const result: QuestionResult = { question, wrongAnswers, timestamp: now };
+  const result: QuestionResult = { question, wrongAnswers };
 
   return {
     ...state,
@@ -275,19 +273,67 @@ export function allResults(state: GameState): readonly QuestionResult[] {
 
 const STORAGE_KEY = "multiplication-game-state";
 
-/** Serialize game state to a JSON string. */
+/** Parse a compact question key like "9x11" into a Question. */
+export function parseQuestionKey(key: string): Question {
+  const [aStr, bStr] = key.split("x");
+  return { a: Number(aStr), b: Number(bStr) };
+}
+
+/** Compact session: i=id, t=startedAt timestamp, r=right (correct) keys, w=wrong keys */
+interface SerializedSession {
+  i: string;
+  t: number;
+  r: string[];
+  w: string[];
+}
+
+interface SerializedState {
+  v: 2;
+  sessions: SerializedSession[];
+  currentSessionId: string | null;
+}
+
+/** Serialize game state to a compact JSON string. */
 export function serializeGameState(state: GameState): string {
-  return JSON.stringify(state);
+  const serialized: SerializedState = {
+    v: 2,
+    sessions: state.sessions.map((s) => {
+      const right: string[] = [];
+      const wrong: string[] = [];
+      for (const r of s.results) {
+        const key = questionKey(r.question);
+        if (r.wrongAnswers.length === 0) {
+          right.push(key);
+        } else {
+          wrong.push(key);
+        }
+      }
+      return { i: s.id, t: s.startedAt, r: right, w: wrong };
+    }),
+    currentSessionId: state.currentSessionId,
+  };
+  return JSON.stringify(serialized);
 }
 
 /** Deserialize a JSON string back to GameState, falling back to empty state on invalid data. */
 export function deserializeGameState(json: string): GameState {
   try {
-    const parsed = JSON.parse(json);
-    if (!parsed || !Array.isArray(parsed.sessions)) {
+    const parsed: SerializedState = JSON.parse(json);
+    if (!parsed || parsed.v !== 2 || !Array.isArray(parsed.sessions)) {
       return createGameState();
     }
-    return parsed as GameState;
+
+    return {
+      sessions: parsed.sessions.map((s) => ({
+        id: s.i,
+        startedAt: s.t,
+        results: [
+          ...s.r.map((key) => ({ question: parseQuestionKey(key), wrongAnswers: [] as number[] })),
+          ...s.w.map((key) => ({ question: parseQuestionKey(key), wrongAnswers: [-1] as number[] })),
+        ],
+      })),
+      currentSessionId: parsed.currentSessionId,
+    };
   } catch {
     return createGameState();
   }
