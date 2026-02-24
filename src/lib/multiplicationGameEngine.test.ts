@@ -49,9 +49,8 @@ describe("barrel re-exports", () => {
 
     const json = serializeGameState(state, multiplicationGenerator);
     const parsed = JSON.parse(json);
-    expect(parsed.v).toBe(2);
-    expect(parsed.sessions[0].r).toEqual(["3x4"]);
-    expect(parsed.sessions[0].w).toEqual(["5x6"]);
+    expect(parsed.v).toBe(3);
+    expect(parsed.sessions[0].d).toEqual([["3x4", 1], ["5x6", 0]]);
 
     const restored = deserializeGameState(json, multiplicationGenerator);
     expect(allResults(restored)).toHaveLength(2);

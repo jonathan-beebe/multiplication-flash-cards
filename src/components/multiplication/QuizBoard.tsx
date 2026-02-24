@@ -15,10 +15,11 @@ interface QuizBoardProps<Q> {
   renderQuestion: (question: Q, animProps: CardAnimationProps) => React.ReactNode;
   onCorrect?: () => void;
   onWrong?: () => void;
-  onAnswer?: (question: Q, correct: boolean) => void;
+  onAnswer?: (question: Q, correct: boolean, durationMs: number) => void;
+  now?: () => number;
 }
 
-export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestion, onCorrect, onWrong, onAnswer }: QuizBoardProps<Q>) {
+export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestion, onCorrect, onWrong, onAnswer, now = Date.now }: QuizBoardProps<Q>) {
   const [question, setQuestion] = useState<Q>(() => getNextQuestion());
   const [nextQuestion, setNextQuestion] = useState<Q | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set());
@@ -28,6 +29,7 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
   const [announcement, setAnnouncement] = useState("");
   const announceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const choicesRef = useRef<HTMLDivElement>(null);
+  const questionStartRef = useRef<number>(now());
 
   const announce = useCallback((text: string) => {
     setAnnouncement("");
@@ -42,7 +44,8 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
   const handleAnswer = useCallback(
     (answer: number) => {
       if (generator.evaluate(question, answer)) {
-        onAnswer?.(question, wrongAnswers.size === 0);
+        const durationMs = now() - questionStartRef.current;
+        onAnswer?.(question, wrongAnswers.size === 0, durationMs);
         onCorrect?.();
         setShowCorrect(true);
         setTimeout(() => {
@@ -59,7 +62,7 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
         setWrongAnswers((prev) => new Set(prev).add(answer));
       }
     },
-    [generator, question, wrongAnswers, onCorrect, onWrong, onAnswer, getNextQuestion, announce]
+    [generator, question, wrongAnswers, onCorrect, onWrong, onAnswer, getNextQuestion, announce, now]
   );
 
   const handleTransitionEnd = useCallback(
@@ -70,12 +73,13 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
       setNextQuestion(null);
       setWrongAnswers(new Set());
       setIsAnimating(false);
+      questionStartRef.current = now();
       announce(`Correct! Next question: ${generator.displayText(next)}`);
       setTimeout(() => {
         choicesRef.current?.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
       }, 0);
     },
-    [nextQuestion, announce, generator]
+    [nextQuestion, announce, generator, now]
   );
 
   const backQuestion = nextQuestion ?? question;

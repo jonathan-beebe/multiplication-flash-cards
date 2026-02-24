@@ -57,8 +57,8 @@ export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
   }, [generateId, now]);
 
   const record = useCallback(
-    (question: Question, correct: boolean) => {
-      setState((s) => recordResult(s, question, correct));
+    (question: Question, correct: boolean, durationMs?: number) => {
+      setState((s) => recordResult(s, question, correct, durationMs));
     },
     [],
   );

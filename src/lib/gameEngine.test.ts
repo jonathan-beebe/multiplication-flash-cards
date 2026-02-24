@@ -257,22 +257,39 @@ describe("allResults", () => {
 // Serialization / Deserialization
 // ---------------------------------------------------------------------------
 
-describe("serializeGameState / deserializeGameState", () => {
-  it("produces v2 compact format with right/wrong arrays", () => {
+describe("recordResult with durationMs", () => {
+  it("includes durationMs when provided", () => {
     let state = startSession(createGameState<NumQuestion>(), "s1", 1000);
-    state = recordResult(state, { value: 3 }, true);
+    state = recordResult(state, { value: 5 }, true, 1234);
+    expect(state.sessions[0].results[0].durationMs).toBe(1234);
+  });
+
+  it("omits durationMs when not provided", () => {
+    let state = startSession(createGameState<NumQuestion>(), "s1", 1000);
+    state = recordResult(state, { value: 5 }, true);
+    expect(state.sessions[0].results[0]).not.toHaveProperty("durationMs");
+  });
+});
+
+describe("serializeGameState / deserializeGameState", () => {
+  it("produces v3 compact format with ordered tuples", () => {
+    let state = startSession(createGameState<NumQuestion>(), "s1", 1000);
+    state = recordResult(state, { value: 3 }, true, 500);
     state = recordResult(state, { value: 5 }, false);
-    state = recordResult(state, { value: 7 }, true);
+    state = recordResult(state, { value: 7 }, true, 1200);
 
     const json = serializeGameState(state, testGenerator);
     const parsed = JSON.parse(json);
 
-    expect(parsed.v).toBe(2);
+    expect(parsed.v).toBe(3);
     expect(parsed.sessions).toHaveLength(1);
     expect(parsed.sessions[0].i).toBe("s1");
     expect(parsed.sessions[0].t).toBe(1000);
-    expect(parsed.sessions[0].r).toEqual(["3", "7"]);
-    expect(parsed.sessions[0].w).toEqual(["5"]);
+    expect(parsed.sessions[0].d).toEqual([
+      ["3", 1, 500],
+      ["5", 0],
+      ["7", 1, 1200],
+    ]);
     expect(parsed.currentSessionId).toBe("s1");
   });
 
@@ -289,6 +306,36 @@ describe("serializeGameState / deserializeGameState", () => {
     expect(restored.sessions).toHaveLength(2);
     expect(restored.currentSessionId).toBe("s2");
     expect(allResults(restored)).toHaveLength(3);
+  });
+
+  it("round-trips preserving result order", () => {
+    let state = startSession(createGameState<NumQuestion>(), "s1", 1000);
+    state = recordResult(state, { value: 1 }, true);
+    state = recordResult(state, { value: 2 }, false);
+    state = recordResult(state, { value: 3 }, true);
+
+    const json = serializeGameState(state, testGenerator);
+    const restored = deserializeGameState(json, testGenerator);
+    const results = restored.sessions[0].results;
+
+    expect(results[0]).toEqual({ question: { value: 1 }, correct: true });
+    expect(results[1]).toEqual({ question: { value: 2 }, correct: false });
+    expect(results[2]).toEqual({ question: { value: 3 }, correct: true });
+  });
+
+  it("round-trips durationMs values", () => {
+    let state = startSession(createGameState<NumQuestion>(), "s1", 1000);
+    state = recordResult(state, { value: 1 }, true, 500);
+    state = recordResult(state, { value: 2 }, false);
+    state = recordResult(state, { value: 3 }, true, 1200);
+
+    const json = serializeGameState(state, testGenerator);
+    const restored = deserializeGameState(json, testGenerator);
+    const results = restored.sessions[0].results;
+
+    expect(results[0].durationMs).toBe(500);
+    expect(results[1]).not.toHaveProperty("durationMs");
+    expect(results[2].durationMs).toBe(1200);
   });
 
   it("round-trips preserving summarize behavior", () => {
@@ -313,6 +360,29 @@ describe("serializeGameState / deserializeGameState", () => {
     expect(restored).toEqual(state);
   });
 
+  it("deserializes v2 format for backward compatibility", () => {
+    const v2Json = JSON.stringify({
+      v: 2,
+      sessions: [
+        { i: "s1", t: 1000, r: ["3", "7"], w: ["5"] },
+      ],
+      currentSessionId: "s1",
+    });
+
+    const restored = deserializeGameState(v2Json, testGenerator);
+
+    expect(restored.sessions).toHaveLength(1);
+    expect(restored.sessions[0].id).toBe("s1");
+    expect(restored.sessions[0].startedAt).toBe(1000);
+    expect(restored.currentSessionId).toBe("s1");
+
+    const results = restored.sessions[0].results;
+    expect(results).toHaveLength(3);
+    // v2 groups correct first, then wrong
+    expect(results.filter((r) => r.correct)).toHaveLength(2);
+    expect(results.filter((r) => !r.correct)).toHaveLength(1);
+  });
+
   it("returns empty state for invalid JSON", () => {
     const restored = deserializeGameState("not valid json", testGenerator);
     expect(restored).toEqual(createGameState<NumQuestion>());
@@ -325,6 +395,11 @@ describe("serializeGameState / deserializeGameState", () => {
 
   it("returns empty state for JSON with non-array sessions", () => {
     const restored = deserializeGameState('{"sessions": "oops", "currentSessionId": null}', testGenerator);
+    expect(restored).toEqual(createGameState<NumQuestion>());
+  });
+
+  it("returns empty state for unknown version", () => {
+    const restored = deserializeGameState('{"v": 99, "sessions": [], "currentSessionId": null}', testGenerator);
     expect(restored).toEqual(createGameState<NumQuestion>());
   });
 });

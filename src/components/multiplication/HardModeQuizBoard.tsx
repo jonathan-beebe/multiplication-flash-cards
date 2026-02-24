@@ -6,12 +6,14 @@ interface HardModeQuizBoardProps<Q> {
   generator: QuestionGenerator<Q>;
   getNextQuestion: () => Q;
   renderQuestion: (question: Q, animProps: CardAnimationProps) => React.ReactNode;
-  onAnswer?: (question: Q, correct: boolean) => void;
+  onAnswer?: (question: Q, correct: boolean, durationMs: number) => void;
+  now?: () => number;
 }
 
-export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, renderQuestion, onAnswer }: HardModeQuizBoardProps<Q>) {
+export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, renderQuestion, onAnswer, now = Date.now }: HardModeQuizBoardProps<Q>) {
   const [question, setQuestion] = useState<Q>(() => getNextQuestion());
   const wrongGuessesRef = useRef<number[]>([]);
+  const questionStartRef = useRef<number>(now());
   const [nextQuestion, setNextQuestion] = useState<Q | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
@@ -54,7 +56,8 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
     }
 
     if (generator.evaluate(question, value)) {
-      onAnswer?.(question, wrongGuessesRef.current.length === 0);
+      const durationMs = now() - questionStartRef.current;
+      onAnswer?.(question, wrongGuessesRef.current.length === 0, durationMs);
       setInputError(null);
       setShowCorrect(true);
       lockedRef.current = true;
@@ -73,7 +76,7 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
       announce(`${value} is incorrect. Try again.`);
       inputRef.current?.focus();
     }
-  }, [inputValue, isAnimating, showCorrect, question, announce, onAnswer, getNextQuestion, generator]);
+  }, [inputValue, isAnimating, showCorrect, question, announce, onAnswer, getNextQuestion, generator, now]);
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
@@ -87,9 +90,10 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
       setIsAnimating(false);
       lockedRef.current = false;
       wrongGuessesRef.current = [];
+      questionStartRef.current = now();
       setTimeout(() => inputRef.current?.focus(), 50);
     },
-    [nextQuestion]
+    [nextQuestion, now]
   );
 
   function handleKeyDown(e: React.KeyboardEvent) {

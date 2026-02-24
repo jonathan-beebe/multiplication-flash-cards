@@ -5,6 +5,7 @@
 export interface QuestionResult<Q> {
   question: Q;
   correct: boolean;
+  durationMs?: number;
 }
 
 export interface Session<Q> {
@@ -70,12 +71,13 @@ export function recordResult<Q>(
   state: GameState<Q>,
   question: Q,
   correct: boolean,
+  durationMs?: number,
 ): GameState<Q> {
   if (state.currentSessionId === null) {
     throw new Error("No active session");
   }
 
-  const result: QuestionResult<Q> = { question, correct };
+  const result: QuestionResult<Q> = { question, correct, ...(durationMs !== undefined && { durationMs }) };
 
   return {
     ...state,
@@ -192,43 +194,81 @@ export function allResults<Q>(state: GameState<Q>): readonly QuestionResult<Q>[]
 // Persistence
 // ---------------------------------------------------------------------------
 
-/** Compact session: i=id, t=startedAt timestamp, r=right (correct) keys, w=wrong keys */
-interface SerializedSession {
+/** v2 compact session: i=id, t=startedAt timestamp, r=right (correct) keys, w=wrong keys */
+interface SerializedSessionV2 {
   i: string;
   t: number;
   r: string[];
   w: string[];
 }
 
-interface SerializedState {
+interface SerializedStateV2 {
   v: 2;
-  sessions: SerializedSession[];
+  sessions: SerializedSessionV2[];
   currentSessionId: string | null;
 }
 
-/** Serialize game state to a compact JSON string. */
+/** v3 compact session: ordered array of tuples preserving result order and duration */
+interface SerializedSessionV3 {
+  i: string;
+  t: number;
+  d: [string, 0 | 1, number?][];
+}
+
+interface SerializedStateV3 {
+  v: 3;
+  sessions: SerializedSessionV3[];
+  currentSessionId: string | null;
+}
+
+/** Serialize game state to a compact JSON string (v3 format). */
 export function serializeGameState<Q>(
   state: GameState<Q>,
   generator: QuestionGenerator<Q>,
 ): string {
-  const serialized: SerializedState = {
-    v: 2,
-    sessions: state.sessions.map((s) => {
-      const right: string[] = [];
-      const wrong: string[] = [];
-      for (const r of s.results) {
-        const key = generator.questionKey(r.question);
-        if (r.correct) {
-          right.push(key);
-        } else {
-          wrong.push(key);
-        }
-      }
-      return { i: s.id, t: s.startedAt, r: right, w: wrong };
-    }),
+  const serialized: SerializedStateV3 = {
+    v: 3,
+    sessions: state.sessions.map((s) => ({
+      i: s.id,
+      t: s.startedAt,
+      d: s.results.map((r): [string, 0 | 1, number?] => {
+        const tuple: [string, 0 | 1, number?] = [generator.questionKey(r.question), r.correct ? 1 : 0];
+        if (r.durationMs !== undefined) tuple.push(r.durationMs);
+        return tuple;
+      }),
+    })),
     currentSessionId: state.currentSessionId,
   };
   return JSON.stringify(serialized);
+}
+
+function deserializeV3<Q>(parsed: SerializedStateV3, generator: QuestionGenerator<Q>): GameState<Q> {
+  return {
+    sessions: parsed.sessions.map((s) => ({
+      id: s.i,
+      startedAt: s.t,
+      results: s.d.map(([key, correct, durationMs]) => ({
+        question: generator.parseQuestionKey(key),
+        correct: correct === 1,
+        ...(durationMs !== undefined && { durationMs }),
+      })),
+    })),
+    currentSessionId: parsed.currentSessionId,
+  };
+}
+
+function deserializeV2<Q>(parsed: SerializedStateV2, generator: QuestionGenerator<Q>): GameState<Q> {
+  return {
+    sessions: parsed.sessions.map((s) => ({
+      id: s.i,
+      startedAt: s.t,
+      results: [
+        ...s.r.map((key) => ({ question: generator.parseQuestionKey(key), correct: true as const })),
+        ...s.w.map((key) => ({ question: generator.parseQuestionKey(key), correct: false as const })),
+      ],
+    })),
+    currentSessionId: parsed.currentSessionId,
+  };
 }
 
 /** Deserialize a JSON string back to GameState, falling back to empty state on invalid data. */
@@ -237,22 +277,15 @@ export function deserializeGameState<Q>(
   generator: QuestionGenerator<Q>,
 ): GameState<Q> {
   try {
-    const parsed: SerializedState = JSON.parse(json);
-    if (!parsed || parsed.v !== 2 || !Array.isArray(parsed.sessions)) {
+    const parsed = JSON.parse(json);
+    if (!parsed || !Array.isArray(parsed.sessions)) {
       return createGameState<Q>();
     }
 
-    return {
-      sessions: parsed.sessions.map((s) => ({
-        id: s.i,
-        startedAt: s.t,
-        results: [
-          ...s.r.map((key) => ({ question: generator.parseQuestionKey(key), correct: true })),
-          ...s.w.map((key) => ({ question: generator.parseQuestionKey(key), correct: false })),
-        ],
-      })),
-      currentSessionId: parsed.currentSessionId,
-    };
+    if (parsed.v === 3) return deserializeV3(parsed as SerializedStateV3, generator);
+    if (parsed.v === 2) return deserializeV2(parsed as SerializedStateV2, generator);
+
+    return createGameState<Q>();
   } catch {
     return createGameState<Q>();
   }
