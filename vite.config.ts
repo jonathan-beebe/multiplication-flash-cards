@@ -29,6 +29,14 @@ export default defineConfig({
           next();
         });
       },
+      configurePreviewServer(server) {
+        server.middlewares.use((req, _res, next) => {
+          if (req.url === '/multiplication-flash-cards') {
+            req.url = '/multiplication-flash-cards/';
+          }
+          next();
+        });
+      },
     },
     react(),
     tailwindcss(),
