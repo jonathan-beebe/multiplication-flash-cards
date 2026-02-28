@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
-import { setInGame } from "./updateScheduler";
+import { useGameActive } from "./useGameActive";
 import {
   startSession,
   recordResult,
@@ -36,9 +36,7 @@ export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
   );
   const isInitialMount = useRef(true);
 
-  useEffect(() => {
-    return () => setInGame(false)
-  }, [])
+  useGameActive(state.currentSessionId !== null)
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -49,7 +47,6 @@ export function useMultiplicationGameEngine(deps?: Partial<GameEngineDeps>) {
   }, [state]);
 
   const start = useCallback(() => {
-    setInGame(true)
     setState((s) => {
       // If the current session is empty (no results), reuse it instead of
       // creating another one. This prevents duplicates from React Strict Mode
