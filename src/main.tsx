@@ -5,7 +5,15 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import { AppRoutes } from '@/AppRoutes'
 
-registerSW({ immediate: true })
+registerSW({
+  immediate: true,
+  onRegistered(registration) {
+    if (registration) {
+      const interval = Number(import.meta.env.VITE_SW_UPDATE_INTERVAL_MS) || 60 * 60 * 1000
+      setInterval(() => registration.update(), interval)
+    }
+  },
+})
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
