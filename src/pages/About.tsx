@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 
 function About() {
   useEffect(() => {
-    document.title = "About — Multiplication Flash Cards";
+    document.title = "About — Multiplication Flash Cardsz";
   }, []);
 
   return (
