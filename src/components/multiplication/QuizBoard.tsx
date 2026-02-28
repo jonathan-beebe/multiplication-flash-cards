@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import QuizButton from "@/components/multiplication/QuizButton";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 
@@ -30,6 +30,7 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
   const announceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const choicesRef = useRef<HTMLDivElement>(null);
   const questionStartRef = useRef<number>(now());
+  const mountedRef = useRef(false);
 
   const announce = useCallback((text: string) => {
     setAnnouncement("");
@@ -68,19 +69,25 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
       if (e.propertyName !== "transform") return;
-      const next = nextQuestion!;
-      setQuestion(next);
+      setQuestion(nextQuestion!);
       setNextQuestion(null);
       setWrongAnswers(new Set());
       setIsAnimating(false);
-      questionStartRef.current = now();
-      announce(`Correct! Next question: ${generator.displayText(next)}`);
-      setTimeout(() => {
-        choicesRef.current?.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
-      }, 0);
     },
-    [nextQuestion, announce, generator, now]
+    [nextQuestion]
   );
+
+  useEffect(() => {
+    if (!mountedRef.current) { mountedRef.current = true; return; }
+    questionStartRef.current = now();
+    const announceId = setTimeout(() => {
+      announce(`Correct! Next question: ${generator.displayText(question)}`);
+    }, 0);
+    const focusId = setTimeout(() => {
+      choicesRef.current?.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
+    }, 0);
+    return () => { clearTimeout(announceId); clearTimeout(focusId); };
+  }, [question, announce, generator, now]);
 
   const backQuestion = nextQuestion ?? question;
 

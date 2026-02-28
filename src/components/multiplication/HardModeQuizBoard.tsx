@@ -26,6 +26,7 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
   const inputRef = useRef<HTMLInputElement>(null);
   const announceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lockedRef = useRef(false);
+  const mountedRef = useRef(false);
 
   useEffect(() => {
     const id = setTimeout(() => inputRef.current?.focus(), 50);
@@ -81,20 +82,24 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
       if (e.propertyName !== "transform") return;
-      const next = nextQuestion!;
-      setQuestion(next);
+      setQuestion(nextQuestion!);
       setNextQuestion(null);
       setInputValue("");
       setInputError(null);
       setShowCorrect(false);
       setIsAnimating(false);
-      lockedRef.current = false;
-      wrongGuessesRef.current = [];
-      questionStartRef.current = now();
-      setTimeout(() => inputRef.current?.focus(), 50);
     },
-    [nextQuestion, now]
+    [nextQuestion]
   );
+
+  useEffect(() => {
+    if (!mountedRef.current) { mountedRef.current = true; return; }
+    lockedRef.current = false;
+    wrongGuessesRef.current = [];
+    questionStartRef.current = now();
+    const id = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => clearTimeout(id);
+  }, [question, now]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter") handleSubmit();
