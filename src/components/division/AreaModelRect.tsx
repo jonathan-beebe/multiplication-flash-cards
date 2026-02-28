@@ -1,4 +1,4 @@
-import type { Section } from "@/lib/divisionProblem";
+import type { Section } from "@/lib/division/divisionProblem";
 
 interface AreaModelRectProps {
   divisor: number;

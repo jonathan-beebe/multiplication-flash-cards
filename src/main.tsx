@@ -1,5 +1,5 @@
 import { registerSW } from 'virtual:pwa-register'
-import { scheduleUpdate } from '@/lib/updateScheduler'
+import { scheduleUpdate } from '@/lib/engine/updateScheduler'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'

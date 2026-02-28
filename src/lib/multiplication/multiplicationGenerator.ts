@@ -1,4 +1,4 @@
-import type { QuestionGenerator, QuestionResult, QuestionStats } from "./gameEngine";
+import type { QuestionGenerator, QuestionResult, QuestionStats } from "../engine/gameEngine";
 
 // ---------------------------------------------------------------------------
 // Types

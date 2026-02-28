@@ -10,7 +10,7 @@ export type {
   QuestionStats,
   PeriodSummary,
   QuestionGenerator,
-} from "./gameEngine";
+} from "../engine/gameEngine";
 
 export {
   PERSISTENCE_ENABLED,
@@ -29,4 +29,4 @@ export {
   deserializeGameState,
   loadGameState,
   saveGameState,
-} from "./gameEngine";
+} from "../engine/gameEngine";

@@ -3,8 +3,8 @@ import { render, screen, act, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import DivisionPractice from "@/components/division/DivisionPractice";
 
-vi.mock("@/lib/divisionProblem", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/divisionProblem")>();
+vi.mock("@/lib/division/divisionProblem", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/division/divisionProblem")>();
   return {
     ...actual,
     generateProblem: vi.fn().mockReturnValue({ dividend: 72, divisor: 3, quotient: 24 }),

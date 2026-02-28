@@ -3,8 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import clsx from "clsx";
 import NavBar from "@/components/NavBar";
 import AreaModelProblem from "@/components/division/AreaModelProblem";
-import { LEVELS } from "@/lib/divisionProblem";
-import type { Level } from "@/lib/divisionProblem";
+import { LEVELS } from "@/lib/division/divisionProblem";
+import type { Level } from "@/lib/division/divisionProblem";
 
 const LEVEL_IDS: Level[] = [1, 2, 3, 4];
 

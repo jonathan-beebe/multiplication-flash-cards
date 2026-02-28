@@ -1,4 +1,4 @@
-import { useOperationGameEngine, type GameEngineDeps } from "./useOperationGameEngine";
+import { useOperationGameEngine, type GameEngineDeps } from "../engine/useOperationGameEngine";
 import { multiplicationGenerator } from "./multiplicationGenerator";
 
 export type { GameEngineDeps };

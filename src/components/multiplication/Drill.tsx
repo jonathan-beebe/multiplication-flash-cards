@@ -5,9 +5,9 @@ import QuizBoard from "@/components/multiplication/QuizBoard";
 import Card from "@/components/Card";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
 import DrillTimerBar from "@/components/multiplication/DrillTimerBar";
-import type { Question } from "@/lib/multiplicationGenerator";
-import { multiplicationGenerator } from "@/lib/multiplicationGenerator";
-import { useMultiplicationGameEngine } from "@/lib/useMultiplicationGameEngine";
+import type { Question } from "@/lib/multiplication/multiplicationGenerator";
+import { multiplicationGenerator } from "@/lib/multiplication/multiplicationGenerator";
+import { useMultiplicationGameEngine } from "@/lib/multiplication/useMultiplicationGameEngine";
 
 interface DrillProps {
   durationMinutes: number;

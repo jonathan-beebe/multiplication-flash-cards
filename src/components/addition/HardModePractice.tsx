@@ -4,10 +4,10 @@ import NavBar from "@/components/NavBar";
 import HardModeQuizBoard from "@/components/multiplication/HardModeQuizBoard";
 import Card from "@/components/Card";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
-import type { AdditionQuestion } from "@/lib/additionGenerator";
-import { createAdditionGenerator } from "@/lib/additionGenerator";
-import { useOperationGameEngine } from "@/lib/useOperationGameEngine";
-import { parseOperationLevel, ADDITION_LEVEL_RANGES } from "@/lib/operationLevels";
+import type { AdditionQuestion } from "@/lib/addition/additionGenerator";
+import { createAdditionGenerator } from "@/lib/addition/additionGenerator";
+import { useOperationGameEngine } from "@/lib/engine/useOperationGameEngine";
+import { parseOperationLevel, ADDITION_LEVEL_RANGES } from "@/lib/engine/operationLevels";
 
 function renderQuestion(q: AdditionQuestion, animProps: CardAnimationProps) {
   return <Card display={`${q.a} + ${q.b}`} srText={`${q.a} plus ${q.b}`} {...animProps} />;

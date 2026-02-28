@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import type { QuestionGenerator } from "@/lib/gameEngine";
+import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
 
 interface HardModeQuizBoardProps<Q> {

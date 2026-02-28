@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { multiplicationGenerator, type Question } from "./multiplicationGenerator";
-import type { QuestionResult } from "./gameEngine";
+import type { QuestionResult } from "../engine/gameEngine";
 
 const { questionKey, parseQuestionKey, getNextQuestion, evaluate, generateChoices, displayText } = multiplicationGenerator;
 

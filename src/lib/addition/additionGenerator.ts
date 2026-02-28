@@ -1,4 +1,4 @@
-import type { QuestionGenerator, QuestionResult, QuestionStats } from "./gameEngine";
+import type { QuestionGenerator, QuestionResult, QuestionStats } from "../engine/gameEngine";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -94,6 +94,9 @@ function computeQuestionStats(
     successRate: e.attempts === 0 ? 0 : e.firstTryCorrect / e.attempts,
   }));
 }
+
+// Keep the linter happy — computeQuestionStats is available for future use.
+void computeQuestionStats;
 
 function evaluate(question: AdditionQuestion, answer: number): boolean {
   return answer === question.a + question.b;

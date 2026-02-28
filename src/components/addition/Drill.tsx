@@ -5,10 +5,10 @@ import QuizBoard from "@/components/multiplication/QuizBoard";
 import Card from "@/components/Card";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
 import DrillTimerBar from "@/components/multiplication/DrillTimerBar";
-import type { AdditionQuestion } from "@/lib/additionGenerator";
-import { createAdditionGenerator } from "@/lib/additionGenerator";
-import { useOperationGameEngine } from "@/lib/useOperationGameEngine";
-import { parseOperationLevel, ADDITION_LEVEL_RANGES } from "@/lib/operationLevels";
+import type { AdditionQuestion } from "@/lib/addition/additionGenerator";
+import { createAdditionGenerator } from "@/lib/addition/additionGenerator";
+import { useOperationGameEngine } from "@/lib/engine/useOperationGameEngine";
+import { parseOperationLevel, ADDITION_LEVEL_RANGES } from "@/lib/engine/operationLevels";
 
 interface DrillProps {
   durationMinutes: number;

@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useRef } from "react";
 import QuizButton from "@/components/multiplication/QuizButton";
-import type { QuestionGenerator } from "@/lib/gameEngine";
+import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 
 export interface CardAnimationProps {
   className?: string;

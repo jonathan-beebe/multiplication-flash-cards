@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useGameActive } from "@/lib/useGameActive";
+import { useGameActive } from "@/lib/engine/useGameActive";
 import {
   generateProblem,
   getHelpfulFacts,
   validatePartialQuotient,
-} from "@/lib/divisionProblem";
-import type { Level, Problem, Section } from "@/lib/divisionProblem";
+} from "@/lib/division/divisionProblem";
+import type { Level, Problem, Section } from "@/lib/division/divisionProblem";
 import AreaModelRect from "@/components/division/AreaModelRect";
 
 type Phase = "building" | "summing" | "done";

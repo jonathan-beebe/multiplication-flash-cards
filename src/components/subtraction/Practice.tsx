@@ -4,10 +4,10 @@ import NavBar from "@/components/NavBar";
 import QuizBoard from "@/components/multiplication/QuizBoard";
 import Card from "@/components/Card";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
-import type { SubtractionQuestion } from "@/lib/subtractionGenerator";
-import { createSubtractionGenerator } from "@/lib/subtractionGenerator";
-import { useOperationGameEngine } from "@/lib/useOperationGameEngine";
-import { parseOperationLevel, SUBTRACTION_LEVEL_RANGES } from "@/lib/operationLevels";
+import type { SubtractionQuestion } from "@/lib/subtraction/subtractionGenerator";
+import { createSubtractionGenerator } from "@/lib/subtraction/subtractionGenerator";
+import { useOperationGameEngine } from "@/lib/engine/useOperationGameEngine";
+import { parseOperationLevel, SUBTRACTION_LEVEL_RANGES } from "@/lib/engine/operationLevels";
 
 function renderQuestion(q: SubtractionQuestion, animProps: CardAnimationProps) {
   return <Card display={`${q.a} − ${q.b}`} srText={`${q.a} minus ${q.b}`} {...animProps} />;

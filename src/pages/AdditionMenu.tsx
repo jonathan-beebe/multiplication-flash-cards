@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import clsx from "clsx";
 import NavBar from "@/components/NavBar";
 import HomeButton from "@/components/HomeButton";
-import { OPERATION_LEVELS, OPERATION_LEVEL_IDS, parseOperationLevel } from "@/lib/operationLevels";
+import { OPERATION_LEVELS, OPERATION_LEVEL_IDS, parseOperationLevel } from "@/lib/engine/operationLevels";
 
 function AdditionMenu() {
   const { level: levelParam } = useParams<{ level: string }>();

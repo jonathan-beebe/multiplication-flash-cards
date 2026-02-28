@@ -4,8 +4,8 @@ import {
   getHelpfulFacts,
   validatePartialQuotient,
   LEVELS,
-} from "@/lib/divisionProblem";
-import type { Level } from "@/lib/divisionProblem";
+} from "@/lib/division/divisionProblem";
+import type { Level } from "@/lib/division/divisionProblem";
 
 const LEVELS_LIST: Level[] = [1, 2, 3, 4];
 
