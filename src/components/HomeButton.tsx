@@ -21,7 +21,7 @@ export default function HomeButton({ to, color, children, 'aria-label': ariaLabe
     <Link
       to={to}
       aria-label={ariaLabel}
-      className={`w-full rounded-xl px-6 py-4 text-xl font-semibold text-white shadow-lg transition-all duration-150 active:scale-95 active:shadow-sm ${colorClasses[color]}`}
+      className={`w-full rounded-xl px-6 py-4 text-xl font-semibold text-white shadow-lg transition-all duration-150 active:scale-95 active:shadow-sm flex items-center justify-center ${colorClasses[color]}`}
     >
       {children}
     </Link>
