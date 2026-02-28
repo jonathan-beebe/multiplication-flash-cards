@@ -1,8 +1,8 @@
 import clsx from "clsx";
 
 interface CardProps {
-  a: number;
-  b: number;
+  display: string;
+  srText: string;
   className?: string;
   style?: React.CSSProperties;
   onTransitionEnd?: React.TransitionEventHandler<HTMLDivElement>;
@@ -12,7 +12,7 @@ interface CardProps {
 const baseClasses =
   clsx(
     "card flex items-center justify-center rounded-2xl",
-    "bg-slate-50", 
+    "bg-slate-50",
     "shadow-[inset_1px_1px_0px_rgba(255,255,255,0.8),inset_-1px_-1px_0px_rgba(0,0,0,0.12),2px_2px_2px_rgba(0,0,0,0.1)]",
     "border border-t-white/80 border-l-white/80 border-b-slate-300/60 border-r-slate-300/60",
     "dark:bg-slate-800",
@@ -20,7 +20,7 @@ const baseClasses =
     "dark:border-t-slate-600/60 dark:border-l-slate-600/60 dark:border-b-slate-900/80 dark:border-r-slate-900/80 dark:border-none",
   );
 
-function Card({ a, b, className, style, onTransitionEnd, 'aria-hidden': ariaHidden }: CardProps) {
+function Card({ display, srText, className, style, onTransitionEnd, 'aria-hidden': ariaHidden }: CardProps) {
   return (
     <div
       className={`${baseClasses}${className ? ` ${className}` : ""}`}
@@ -30,9 +30,9 @@ function Card({ a, b, className, style, onTransitionEnd, 'aria-hidden': ariaHidd
     >
       <div className="text-center">
         <span className="text-5xl tabular-nums font-bold text-text" aria-hidden="true">
-          {a} × {b}
+          {display}
         </span>
-        <span className="sr-only">{a} times {b}</span>
+        <span className="sr-only">{srText}</span>
       </div>
     </div>
   );

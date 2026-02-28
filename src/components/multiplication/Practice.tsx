@@ -8,7 +8,7 @@ import { multiplicationGenerator } from "@/lib/multiplicationGenerator";
 import { useMultiplicationGameEngine } from "@/lib/useMultiplicationGameEngine";
 
 function renderQuestion(q: Question, animProps: CardAnimationProps) {
-  return <Card a={q.a} b={q.b} {...animProps} />;
+  return <Card display={`${q.a} × ${q.b}`} srText={`${q.a} times ${q.b}`} {...animProps} />;
 }
 
 function Practice() {
