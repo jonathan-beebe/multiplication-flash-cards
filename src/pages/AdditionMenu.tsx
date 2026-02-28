@@ -1,0 +1,43 @@
+import { useEffect } from "react";
+import NavBar from "@/components/NavBar";
+import HomeButton from "@/components/HomeButton";
+
+function AdditionMenu() {
+  useEffect(() => {
+    document.title = "Addition — Flash Cards";
+  }, []);
+
+  return (
+    <main className="flex min-h-screen items-center justify-center px-4 py-4 pb-12 bg-background">
+      <NavBar />
+      <div className="flex w-full max-w-md flex-col items-center text-center">
+        <h1 className="mb-8 text-4xl font-bold text-text">Addition</h1>
+        <div className="flex w-full max-w-xs flex-col items-center gap-6">
+          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Practice</h2>
+          <div className="flex w-full flex-col gap-4">
+            <HomeButton to="/addition/practice/multiple-choice" color="indigo">
+              Multiple Choice
+            </HomeButton>
+            <HomeButton to="/addition/practice/hard-mode" color="indigo">
+              Hard Mode
+            </HomeButton>
+          </div>
+          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Drills</h2>
+          <div className="flex w-full flex-col gap-4">
+            <HomeButton to="/addition/1-minute-drill" color="amber" aria-label="1 minute drill">
+              1 min
+            </HomeButton>
+            <HomeButton to="/addition/3-minute-drill" color="amber" aria-label="3 minute drill">
+              3 min
+            </HomeButton>
+            <HomeButton to="/addition/5-minute-drill" color="amber" aria-label="5 minute drill">
+              5 min
+            </HomeButton>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default AdditionMenu;

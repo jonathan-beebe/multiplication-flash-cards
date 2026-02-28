@@ -57,32 +57,34 @@ afterEach(() => {
 describe("App user journeys", () => {
   // ─── 1. Home screen ────────────────────────────────────────────────
   describe("Home screen", () => {
-    it("renders heading and all navigation options", () => {
+    it("renders heading and all operation buttons", () => {
       render(
         <MemoryRouter initialEntries={["/"]}>
           <AppRoutes />
         </MemoryRouter>,
       );
 
-      expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
-      expect(screen.getByRole("heading", { name: /multiplication practice/i })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /multiple choice/i })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /hard mode/i })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /1 min/i })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /3 min/i })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /5 min/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /addition/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /subtraction/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /multiplication/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /division/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /about/i })).toBeInTheDocument();
     });
   });
 
   // ─── 2. Practice flow ──────────────────────────────────────────────
   describe("Practice flow", () => {
-    it("Home → Practice → answer questions → Home", () => {
+    it("Home → Multiplication → Practice → answer questions → Home", () => {
       render(
         <MemoryRouter initialEntries={["/"]}>
           <AppRoutes />
         </MemoryRouter>,
       );
+
+      // Navigate to the multiplication menu
+      fireEvent.click(screen.getByRole("link", { name: /multiplication/i }));
+      expect(screen.getByRole("heading", { name: /multiplication/i })).toBeInTheDocument();
 
       // Navigate to practice (multiple choice)
       fireEvent.click(screen.getByRole("link", { name: /multiple choice/i }));
@@ -102,20 +104,21 @@ describe("App user journeys", () => {
 
       // Navigate home via NavBar
       fireEvent.click(screen.getByRole("link", { name: /home/i }));
-      expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
     });
   });
 
   // ─── 3. Drill full flow ────────────────────────────────────────────
   describe("Drill full flow", () => {
-    it("Home → Drill → answer → timer expires → DrillComplete → Restart → Drill → Home", () => {
+    it("Home → Multiplication → Drill → answer → timer expires → DrillComplete → Restart → Drill → Home", () => {
       render(
         <MemoryRouter initialEntries={["/"]}>
           <AppRoutes />
         </MemoryRouter>,
       );
 
-      // Navigate to 1-minute drill
+      // Navigate to the multiplication menu then drill
+      fireEvent.click(screen.getByRole("link", { name: /multiplication/i }));
       fireEvent.click(screen.getByRole("link", { name: /1 min/i }));
 
       // Drill UI: question visible, timer bar visible
@@ -149,20 +152,21 @@ describe("App user journeys", () => {
 
       // Navigate home via NavBar
       fireEvent.click(screen.getByRole("link", { name: /home/i }));
-      expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
     });
   });
 
   // ─── 4. Drill early exit ───────────────────────────────────────────
   describe("Drill early exit", () => {
-    it("Home → Drill → NavBar Home (no completion screen)", () => {
+    it("Home → Multiplication → Drill → NavBar Home (no completion screen)", () => {
       render(
         <MemoryRouter initialEntries={["/"]}>
           <AppRoutes />
         </MemoryRouter>,
       );
 
-      // Navigate to 1-minute drill
+      // Navigate to multiplication then drill
+      fireEvent.click(screen.getByRole("link", { name: /multiplication/i }));
       fireEvent.click(screen.getByRole("link", { name: /1 min/i }));
       expect(screen.getAllByText(/\d+\s*×\s*\d+/).length).toBeGreaterThan(0);
 
@@ -170,7 +174,7 @@ describe("App user journeys", () => {
       fireEvent.click(screen.getByRole("link", { name: /home/i }));
 
       // Should be on Home, not DrillComplete
-      expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
       expect(screen.queryByText(/drill complete/i)).not.toBeInTheDocument();
     });
   });
@@ -224,7 +228,7 @@ describe("App user journeys", () => {
       expect(screen.getByRole("heading", { name: /division practice/i })).toBeInTheDocument();
 
       fireEvent.click(screen.getByRole("link", { name: /home/i }));
-      expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
     });
   });
 
@@ -246,7 +250,7 @@ describe("App user journeys", () => {
 
       // Navigate home via NavBar
       fireEvent.click(screen.getByRole("link", { name: /home/i }));
-      expect(screen.getByRole("heading", { name: /multiplication flash\s*cards/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
     });
   });
 });

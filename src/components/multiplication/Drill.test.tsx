@@ -14,7 +14,7 @@ afterEach(() => {
 describe("Drill → Success routing", () => {
   it("navigates to success screen when timer expires", () => {
     render(
-      <MemoryRouter initialEntries={["/1-minute-drill"]}>
+      <MemoryRouter initialEntries={["/multiplication/1-minute-drill"]}>
         <AppRoutes />
       </MemoryRouter>,
     );
@@ -35,7 +35,7 @@ describe("Drill → Success routing", () => {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/1-minute-drill/success",
+            pathname: "/multiplication/1-minute-drill/success",
             state: { correctCount: 15, wrongCount: 3 },
           },
         ]}
@@ -54,7 +54,7 @@ describe("Drill → Success routing", () => {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/1-minute-drill/success",
+            pathname: "/multiplication/1-minute-drill/success",
             state: { correctCount: 10, wrongCount: 2 },
           },
         ]}
@@ -77,7 +77,7 @@ describe("Drill → Success routing", () => {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/1-minute-drill/success",
+            pathname: "/multiplication/1-minute-drill/success",
             state: { correctCount: 5, wrongCount: 1 },
           },
         ]}
@@ -88,7 +88,7 @@ describe("Drill → Success routing", () => {
 
     fireEvent.click(screen.getByRole("link", { name: /home/i }));
 
-    expect(screen.getByRole("heading", { name: /multiplication flash/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /math flash/i })).toBeInTheDocument();
   });
 
   it("demo route renders with prop-based counts", () => {

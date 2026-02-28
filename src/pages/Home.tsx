@@ -4,67 +4,36 @@ import HomeButton from "@/components/HomeButton";
 
 function Home() {
   useEffect(() => {
-    document.title = "Multiplication Flash Cards";
+    document.title = "Math Flash Cards";
   }, []);
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-4 pb-12 bg-background">
       <div className="flex w-full max-w-md flex-col items-center text-center">
-        <h1 className="mb-8 text-4xl font-bold text-text">
-          Multiplication Flash{"\u00A0"}Cards
-        </h1>
-        <div className="flex w-full max-w-xs flex-col items-center gap-6">
-          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
-            Multiplication Practice
-          </h2>
-          <div className="flex w-full flex-col gap-4">
-            <HomeButton to="/practice/multiple-choice" color="indigo">
-              Multiple Choice
-            </HomeButton>
-            <HomeButton to="/practice/hard-mode" color="indigo">
-              Hard Mode
-            </HomeButton>
-          </div>
-          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
-            Multiplication Drills
-          </h2>
-          <div className="flex w-full flex-col gap-4">
-            <HomeButton to="/1-minute-drill" color="amber" aria-label="1 minute drill">
-              1 min
-            </HomeButton>
-            <HomeButton to="/3-minute-drill" color="amber" aria-label="3 minute drill">
-              3 min
-            </HomeButton>
-            <HomeButton to="/5-minute-drill" color="amber" aria-label="5 minute drill">
-              5 min
-            </HomeButton>
-          </div>
+        <h1 className="mb-8 text-4xl font-bold text-text">Math Flash{"\u00A0"}Cards</h1>
+        <div className="grid grid-cols-2 w-full max-w-xs gap-4">
+          <HomeButton to="/addition" color="indigo">
+            + Addition
+          </HomeButton>
+          <HomeButton to="/subtraction" color="indigo">
+            − Subtraction
+          </HomeButton>
+          <HomeButton to="/multiplication" color="amber">
+            × Multiplication
+          </HomeButton>
+          <HomeButton to="/division" color="teal">
+            ÷ Division
+          </HomeButton>
         </div>
 
-        <hr className="my-8 w-full border-slate-200 dark:border-slate-700" />
-
-        <h1 className="mb-8 text-4xl font-bold text-text">
-          Division
-        </h1>
-        <div className="flex w-full max-w-xs flex-col items-center gap-6">
-          <div className="w-full flex flex-col items-center gap-4">
-            <HomeButton to="/division-practice" color="teal">
-              Explore Division
-            </HomeButton>
-          </div>
-        </div>
-
-        <hr className="my-8 w-full border-slate-200 dark:border-slate-700" />
-
-        <div className="flex w-full max-w-xs flex-col items-center gap-6">
+        <div className="mt-12">
           <Link
             to="/about"
-            className="mt-4 text-sm text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+            className="text-sm text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
           >
             About
           </Link>
         </div>
-
       </div>
     </main>
   );
