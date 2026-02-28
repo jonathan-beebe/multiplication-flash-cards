@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import AreaModelProblem from "@/components/division/AreaModelProblem";
+import { setInGame } from "@/lib/updateScheduler";
+
+vi.mock("@/lib/updateScheduler", () => ({
+  setInGame: vi.fn(),
+}));
 
 // Deterministic problem: 72 ÷ 3 = 24
 // Two-section path: enter 20 (area=60, remaining=12) → enter 4 (area=12, remaining=0) → summing
@@ -284,5 +289,41 @@ describe("AreaModelProblem — keyboard regression: Enter in summing phase", () 
 
     act(() => vi.advanceTimersByTime(50));
     expect(nextButton).toHaveFocus(); // now focused, safe to press Enter again
+  });
+});
+
+// ─── Update scheduler integration ─────────────────────────────────────────────
+
+describe("AreaModelProblem — update scheduler", () => {
+  beforeEach(() => {
+    vi.mocked(setInGame).mockClear();
+  });
+
+  it("marks in-game on mount", () => {
+    renderComponent();
+    expect(setInGame).toHaveBeenCalledWith(true);
+  });
+
+  it("marks not in-game when phase reaches done", () => {
+    renderComponent();
+    enterPartialQuotient("24"); // single section → done
+    expect(setInGame).toHaveBeenLastCalledWith(false);
+  });
+
+  it("marks in-game again when the next problem starts", () => {
+    renderComponent();
+    enterPartialQuotient("24"); // → done
+    vi.mocked(setInGame).mockClear();
+    fireEvent.click(screen.getByRole("button", { name: /next problem/i }));
+    act(() => vi.advanceTimersByTime(50));
+    expect(setInGame).toHaveBeenLastCalledWith(true);
+  });
+
+  it("marks not in-game when the component unmounts", () => {
+    const { unmount } = render(<AreaModelProblem level={1} />);
+    act(() => vi.advanceTimersByTime(50));
+    vi.mocked(setInGame).mockClear();
+    unmount();
+    expect(setInGame).toHaveBeenLastCalledWith(false);
   });
 });

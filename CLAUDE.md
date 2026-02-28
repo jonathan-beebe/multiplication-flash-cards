@@ -17,3 +17,4 @@ A math training PWA for grade school children, covering addition, subtraction, m
 # Worflow details
 
 - **git commit messages.** We follow the git conventions for [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
+- **Plan before executing.** Always present a plan and get approval before implementing non-trivial changes.
