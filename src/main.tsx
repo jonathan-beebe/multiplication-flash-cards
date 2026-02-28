@@ -11,6 +11,9 @@ registerSW({
     if (registration) {
       const interval = Number(import.meta.env.VITE_SW_UPDATE_INTERVAL_MS) || 60 * 60 * 1000
       setInterval(() => registration.update(), interval)
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('[PWA] New version detected — reloading.')
+      })
     }
   },
 })
