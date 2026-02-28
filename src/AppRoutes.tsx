@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Home from '@/pages/Home.tsx'
 import About from '@/pages/About.tsx'
 import AdditionMenu from '@/pages/AdditionMenu.tsx'
@@ -21,15 +21,24 @@ import DrillComplete from '@/components/multiplication/DrillComplete.tsx'
 
 import DivisionPractice from '@/components/division/DivisionPractice.tsx'
 
-/** Stamps id/tabindex on <main> after each route renders so the skip link resolves. */
-function MainIdStamper() {
+/**
+ * Stamps id/tabindex on <main> after each route renders so the skip link
+ * resolves, and moves keyboard focus to <main> on every navigation so
+ * screen reader users land at the top of new page content (WCAG 2.4.3).
+ */
+function RouteFocusManager() {
   const location = useLocation();
+  const isFirstRender = useRef(true);
   useEffect(() => {
     const main = document.querySelector<HTMLElement>('main');
-    if (main) {
-      main.id = 'main-content';
-      main.setAttribute('tabindex', '-1');
+    if (!main) return;
+    main.id = 'main-content';
+    main.setAttribute('tabindex', '-1');
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
+    main.focus({ preventScroll: false });
   }, [location.pathname]);
   return null;
 }
@@ -40,7 +49,7 @@ export function AppRoutes() {
       <a href="#main-content" className="skip-nav-link">
         Skip to main content
       </a>
-      <MainIdStamper />
+      <RouteFocusManager />
       <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
