@@ -10,7 +10,7 @@ import { useOperationGameEngine } from "@/lib/engine/useOperationGameEngine";
 import { parseOperationLevel, SUBTRACTION_LEVEL_RANGES } from "@/lib/engine/operationLevels";
 
 function renderQuestion(q: SubtractionQuestion, animProps: CardAnimationProps) {
-  return <Card display={`${q.a} − ${q.b}`} srText={`${q.a} minus ${q.b}`} {...animProps} />;
+  return <Card display={<>{q.a}<br/>−&nbsp;{q.b}</>} srText={`${q.a} minus ${q.b}`} contentClassName="text-right" {...animProps} />;
 }
 
 function HardModePractice() {

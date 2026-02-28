@@ -1,9 +1,10 @@
 import clsx from "clsx";
 
 interface CardProps {
-  display: string;
+  display: React.ReactNode;
   srText: string;
   className?: string;
+  contentClassName?: string;
   style?: React.CSSProperties;
   onTransitionEnd?: React.TransitionEventHandler<HTMLDivElement>;
   'aria-hidden'?: boolean | "true" | "false";
@@ -20,7 +21,7 @@ const baseClasses =
     "dark:border-t-slate-600/60 dark:border-l-slate-600/60 dark:border-b-slate-900/80 dark:border-r-slate-900/80 dark:border-none",
   );
 
-function Card({ display, srText, className, style, onTransitionEnd, 'aria-hidden': ariaHidden }: CardProps) {
+function Card({ display, srText, className, contentClassName, style, onTransitionEnd, 'aria-hidden': ariaHidden }: CardProps) {
   return (
     <div
       className={`${baseClasses}${className ? ` ${className}` : ""}`}
@@ -28,7 +29,7 @@ function Card({ display, srText, className, style, onTransitionEnd, 'aria-hidden
       onTransitionEnd={onTransitionEnd}
       aria-hidden={ariaHidden}
     >
-      <div className="text-center">
+      <div className={contentClassName ?? "text-center"}>
         <span className="text-5xl tabular-nums font-bold text-text" aria-hidden="true">
           {display}
         </span>

@@ -15,7 +15,7 @@ interface DrillProps {
 }
 
 function renderQuestion(q: AdditionQuestion, animProps: CardAnimationProps) {
-  return <Card display={`${q.a} + ${q.b}`} srText={`${q.a} plus ${q.b}`} {...animProps} />;
+  return <Card display={<>{q.a}<br/>+&nbsp;{q.b}</>} srText={`${q.a} plus ${q.b}`} contentClassName="text-right" {...animProps} />;
 }
 
 function Drill({ durationMinutes }: DrillProps) {

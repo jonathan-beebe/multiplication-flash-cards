@@ -15,7 +15,7 @@ interface DrillProps {
 }
 
 function renderQuestion(q: SubtractionQuestion, animProps: CardAnimationProps) {
-  return <Card display={`${q.a} − ${q.b}`} srText={`${q.a} minus ${q.b}`} {...animProps} />;
+  return <Card display={<>{q.a}<br/>−&nbsp;{q.b}</>} srText={`${q.a} minus ${q.b}`} contentClassName="text-right" {...animProps} />;
 }
 
 function Drill({ durationMinutes }: DrillProps) {
