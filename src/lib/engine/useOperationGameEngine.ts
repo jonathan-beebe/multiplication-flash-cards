@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
-import { useGameActive } from "./useGameActive";
 import {
   startSession,
   recordResult,
@@ -38,8 +37,6 @@ export function useOperationGameEngine<Q>(
     loadGameState(generator),
   );
   const isInitialMount = useRef(true);
-
-  useGameActive(state.currentSessionId !== null);
 
   useEffect(() => {
     if (isInitialMount.current) {

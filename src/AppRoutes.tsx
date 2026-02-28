@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
+import { UpdateBanner } from '@/components/UpdateBanner'
 import Home from '@/pages/Home.tsx'
 import About from '@/pages/About.tsx'
 import AdditionMenu from '@/pages/AdditionMenu.tsx'
@@ -46,6 +47,7 @@ function RouteFocusManager() {
 export function AppRoutes() {
   return (
     <>
+      <UpdateBanner />
       <a href="#main-content" className="skip-nav-link">
         Skip to main content
       </a>

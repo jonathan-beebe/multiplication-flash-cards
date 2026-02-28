@@ -1,5 +1,5 @@
 import { registerSW } from 'virtual:pwa-register'
-import { scheduleUpdate } from '@/lib/engine/updateScheduler'
+import { notifyUpdateAvailable } from '@/lib/pwa/updateNotifier'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
@@ -9,11 +9,8 @@ import { AppRoutes } from '@/AppRoutes'
 const updateSW = registerSW({
   immediate: true,
   onNeedRefresh() {
-    console.log('[PWA] New version available — scheduling update.')
-    scheduleUpdate(() => {
-      console.log('[PWA] Applying update now.')
-      updateSW(true)
-    })
+    console.log('[PWA] New version available!.')
+    notifyUpdateAvailable(() => updateSW(true))
   },
   onRegistered(registration) {
     if (registration) {

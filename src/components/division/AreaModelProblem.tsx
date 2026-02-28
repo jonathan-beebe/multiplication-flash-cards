@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useGameActive } from "@/lib/engine/useGameActive";
 import {
   generateProblem,
   getHelpfulFacts,
@@ -38,8 +37,6 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
-
-  useGameActive(phase !== "done")
 
   // Focus the input whenever the phase changes (building or summing),
   // or the "Next problem" button when done. The delay prevents the Enter
