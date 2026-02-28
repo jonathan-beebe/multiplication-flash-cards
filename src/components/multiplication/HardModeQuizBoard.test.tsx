@@ -10,6 +10,7 @@ interface MockQuestion {
 }
 
 const mockGenerator: QuestionGenerator<MockQuestion> = {
+  storageKey: "mock-game-state",
   questionKey: (q) => `${q.left}+${q.right}`,
   parseQuestionKey: (key) => {
     const [l, r] = key.split("+");

@@ -7,7 +7,6 @@ import {
   getCurrentSession,
   summarize,
   sessionSummary,
-  daySummary,
   questionStats,
   strugglingQuestions,
   allResults,
@@ -16,10 +15,9 @@ import {
   deserializeGameState,
   type Question,
   type QuestionResult,
-  type GameState,
 } from "./multiplicationGameEngine";
 
-const { questionKey, parseQuestionKey, getNextQuestion } = multiplicationGenerator;
+const { questionKey } = multiplicationGenerator;
 
 // ---------------------------------------------------------------------------
 // Barrel re-export smoke tests — verify the old import path still works

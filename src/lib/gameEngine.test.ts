@@ -31,6 +31,8 @@ const testGenerator: QuestionGenerator<NumQuestion> = {
   parseQuestionKey: (key) => ({ value: Number(key) }),
   getNextQuestion: (_prev, rand) => ({ value: Math.floor(rand * 10) }),
   evaluate: (q, answer) => answer === q.value * 2,
+  generateChoices: (q) => [q.value * 2, q.value * 2 + 1, q.value * 2 + 2],
+  displayText: (q) => String(q.value),
 };
 
 // Helper to build results quickly
