@@ -3,8 +3,8 @@
 @theme {
   --color-background: light-dark(var(--color-slate-100), var(--color-slate-900));
   --color-text: light-dark(var(--color-slate-900), var(--color-slate-100));
-  --color-correct: light-dark(var(--color-green-700), var(--color-green-600));
-  --color-wrong: light-dark(var(--color-red-500), var(--color-red-600));
+  --color-correct: var(--color-green-700);
+  --color-wrong: var(--color-red-700);
 }
 
 /* System font stack */

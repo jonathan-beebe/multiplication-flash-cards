@@ -50,8 +50,8 @@ function SubtractionMenu() {
         </nav>
 
         <div className="flex w-full max-w-xs flex-col items-center gap-6">
-          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Practice</h2>
-          <div className="flex w-full flex-col gap-4">
+          <h2 id="subtraction-practice-heading" className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Practice</h2>
+          <div role="group" aria-labelledby="subtraction-practice-heading" className="flex w-full flex-col gap-4">
             <HomeButton to={`/subtraction/${level}/practice/multiple-choice`} color="rose">
               Multiple Choice
             </HomeButton>
@@ -59,8 +59,8 @@ function SubtractionMenu() {
               Hard Mode
             </HomeButton>
           </div>
-          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Drills</h2>
-          <div className="flex w-full flex-col gap-4">
+          <h2 id="subtraction-drills-heading" className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Drills</h2>
+          <div role="group" aria-labelledby="subtraction-drills-heading" className="flex w-full flex-col gap-4">
             <HomeButton to={`/subtraction/${level}/1-minute-drill`} color="rose" aria-label="1 minute drill">
               1 min
             </HomeButton>

@@ -11,7 +11,7 @@ function DrillComplete({ correctCount: propCorrect, wrongCount: propWrong }: Dri
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Drill Complete — Multiplication Flash Cards";
+    document.title = "Drill Complete — Math Flash Cards";
   }, []);
   const correctCount = propCorrect ?? location.state?.correctCount ?? 0;
   const wrongCount = propWrong ?? location.state?.wrongCount ?? 0;

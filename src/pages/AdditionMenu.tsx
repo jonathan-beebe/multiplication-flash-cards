@@ -50,8 +50,8 @@ function AdditionMenu() {
         </nav>
 
         <div className="flex w-full max-w-xs flex-col items-center gap-6">
-          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Practice</h2>
-          <div className="flex w-full flex-col gap-4">
+          <h2 id="addition-practice-heading" className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Practice</h2>
+          <div role="group" aria-labelledby="addition-practice-heading" className="flex w-full flex-col gap-4">
             <HomeButton to={`/addition/${level}/practice/multiple-choice`} color="green">
               Multiple Choice
             </HomeButton>
@@ -59,8 +59,8 @@ function AdditionMenu() {
               Hard Mode
             </HomeButton>
           </div>
-          <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Drills</h2>
-          <div className="flex w-full flex-col gap-4">
+          <h2 id="addition-drills-heading" className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Drills</h2>
+          <div role="group" aria-labelledby="addition-drills-heading" className="flex w-full flex-col gap-4">
             <HomeButton to={`/addition/${level}/1-minute-drill`} color="green" aria-label="1 minute drill">
               1 min
             </HomeButton>

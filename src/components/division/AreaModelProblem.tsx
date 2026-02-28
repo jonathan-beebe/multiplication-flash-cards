@@ -304,6 +304,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
           <button
             onClick={() => setHintsOpen((o) => !o)}
             aria-expanded={hintsOpen}
+            aria-controls="hints-panel"
             className="w-full flex justify-between items-center px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           >
             <span>Helpful facts for {problem.divisor}</span>
@@ -313,7 +314,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
           </button>
 
           {hintsOpen && (
-            <div className="grid grid-cols-3 gap-x-2 gap-y-1 p-3 bg-slate-50 dark:bg-slate-800/50">
+            <div id="hints-panel" className="grid grid-cols-3 gap-x-2 gap-y-1 p-3 bg-slate-50 dark:bg-slate-800/50">
               {helpfulFacts.map(({ multiplier, product }) => (
                 <div
                   key={multiplier}

@@ -26,6 +26,7 @@ function Drill({ durationMinutes }: DrillProps) {
   const generator = useMemo(() => createSubtractionGenerator(aMin, aMax, bMin, bMax), [aMin, aMax, bMin, bMax]);
   const engine = useOperationGameEngine(generator);
   const [timeRemaining, setTimeRemaining] = useState(durationMinutes * 60);
+  const [timerAnnouncement, setTimerAnnouncement] = useState("");
 
   useEffect(() => {
     document.title = `${durationMinutes} Minute Drill — Subtraction Flash Cards`;
@@ -50,6 +51,12 @@ function Drill({ durationMinutes }: DrillProps) {
         state: { correctCount: correctCountRef.current, wrongCount: wrongCountRef.current },
         replace: true,
       });
+    } else if (timeRemaining === 60) {
+      setTimerAnnouncement("1 minute remaining");
+    } else if (timeRemaining === 30) {
+      setTimerAnnouncement("30 seconds remaining");
+    } else if (timeRemaining === 10) {
+      setTimerAnnouncement("10 seconds remaining");
     }
   }, [timeRemaining, navigate]);
 
@@ -66,6 +73,7 @@ function Drill({ durationMinutes }: DrillProps) {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4">
+      <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">{timerAnnouncement}</span>
       <DrillTimerBar durationSeconds={durationMinutes * 60} />
       <div className="fixed top-2 right-4 z-10 text-xs tabular-nums text-slate-600 dark:text-slate-400">
         <span className="sr-only">Time remaining: </span>
