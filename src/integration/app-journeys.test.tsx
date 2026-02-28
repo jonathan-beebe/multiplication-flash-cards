@@ -179,8 +179,75 @@ describe("App user journeys", () => {
     });
   });
 
-  // ─── 5. Division practice flow ─────────────────────────────────────
+  // ─── 5. Addition flow ──────────────────────────────────────────────
+  describe("Addition flow", () => {
+    it("Home → Addition menu → Practice → Back → menu → Home", () => {
+      render(
+        <MemoryRouter initialEntries={["/"]}>
+          <AppRoutes />
+        </MemoryRouter>,
+      );
+
+      // Navigate to addition menu
+      fireEvent.click(screen.getByRole("link", { name: /addition/i }));
+      expect(screen.getByRole("heading", { name: /addition/i })).toBeInTheDocument();
+
+      // Navigate to practice (multiple choice)
+      fireEvent.click(screen.getByRole("link", { name: /multiple choice/i }));
+      const numericButtons = screen.getAllByRole("button").filter((b) => /^\d+$/.test(b.textContent!));
+      expect(numericButtons.length).toBeGreaterThan(0);
+
+      // Click Back → returns to AdditionMenu
+      fireEvent.click(screen.getByRole("link", { name: /back/i }));
+      expect(screen.getByRole("heading", { name: /addition/i })).toBeInTheDocument();
+
+      // Click Home → returns to home screen
+      fireEvent.click(screen.getByRole("link", { name: /home/i }));
+      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
+    });
+  });
+
+  // ─── 6. Subtraction flow ───────────────────────────────────────────
+  describe("Subtraction flow", () => {
+    it("Home → Subtraction menu → Practice → Back → menu → Home", () => {
+      render(
+        <MemoryRouter initialEntries={["/"]}>
+          <AppRoutes />
+        </MemoryRouter>,
+      );
+
+      // Navigate to subtraction menu
+      fireEvent.click(screen.getByRole("link", { name: /subtraction/i }));
+      expect(screen.getByRole("heading", { name: /subtraction/i })).toBeInTheDocument();
+
+      // Navigate to practice (multiple choice)
+      fireEvent.click(screen.getByRole("link", { name: /multiple choice/i }));
+      const numericButtons = screen.getAllByRole("button").filter((b) => /^\d+$/.test(b.textContent!));
+      expect(numericButtons.length).toBeGreaterThan(0);
+
+      // Click Back → returns to SubtractionMenu
+      fireEvent.click(screen.getByRole("link", { name: /back/i }));
+      expect(screen.getByRole("heading", { name: /subtraction/i })).toBeInTheDocument();
+
+      // Click Home → returns to home screen
+      fireEvent.click(screen.getByRole("link", { name: /home/i }));
+      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
+    });
+  });
+
+  // ─── 7. Division practice flow ─────────────────────────────────────
   describe("Division practice flow", () => {
+    it("Home → Division → division practice screen", () => {
+      render(
+        <MemoryRouter initialEntries={["/"]}>
+          <AppRoutes />
+        </MemoryRouter>,
+      );
+
+      fireEvent.click(screen.getByRole("link", { name: /division/i }));
+      expect(screen.getByRole("heading", { name: /division practice/i })).toBeInTheDocument();
+    });
+
     it("/division-practice redirects to /division-practice/level-1", () => {
       render(
         <MemoryRouter initialEntries={["/division-practice"]}>
@@ -232,7 +299,7 @@ describe("App user journeys", () => {
     });
   });
 
-  // ─── 6. About flow ────────────────────────────────────────────────
+  // ─── 8. About flow ────────────────────────────────────────────────
   describe("About flow", () => {
     it("Home → About → Home", () => {
       render(
