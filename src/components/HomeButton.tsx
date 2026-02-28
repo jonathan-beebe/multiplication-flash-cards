@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 interface HomeButtonProps {
   to: string;
-  color: "indigo" | "amber" | "teal" | "green" | "red";
+  color: "indigo" | "amber" | "teal" | "green" | "red" | "rose" | "pink";
   children: React.ReactNode;
   'aria-label'?: string;
 }
@@ -18,6 +18,10 @@ const colorClasses = {
     "bg-green-600 hover:bg-green-500 active:bg-green-700 dark:bg-green-600 dark:hover:bg-green-500 dark:active:bg-green-700",
   red:
     "bg-red-600 hover:bg-red-500 active:bg-red-700 dark:bg-red-600 dark:hover:bg-red-500 dark:active:bg-red-700",
+  rose:
+    "bg-rose-600 hover:bg-rose-500 active:bg-rose-700 dark:bg-rose-600 dark:hover:bg-rose-500 dark:active:bg-rose-700",
+  pink:
+    "bg-pink-600 hover:bg-pink-500 active:bg-pink-700 dark:bg-pink-600 dark:hover:bg-pink-500 dark:active:bg-pink-700",
 };
 
 export default function HomeButton({ to, color, children, 'aria-label': ariaLabel }: HomeButtonProps) {

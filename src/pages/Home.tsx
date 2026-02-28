@@ -15,7 +15,7 @@ function Home() {
           <HomeButton to="/addition" color="green" aria-label="Addition">
             <span className="text-5xl font-bold leading-none" aria-hidden="true">+</span>
           </HomeButton>
-          <HomeButton to="/subtraction" color="red" aria-label="Subtraction">
+          <HomeButton to="/subtraction" color="rose" aria-label="Subtraction">
             <span className="text-5xl font-bold leading-none" aria-hidden="true">−</span>
           </HomeButton>
           <HomeButton to="/multiplication" color="amber" aria-label="Multiplication">
