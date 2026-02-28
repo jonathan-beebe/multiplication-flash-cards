@@ -36,7 +36,7 @@ function Practice() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4">
-      <NavBar backTo={`/addition/${level}`} />
+      <NavBar backTo={`/addition/${level}`} backLabel="Back to Addition" />
       <QuizBoard
         generator={generator}
         getNextQuestion={engine.getNextQuestion}

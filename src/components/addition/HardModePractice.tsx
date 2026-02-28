@@ -36,7 +36,7 @@ function HardModePractice() {
 
   return (
     <main className="flex h-dvh items-center justify-center bg-background px-4 overflow-hidden">
-      <NavBar backTo={`/addition/${level}`} />
+      <NavBar backTo={`/addition/${level}`} backLabel="Back to Addition" />
       <HardModeQuizBoard
         generator={generator}
         getNextQuestion={engine.getNextQuestion}

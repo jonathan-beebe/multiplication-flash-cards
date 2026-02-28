@@ -71,7 +71,7 @@ function Drill({ durationMinutes }: DrillProps) {
         <span className="sr-only">Time remaining: </span>
         {Math.floor(timeRemaining / 60)}:{String(timeRemaining % 60).padStart(2, "0")}
       </div>
-      <NavBar backTo={`/subtraction/${level}`} />
+      <NavBar backTo={`/subtraction/${level}`} backLabel="Back to Subtraction" />
       <QuizBoard
         generator={generator}
         onCorrect={handleCorrect}
