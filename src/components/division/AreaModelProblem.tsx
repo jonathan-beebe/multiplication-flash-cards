@@ -278,16 +278,22 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
       {/* Done phase */}
       {phase === "done" && (
         <div className="flex flex-col items-center gap-4">
-          <p className="text-2xl font-bold tabular-nums text-teal-600 dark:text-teal-400">
-            {problem.dividend.toLocaleString()} ÷ {problem.divisor} ={" "}
-            {problem.quotient.toLocaleString()} ✓
+          <p
+            className="text-2xl font-bold tabular-nums text-teal-600 dark:text-teal-400"
+            aria-label={`${problem.dividend} divided by ${problem.divisor} equals ${problem.quotient}, correct`}
+          >
+            <span aria-hidden="true">
+              {problem.dividend.toLocaleString()} ÷ {problem.divisor} ={" "}
+              {problem.quotient.toLocaleString()} ✓
+            </span>
           </p>
           <button
             ref={nextButtonRef}
             onClick={handleNext}
+            aria-label="Next problem"
             className="rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-8 py-3 text-lg shadow-md transition-all"
           >
-            Next problem →
+            <span aria-hidden="true">Next problem →</span>
           </button>
         </div>
       )}
