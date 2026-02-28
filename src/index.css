@@ -63,6 +63,31 @@ body {
   outline-offset: 3px;
 }
 
+/* Skip navigation link — visually hidden until focused (WCAG 2.4.1) */
+.skip-nav-link {
+  position: fixed;
+  top: -100%;
+  left: 0;
+  z-index: 9999;
+  padding: 0.5rem 1.25rem;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-radius: 0 0 0.5rem 0;
+  transition: top 0.1s;
+}
+
+.skip-nav-link:focus {
+  top: 0;
+}
+
+/* Suppress visible focus ring on programmatically focused landmarks */
+main:focus {
+  outline: none;
+}
+
 /* Shake animation for invalid input feedback */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }

@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import Home from '@/pages/Home.tsx'
 import About from '@/pages/About.tsx'
 import AdditionMenu from '@/pages/AdditionMenu.tsx'
@@ -20,9 +21,27 @@ import DrillComplete from '@/components/multiplication/DrillComplete.tsx'
 
 import DivisionPractice from '@/components/division/DivisionPractice.tsx'
 
+/** Stamps id/tabindex on <main> after each route renders so the skip link resolves. */
+function MainIdStamper() {
+  const location = useLocation();
+  useEffect(() => {
+    const main = document.querySelector<HTMLElement>('main');
+    if (main) {
+      main.id = 'main-content';
+      main.setAttribute('tabindex', '-1');
+    }
+  }, [location.pathname]);
+  return null;
+}
+
 export function AppRoutes() {
   return (
-    <Routes>
+    <>
+      <a href="#main-content" className="skip-nav-link">
+        Skip to main content
+      </a>
+      <MainIdStamper />
+      <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
 
@@ -69,5 +88,6 @@ export function AppRoutes() {
       {/* Demo */}
       <Route path="/demo/drill-complete" element={<DrillComplete correctCount={42} wrongCount={8} />} />
     </Routes>
+    </>
   )
 }
