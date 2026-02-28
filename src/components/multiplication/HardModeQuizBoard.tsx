@@ -156,6 +156,7 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
             }}
             onClick={handleSubmit}
             disabled={showCorrect || isAnimating}
+            aria-label="Check answer"
             className="rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all disabled:opacity-50"
           >
             Check
