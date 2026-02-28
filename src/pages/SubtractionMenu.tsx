@@ -41,7 +41,7 @@ function SubtractionMenu() {
               className={clsx(
                 "px-4 py-2 rounded-lg text-sm font-semibold transition-all",
                 level === l
-                  ? "bg-indigo-600 text-white shadow-sm"
+                  ? "bg-red-600 text-white shadow-sm"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
               )}
             >
@@ -53,22 +53,22 @@ function SubtractionMenu() {
         <div className="flex w-full max-w-xs flex-col items-center gap-6">
           <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Practice</h2>
           <div className="flex w-full flex-col gap-4">
-            <HomeButton to={`/subtraction/${level}/practice/multiple-choice`} color="indigo">
+            <HomeButton to={`/subtraction/${level}/practice/multiple-choice`} color="red">
               Multiple Choice
             </HomeButton>
-            <HomeButton to={`/subtraction/${level}/practice/hard-mode`} color="indigo">
+            <HomeButton to={`/subtraction/${level}/practice/hard-mode`} color="red">
               Hard Mode
             </HomeButton>
           </div>
           <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Drills</h2>
           <div className="flex w-full flex-col gap-4">
-            <HomeButton to={`/subtraction/${level}/1-minute-drill`} color="amber" aria-label="1 minute drill">
+            <HomeButton to={`/subtraction/${level}/1-minute-drill`} color="red" aria-label="1 minute drill">
               1 min
             </HomeButton>
-            <HomeButton to={`/subtraction/${level}/3-minute-drill`} color="amber" aria-label="3 minute drill">
+            <HomeButton to={`/subtraction/${level}/3-minute-drill`} color="red" aria-label="3 minute drill">
               3 min
             </HomeButton>
-            <HomeButton to={`/subtraction/${level}/5-minute-drill`} color="amber" aria-label="5 minute drill">
+            <HomeButton to={`/subtraction/${level}/5-minute-drill`} color="red" aria-label="5 minute drill">
               5 min
             </HomeButton>
           </div>
