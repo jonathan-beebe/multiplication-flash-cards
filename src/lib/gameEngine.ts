@@ -194,6 +194,8 @@ export function allResults<Q>(state: GameState<Q>): readonly QuestionResult<Q>[]
 // Persistence
 // ---------------------------------------------------------------------------
 
+export const PERSISTENCE_ENABLED = false;
+
 /** v2 compact session: i=id, t=startedAt timestamp, r=right (correct) keys, w=wrong keys */
 interface SerializedSessionV2 {
   i: string;
@@ -293,6 +295,7 @@ export function deserializeGameState<Q>(
 
 /** Load game state from localStorage, returning empty state if unavailable. */
 export function loadGameState<Q>(generator: QuestionGenerator<Q>): GameState<Q> {
+  if (!PERSISTENCE_ENABLED) return createGameState<Q>();
   try {
     const json = localStorage.getItem(generator.storageKey);
     if (!json) return createGameState<Q>();
@@ -307,6 +310,7 @@ export function saveGameState<Q>(
   state: GameState<Q>,
   generator: QuestionGenerator<Q>,
 ): void {
+  if (!PERSISTENCE_ENABLED) return;
   try {
     localStorage.setItem(generator.storageKey, serializeGameState(state, generator));
   } catch {

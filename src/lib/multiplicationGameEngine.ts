@@ -13,6 +13,7 @@ export type {
 } from "./gameEngine";
 
 export {
+  PERSISTENCE_ENABLED,
   createGameState,
   startSession,
   recordResult,
