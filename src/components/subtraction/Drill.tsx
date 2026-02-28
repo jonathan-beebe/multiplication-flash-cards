@@ -1,13 +1,14 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import QuizBoard from "@/components/multiplication/QuizBoard";
 import Card from "@/components/Card";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
 import DrillTimerBar from "@/components/multiplication/DrillTimerBar";
 import type { SubtractionQuestion } from "@/lib/subtractionGenerator";
-import { subtractionGenerator } from "@/lib/subtractionGenerator";
-import { useSubtractionGameEngine } from "@/lib/useSubtractionGameEngine";
+import { createSubtractionGenerator } from "@/lib/subtractionGenerator";
+import { useOperationGameEngine } from "@/lib/useOperationGameEngine";
+import { parseOperationLevel, SUBTRACTION_LEVEL_RANGES } from "@/lib/operationLevels";
 
 interface DrillProps {
   durationMinutes: number;
@@ -19,7 +20,11 @@ function renderQuestion(q: SubtractionQuestion, animProps: CardAnimationProps) {
 
 function Drill({ durationMinutes }: DrillProps) {
   const navigate = useNavigate();
-  const engine = useSubtractionGameEngine();
+  const { level: levelParam } = useParams<{ level: string }>();
+  const level = parseOperationLevel(levelParam);
+  const { aMin, aMax, bMax } = SUBTRACTION_LEVEL_RANGES[level];
+  const generator = useMemo(() => createSubtractionGenerator(aMin, aMax, bMax), [aMin, aMax, bMax]);
+  const engine = useOperationGameEngine(generator);
   const [timeRemaining, setTimeRemaining] = useState(durationMinutes * 60);
 
   useEffect(() => {
@@ -68,7 +73,7 @@ function Drill({ durationMinutes }: DrillProps) {
       </div>
       <NavBar />
       <QuizBoard
-        generator={subtractionGenerator}
+        generator={generator}
         onCorrect={handleCorrect}
         onWrong={handleWrong}
         getNextQuestion={engine.getNextQuestion}

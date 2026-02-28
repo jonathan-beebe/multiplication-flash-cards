@@ -23,17 +23,16 @@ function parseQuestionKey(key: string): SubtractionQuestion {
   return { a: Number(key.slice(0, idx)), b: Number(key.slice(idx + 1)) };
 }
 
-const MAX = 9999;
-
 /**
- * Pick the next subtraction question.
- *
- * Operands are drawn randomly from [0, MAX] with b ≤ a so the answer is
- * always a non-negative integer.
+ * Pick the next subtraction question with minuend in [aMin, aMax] and
+ * subtrahend in [0, min(bMax, a)] so the answer is always non-negative.
  */
-function getNextQuestion(
+function getNextQuestionInRange(
   previousResults: readonly QuestionResult<SubtractionQuestion>[],
   randomValue: number,
+  aMin: number,
+  aMax: number,
+  bMax: number,
 ): SubtractionQuestion {
   const lastResult =
     previousResults.length > 0
@@ -41,17 +40,27 @@ function getNextQuestion(
       : null;
   const lastKey = lastResult ? questionKey(lastResult.question) : null;
 
+  const aRange = aMax - aMin + 1;
+
   for (let attempt = 0; attempt < 10; attempt++) {
     const seed = (randomValue + attempt * 0.1) % 1;
-    const hi = Math.floor(seed * (MAX + 1));
-    const lo = Math.floor(((seed * 9973) % 1) * (hi + 1));
-    const q: SubtractionQuestion = { a: hi, b: lo };
+    const a = aMin + Math.floor(seed * aRange);
+    const maxB = Math.min(bMax, a);
+    const b = Math.floor(((seed * 9973) % 1) * (maxB + 1));
+    const q: SubtractionQuestion = { a, b };
     if (questionKey(q) !== lastKey) return q;
   }
 
   // Fallback
-  const a = Math.max(1, Math.floor(randomValue * MAX));
-  return { a, b: a - 1 };
+  const a = aMin + Math.floor(randomValue * aRange);
+  return { a, b: 0 };
+}
+
+function getNextQuestion(
+  previousResults: readonly QuestionResult<SubtractionQuestion>[],
+  randomValue: number,
+): SubtractionQuestion {
+  return getNextQuestionInRange(previousResults, randomValue, 1, 9999, 9999);
 }
 
 function computeQuestionStats(
@@ -87,6 +96,18 @@ function computeQuestionStats(
 
 // Keep the linter happy — computeQuestionStats is available for future use.
 void computeQuestionStats;
+
+export function createSubtractionGenerator(aMin: number, aMax: number, bMax: number): QuestionGenerator<SubtractionQuestion> {
+  return {
+    storageKey: `subtraction-game-state-${aMin}-${aMax}-${bMax}`,
+    questionKey,
+    parseQuestionKey,
+    getNextQuestion: (results, random) => getNextQuestionInRange(results, random, aMin, aMax, bMax),
+    evaluate,
+    generateChoices,
+    displayText,
+  };
+}
 
 function evaluate(question: SubtractionQuestion, answer: number): boolean {
   return answer === question.a - question.b;

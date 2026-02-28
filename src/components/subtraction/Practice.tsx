@@ -1,18 +1,24 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import QuizBoard from "@/components/multiplication/QuizBoard";
 import Card from "@/components/Card";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
 import type { SubtractionQuestion } from "@/lib/subtractionGenerator";
-import { subtractionGenerator } from "@/lib/subtractionGenerator";
-import { useSubtractionGameEngine } from "@/lib/useSubtractionGameEngine";
+import { createSubtractionGenerator } from "@/lib/subtractionGenerator";
+import { useOperationGameEngine } from "@/lib/useOperationGameEngine";
+import { parseOperationLevel, SUBTRACTION_LEVEL_RANGES } from "@/lib/operationLevels";
 
 function renderQuestion(q: SubtractionQuestion, animProps: CardAnimationProps) {
   return <Card display={`${q.a} − ${q.b}`} srText={`${q.a} minus ${q.b}`} {...animProps} />;
 }
 
 function Practice() {
-  const engine = useSubtractionGameEngine();
+  const { level: levelParam } = useParams<{ level: string }>();
+  const level = parseOperationLevel(levelParam);
+  const { aMin, aMax, bMax } = SUBTRACTION_LEVEL_RANGES[level];
+  const generator = useMemo(() => createSubtractionGenerator(aMin, aMax, bMax), [aMin, aMax, bMax]);
+  const engine = useOperationGameEngine(generator);
 
   useEffect(() => {
     document.title = "Practice — Subtraction Flash Cards";
@@ -32,7 +38,7 @@ function Practice() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4">
       <NavBar />
       <QuizBoard
-        generator={subtractionGenerator}
+        generator={generator}
         getNextQuestion={engine.getNextQuestion}
         renderQuestion={renderQuestion}
         onAnswer={handleAnswer}

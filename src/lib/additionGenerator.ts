@@ -25,18 +25,16 @@ function parseQuestionKey(key: string): AdditionQuestion {
   return { a: Number(aStr), b: Number(bStr) };
 }
 
-const MAX = 9999;
-
 /**
- * Pick the next addition question.
- *
- * The space (0–9999 × 0–9999) is too large to enumerate, so we generate
- * random operands directly. Struggling-question weighting still applies
- * when the same pair appears more than once.
+ * Pick the next addition question with `a` in [aMin, aMax] and `b` in [bMin, bMax].
  */
-function getNextQuestion(
+function getNextQuestionInRange(
   previousResults: readonly QuestionResult<AdditionQuestion>[],
   randomValue: number,
+  aMin: number,
+  aMax: number,
+  bMin: number,
+  bMax: number,
 ): AdditionQuestion {
   const lastResult =
     previousResults.length > 0
@@ -44,27 +42,26 @@ function getNextQuestion(
       : null;
   const lastKey = lastResult ? questionKey(lastResult.question) : null;
 
-  // Build a small stats map for weighting if any questions have been seen.
-  const stats = computeQuestionStats(previousResults);
-  const statsMap = new Map<string, QuestionStats<AdditionQuestion>>();
-  for (const s of stats) {
-    statsMap.set(questionKey(s.question), s);
-  }
+  const aRange = aMax - aMin + 1;
+  const bRange = bMax - bMin + 1;
 
-  // Generate candidates and pick a weighted one.  We try up to 10 random
-  // candidates; the first one that isn't the last question wins (weighted
-  // by how much the student is struggling with it).
   for (let attempt = 0; attempt < 10; attempt++) {
     const seed = (randomValue + attempt * 0.1) % 1;
-    const a = Math.floor(seed * (MAX + 1));
-    const b = Math.floor(((seed * 9973) % 1) * (MAX + 1)); // different spread
-    const q: AdditionQuestion = randomValue < 0.5 ? { a, b } : { a: b, b: a };
+    const a = aMin + Math.floor(seed * aRange);
+    const b = bMin + Math.floor(((seed * 9973) % 1) * bRange);
+    const q: AdditionQuestion = { a, b };
     if (questionKey(q) !== lastKey) return q;
   }
 
   // Fallback: guaranteed different from last
-  const a = Math.floor(randomValue * MAX);
-  return { a, b: a + 1 };
+  return { a: aMin + Math.floor(randomValue * aRange), b: bMin };
+}
+
+function getNextQuestion(
+  previousResults: readonly QuestionResult<AdditionQuestion>[],
+  randomValue: number,
+): AdditionQuestion {
+  return getNextQuestionInRange(previousResults, randomValue, 0, 9999, 0, 9999);
 }
 
 function computeQuestionStats(
@@ -138,6 +135,18 @@ function generateChoices(question: AdditionQuestion): number[] {
 
 function displayText(question: AdditionQuestion): string {
   return `${question.a} plus ${question.b}`;
+}
+
+export function createAdditionGenerator(aMin: number, aMax: number, bMin: number, bMax: number): QuestionGenerator<AdditionQuestion> {
+  return {
+    storageKey: `addition-game-state-${aMin}-${aMax}-${bMin}-${bMax}`,
+    questionKey,
+    parseQuestionKey,
+    getNextQuestion: (results, random) => getNextQuestionInRange(results, random, aMin, aMax, bMin, bMax),
+    evaluate,
+    generateChoices,
+    displayText,
+  };
 }
 
 export const additionGenerator: QuestionGenerator<AdditionQuestion> = {

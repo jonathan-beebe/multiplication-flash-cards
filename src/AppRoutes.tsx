@@ -27,26 +27,28 @@ export function AppRoutes() {
       <Route path="/about" element={<About />} />
 
       {/* Addition */}
-      <Route path="/addition" element={<AdditionMenu />} />
-      <Route path="/addition/practice/multiple-choice" element={<AdditionPractice />} />
-      <Route path="/addition/practice/hard-mode" element={<AdditionHardMode />} />
-      <Route path="/addition/1-minute-drill" element={<AdditionDrill durationMinutes={1} />} />
-      <Route path="/addition/1-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/addition/3-minute-drill" element={<AdditionDrill durationMinutes={3} />} />
-      <Route path="/addition/3-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/addition/5-minute-drill" element={<AdditionDrill durationMinutes={5} />} />
-      <Route path="/addition/5-minute-drill/success" element={<DrillComplete />} />
+      <Route path="/addition" element={<Navigate to="/addition/ones" replace />} />
+      <Route path="/addition/:level" element={<AdditionMenu />} />
+      <Route path="/addition/:level/practice/multiple-choice" element={<AdditionPractice />} />
+      <Route path="/addition/:level/practice/hard-mode" element={<AdditionHardMode />} />
+      <Route path="/addition/:level/1-minute-drill" element={<AdditionDrill durationMinutes={1} />} />
+      <Route path="/addition/:level/1-minute-drill/success" element={<DrillComplete />} />
+      <Route path="/addition/:level/3-minute-drill" element={<AdditionDrill durationMinutes={3} />} />
+      <Route path="/addition/:level/3-minute-drill/success" element={<DrillComplete />} />
+      <Route path="/addition/:level/5-minute-drill" element={<AdditionDrill durationMinutes={5} />} />
+      <Route path="/addition/:level/5-minute-drill/success" element={<DrillComplete />} />
 
       {/* Subtraction */}
-      <Route path="/subtraction" element={<SubtractionMenu />} />
-      <Route path="/subtraction/practice/multiple-choice" element={<SubtractionPractice />} />
-      <Route path="/subtraction/practice/hard-mode" element={<SubtractionHardMode />} />
-      <Route path="/subtraction/1-minute-drill" element={<SubtractionDrill durationMinutes={1} />} />
-      <Route path="/subtraction/1-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/subtraction/3-minute-drill" element={<SubtractionDrill durationMinutes={3} />} />
-      <Route path="/subtraction/3-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/subtraction/5-minute-drill" element={<SubtractionDrill durationMinutes={5} />} />
-      <Route path="/subtraction/5-minute-drill/success" element={<DrillComplete />} />
+      <Route path="/subtraction" element={<Navigate to="/subtraction/ones" replace />} />
+      <Route path="/subtraction/:level" element={<SubtractionMenu />} />
+      <Route path="/subtraction/:level/practice/multiple-choice" element={<SubtractionPractice />} />
+      <Route path="/subtraction/:level/practice/hard-mode" element={<SubtractionHardMode />} />
+      <Route path="/subtraction/:level/1-minute-drill" element={<SubtractionDrill durationMinutes={1} />} />
+      <Route path="/subtraction/:level/1-minute-drill/success" element={<DrillComplete />} />
+      <Route path="/subtraction/:level/3-minute-drill" element={<SubtractionDrill durationMinutes={3} />} />
+      <Route path="/subtraction/:level/3-minute-drill/success" element={<DrillComplete />} />
+      <Route path="/subtraction/:level/5-minute-drill" element={<SubtractionDrill durationMinutes={5} />} />
+      <Route path="/subtraction/:level/5-minute-drill/success" element={<DrillComplete />} />
 
       {/* Multiplication */}
       <Route path="/multiplication" element={<MultiplicationMenu />} />
