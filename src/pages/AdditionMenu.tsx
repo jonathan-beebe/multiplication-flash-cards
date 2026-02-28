@@ -27,10 +27,9 @@ function AdditionMenu() {
         <h1 className="mb-6 text-4xl font-bold text-text">Addition</h1>
 
         {/* Level picker */}
-        <div
+        <nav
           className="flex gap-1 rounded-xl border border-slate-200 dark:border-slate-700 p-1 bg-slate-100 dark:bg-slate-800/50 mb-8"
-          role="group"
-          aria-label="Select difficulty level"
+          aria-label="Difficulty level"
         >
           {OPERATION_LEVEL_IDS.map((l) => (
             <Link
@@ -48,7 +47,7 @@ function AdditionMenu() {
               {OPERATION_LEVELS[l].label}
             </Link>
           ))}
-        </div>
+        </nav>
 
         <div className="flex w-full max-w-xs flex-col items-center gap-6">
           <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Practice</h2>

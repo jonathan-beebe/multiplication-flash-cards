@@ -43,10 +43,9 @@ export default function DivisionPractice() {
         </div>
 
         {/* Level picker */}
-        <div
+        <nav
           className="flex gap-1 rounded-xl border border-slate-200 dark:border-slate-700 p-1 bg-slate-100 dark:bg-slate-800/50"
-          role="group"
-          aria-label="Select difficulty level"
+          aria-label="Difficulty level"
         >
           {LEVEL_IDS.map((l) => (
             <Link
@@ -64,7 +63,7 @@ export default function DivisionPractice() {
               {LEVELS[l].label}
             </Link>
           ))}
-        </div>
+        </nav>
 
         {/* Problem area — keyed on level so state resets when level changes */}
         <AreaModelProblem key={level} level={level} />
