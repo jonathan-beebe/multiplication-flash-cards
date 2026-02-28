@@ -9,7 +9,7 @@ import { AppRoutes } from '@/AppRoutes'
 const updateSW = registerSW({
   immediate: true,
   onNeedRefresh() {
-    console.log('[PWA] New version available!.')
+    console.log('[PWA] New version available.')
     notifyUpdateAvailable(() => updateSW(true))
   },
   onRegistered(registration) {
