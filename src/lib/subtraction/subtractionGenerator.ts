@@ -25,13 +25,14 @@ function parseQuestionKey(key: string): SubtractionQuestion {
 
 /**
  * Pick the next subtraction question with minuend in [aMin, aMax] and
- * subtrahend in [0, min(bMax, a)] so the answer is always non-negative.
+ * subtrahend in [bMin, min(bMax, a)] so the answer is always non-negative.
  */
 function getNextQuestionInRange(
   previousResults: readonly QuestionResult<SubtractionQuestion>[],
   randomValue: number,
   aMin: number,
   aMax: number,
+  bMin: number,
   bMax: number,
 ): SubtractionQuestion {
   const lastResult =
@@ -46,21 +47,23 @@ function getNextQuestionInRange(
     const seed = (randomValue + attempt * 0.1) % 1;
     const a = aMin + Math.floor(seed * aRange);
     const maxB = Math.min(bMax, a);
-    const b = Math.floor(((seed * 9973) % 1) * (maxB + 1));
+    const minB = Math.min(bMin, maxB);
+    const bRange = maxB - minB + 1;
+    const b = minB + Math.floor(((seed * 9973) % 1) * bRange);
     const q: SubtractionQuestion = { a, b };
     if (questionKey(q) !== lastKey) return q;
   }
 
   // Fallback
   const a = aMin + Math.floor(randomValue * aRange);
-  return { a, b: 0 };
+  return { a, b: bMin };
 }
 
 function getNextQuestion(
   previousResults: readonly QuestionResult<SubtractionQuestion>[],
   randomValue: number,
 ): SubtractionQuestion {
-  return getNextQuestionInRange(previousResults, randomValue, 1, 9999, 9999);
+  return getNextQuestionInRange(previousResults, randomValue, 1, 9999, 2, 9999);
 }
 
 function computeQuestionStats(
@@ -97,12 +100,12 @@ function computeQuestionStats(
 // Keep the linter happy — computeQuestionStats is available for future use.
 void computeQuestionStats;
 
-export function createSubtractionGenerator(aMin: number, aMax: number, bMax: number): QuestionGenerator<SubtractionQuestion> {
+export function createSubtractionGenerator(aMin: number, aMax: number, bMin: number, bMax: number): QuestionGenerator<SubtractionQuestion> {
   return {
-    storageKey: `subtraction-game-state-${aMin}-${aMax}-${bMax}`,
+    storageKey: `subtraction-game-state-${aMin}-${aMax}-${bMin}-${bMax}`,
     questionKey,
     parseQuestionKey,
-    getNextQuestion: (results, random) => getNextQuestionInRange(results, random, aMin, aMax, bMax),
+    getNextQuestion: (results, random) => getNextQuestionInRange(results, random, aMin, aMax, bMin, bMax),
     evaluate,
     generateChoices,
     displayText,

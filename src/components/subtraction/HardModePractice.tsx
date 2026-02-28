@@ -16,8 +16,8 @@ function renderQuestion(q: SubtractionQuestion, animProps: CardAnimationProps) {
 function HardModePractice() {
   const { level: levelParam } = useParams<{ level: string }>();
   const level = parseOperationLevel(levelParam);
-  const { aMin, aMax, bMax } = SUBTRACTION_LEVEL_RANGES[level];
-  const generator = useMemo(() => createSubtractionGenerator(aMin, aMax, bMax), [aMin, aMax, bMax]);
+  const { aMin, aMax, bMin, bMax } = SUBTRACTION_LEVEL_RANGES[level];
+  const generator = useMemo(() => createSubtractionGenerator(aMin, aMax, bMin, bMax), [aMin, aMax, bMin, bMax]);
   const engine = useOperationGameEngine(generator);
 
   useEffect(() => {

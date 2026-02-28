@@ -8,17 +8,17 @@ export const OPERATION_LEVELS: Record<OperationLevel, { label: string; descripti
 };
 
 export const ADDITION_LEVEL_RANGES: Record<OperationLevel, { aMin: number; aMax: number; bMin: number; bMax: number }> = {
-  ones:      { aMin: 0, aMax: 9,    bMin: 0, bMax: 9    },
-  tens:      { aMin: 0, aMax: 99,   bMin: 0, bMax: 9    },
-  hundreds:  { aMin: 0, aMax: 999,  bMin: 0, bMax: 99   },
-  thousands: { aMin: 0, aMax: 9999, bMin: 0, bMax: 9999 },
+  ones:      { aMin: 2, aMax: 9,    bMin: 2, bMax: 9    },
+  tens:      { aMin: 2, aMax: 99,   bMin: 2, bMax: 9    },
+  hundreds:  { aMin: 2, aMax: 999,  bMin: 2, bMax: 99   },
+  thousands: { aMin: 2, aMax: 9999, bMin: 2, bMax: 9999 },
 };
 
-export const SUBTRACTION_LEVEL_RANGES: Record<OperationLevel, { aMin: number; aMax: number; bMax: number }> = {
-  ones:      { aMin: 1, aMax: 9,    bMax: 9    },
-  tens:      { aMin: 1, aMax: 99,   bMax: 9    },
-  hundreds:  { aMin: 1, aMax: 999,  bMax: 99   },
-  thousands: { aMin: 1, aMax: 9999, bMax: 9999 },
+export const SUBTRACTION_LEVEL_RANGES: Record<OperationLevel, { aMin: number; aMax: number; bMin: number; bMax: number }> = {
+  ones:      { aMin: 2, aMax: 9,    bMin: 2, bMax: 9    },
+  tens:      { aMin: 2, aMax: 99,   bMin: 2, bMax: 9    },
+  hundreds:  { aMin: 2, aMax: 999,  bMin: 2, bMax: 99   },
+  thousands: { aMin: 2, aMax: 9999, bMin: 2, bMax: 9999 },
 };
 
 export const OPERATION_LEVEL_IDS: OperationLevel[] = ['ones', 'tens', 'hundreds', 'thousands'];
