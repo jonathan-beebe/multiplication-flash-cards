@@ -6,7 +6,9 @@ A math flash card app to help 1st–5th graders practice addition, subtraction, 
 
 It began as a simple tool to help my fourth-grade son practice his multiplication facts (times tables). After gaining popularity with his school and classmates, it has grown into a comprehensive resource for elementary students to strengthen their math skills at every level.
 
-![App demo](docs/demo.gif)
+| Home Screen | Feature | Flash Cards |
+|---|---|---|
+| ![App demo](docs/001-home.png) | ![App demo](docs/002-feature.png) | ![App demo](docs/003-flashcard.png) |
 
 ## Install as an App
 
