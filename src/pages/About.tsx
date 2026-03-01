@@ -10,12 +10,16 @@ function About() {
     <main className="flex min-h-screen justify-center overflow-auto bg-background px-4 pb-8 pt-16">
       <NavBar />
       <div className="flex w-full max-w-md flex-col gap-6 text-left">
-        <h1 className="text-4xl font-bold text-text">
-          About
-        </h1>
+        <h1 className="text-4xl font-bold text-text">About</h1>
         <p className="text-lg text-slate-700 dark:text-slate-300">
-          A simple flash card app to help kids practice their multiplication
-          tables for the numbers 3–12.
+          A math flash card app to help 1st–5th graders practice
+          addition, subtraction, multiplication, and division.
+        </p>
+        <p className="text-lg text-slate-700 dark:text-slate-300">
+          It began as a simple tool to help my fourth-grade son practice his
+          multiplication facts (times tables). After gaining popularity with his
+          school and classmates, it has grown into a comprehensive resource for
+          elementary students to strengthen their math skills at every level.
         </p>
         <p className="text-lg text-slate-700 dark:text-slate-300">
           If you have any comments, bug reports, or feature requests, please
@@ -39,17 +43,13 @@ function About() {
           .
         </p>
 
-        <h2 className="mt-4 text-2xl font-bold text-text">
-          Install as an App
-        </h2>
+        <h2 className="mt-4 text-2xl font-bold text-text">Install as an App</h2>
         <p className="text-lg text-slate-700 dark:text-slate-300">
           You can install this as an app on your device for easy access — no app
           store needed.
         </p>
 
-        <h3 className="text-xl font-semibold text-text">
-          iPhone or iPad
-        </h3>
+        <h3 className="text-xl font-semibold text-text">iPhone or iPad</h3>
         <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
           <li>Open this page in Safari</li>
           <li>Tap the Share button (square with an arrow pointing up)</li>
@@ -57,9 +57,7 @@ function About() {
           <li>Tap Add</li>
         </ol>
 
-        <h3 className="text-xl font-semibold text-text">
-          Android
-        </h3>
+        <h3 className="text-xl font-semibold text-text">Android</h3>
         <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
           <li>Open this page in Chrome</li>
           <li>Tap the three-dot menu in the top right</li>
@@ -73,8 +71,8 @@ function About() {
         <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
           <li>
             Look for the install icon in the address bar (a computer with a down
-            arrow), or click the three-dot menu and choose Install
-            Multiplication Flash Cards
+            arrow), or click the three-dot menu and choose Install Math Flash
+            Cards
           </li>
           <li>Click Install</li>
         </ol>

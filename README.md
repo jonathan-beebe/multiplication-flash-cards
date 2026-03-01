@@ -2,7 +2,9 @@
 
 [**Play Now**](https://jonathan-beebe.github.io/multiplication-flash-cards/)
 
-A simple flash card app to help kids practice their multiplication tables for the numbers 3–12.
+A math flash card app to help 1st–5th graders practice addition, subtraction, multiplication, and division.
+
+It began as a simple tool to help my fourth-grade son practice his multiplication facts (times tables). After gaining popularity with his school and classmates, it has grown into a comprehensive resource for elementary students to strengthen their math skills at every level.
 
 ![App demo](docs/demo.gif)
 
