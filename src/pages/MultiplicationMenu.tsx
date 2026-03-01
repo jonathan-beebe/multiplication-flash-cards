@@ -8,7 +8,7 @@ function MultiplicationMenu() {
   }, []);
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-4 pb-12 bg-background">
+    <main className="flex min-h-screen items-center justify-center px-4 py-4 pt-16 pb-12 bg-background">
       <NavBar />
       <div className="flex w-full max-w-md flex-col items-center text-center">
         <h1 className="mb-8 text-4xl font-bold text-text">Multiplication</h1>

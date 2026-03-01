@@ -13,16 +13,16 @@ function Home() {
         <h1 className="mb-8 text-4xl font-bold text-text">Math Flash{"\u00A0"}Cards</h1>
         <div className="grid grid-cols-2 w-full max-w-xs gap-4">
           <HomeButton to="/addition" color="green" aria-label="Addition">
-            <span className="text-5xl font-bold leading-none" aria-hidden="true">+</span>
+            <span className="text-5xl font-bold leading-none relative -top-[2px] text-shadow-sm" aria-hidden="true">+</span>
           </HomeButton>
           <HomeButton to="/subtraction" color="rose" aria-label="Subtraction">
-            <span className="text-5xl font-bold leading-none" aria-hidden="true">−</span>
+            <span className="text-5xl font-bold leading-none relative -top-[2px] text-shadow-sm" aria-hidden="true">−</span>
           </HomeButton>
           <HomeButton to="/multiplication" color="amber" aria-label="Multiplication">
-            <span className="text-5xl font-bold leading-none" aria-hidden="true">×</span>
+            <span className="text-5xl font-bold leading-none relative -top-[2px] text-shadow-sm" aria-hidden="true">×</span>
           </HomeButton>
           <HomeButton to="/division" color="teal" aria-label="Division">
-            <span className="text-5xl font-bold leading-none" aria-hidden="true">÷</span>
+            <span className="text-5xl font-bold leading-none relative -top-[2px] text-shadow-sm" aria-hidden="true">÷</span>
           </HomeButton>
         </div>
 
