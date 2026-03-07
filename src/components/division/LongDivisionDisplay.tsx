@@ -1,5 +1,17 @@
 import { type LongDivisionStep, computeRightCols } from "@/lib/division/standardAlgorithm/longDivision";
 
+// Shared slot style: fixed 1ch-wide inline-block.
+function slot(width = 1): React.CSSProperties {
+  return { display: "inline-block", width: `${width}ch`, textAlign: "center", flexShrink: 0 };
+}
+
+// The 2px compensation spacer aligns step rows with the border-l-2 on the dividend row.
+const borderCompensation: React.CSSProperties = {
+  display: "inline-block",
+  width: "2px",
+  flexShrink: 0,
+};
+
 export interface LongDivisionDisplayProps {
   dividend: number;
   divisor: number;
@@ -48,20 +60,6 @@ export default function LongDivisionDisplay({
     };
   });
 
-  // Shared slot style: fixed 1ch-wide inline-block.
-  const slot = (width = 1): React.CSSProperties => ({
-    display: "inline-block",
-    width: `${width}ch`,
-    textAlign: "center",
-    flexShrink: 0,
-  });
-
-  // The 2px compensation spacer aligns step rows with the border-l-2 on the dividend row.
-  const borderCompensation: React.CSSProperties = {
-    display: "inline-block",
-    width: "2px",
-    flexShrink: 0,
-  };
 
   return (
     <div
