@@ -5,6 +5,7 @@ import QuizButton from "@/components/multiplication/QuizButton";
 import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
+import SuccessText from "@/components/atoms/SuccessText";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -62,8 +63,8 @@ function TypographyAtoms() {
         <p className="font-mono tabular-nums text-xl text-text">3 ) 657</p>
       </div>
       <div>
-        <p className="text-xs text-slate-400 mb-1">Success — text-teal-600</p>
-        <p className="text-2xl font-bold tabular-nums text-teal-600 dark:text-teal-400">219 ✓</p>
+        <p className="text-xs text-slate-400 mb-1">Success — SuccessText</p>
+        <SuccessText>219 ✓</SuccessText>
       </div>
       <div>
         <p className="text-xs text-slate-400 mb-1">Error</p>
