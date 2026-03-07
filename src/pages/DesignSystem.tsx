@@ -35,6 +35,10 @@ function Subsection({ title, children }: { title: string; children: React.ReactN
   );
 }
 
+function Stack({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-col gap-4">{children}</div>;
+}
+
 function Group({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-col gap-2">{children}</div>;
 }
@@ -63,7 +67,7 @@ function Label({ children }: { children: React.ReactNode }) {
 
 function TypographyAtoms() {
   return (
-    <div className="flex flex-col gap-4">
+    <Stack>
       <Group>
         <Title>ProblemHeading</Title>
         <ProblemHeading>657 ÷ 3 = ?</ProblemHeading>
@@ -96,7 +100,7 @@ function TypographyAtoms() {
         <Title>Error</Title>
         <ErrorText>Too big — only 57 remaining</ErrorText>
       </Group>
-    </div>
+    </Stack>
   );
 }
 
@@ -116,7 +120,7 @@ function ColorAtoms() {
     { label: "slate-500", className: "bg-slate-500" },
   ];
   return (
-    <div className="flex flex-col gap-4">
+    <Stack>
       <Group>
         <Title>Custom tokens</Title>
         <Items>
@@ -139,7 +143,7 @@ function ColorAtoms() {
           ))}
         </Items>
       </Group>
-    </div>
+    </Stack>
   );
 }
 
@@ -152,7 +156,7 @@ function ButtonAtoms() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <Stack>
 
       {/* HomeButton */}
       <Group>
@@ -207,7 +211,7 @@ function ButtonAtoms() {
           </button>
         </div>
       </Group>
-    </div>
+    </Stack>
   );
 }
 
@@ -215,7 +219,7 @@ function InputAtoms() {
   const [value, setValue] = useState("");
 
   return (
-    <div className="flex flex-col gap-4">
+    <Stack>
       <Group>
         <Title>NumberInput — teal focus (division)</Title>
         <NumberInput
@@ -243,7 +247,7 @@ function InputAtoms() {
         />
         <ErrorText>Enter a whole number</ErrorText>
       </Group>
-    </div>
+    </Stack>
   );
 }
 
