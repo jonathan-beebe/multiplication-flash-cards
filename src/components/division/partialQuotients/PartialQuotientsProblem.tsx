@@ -211,6 +211,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
               onKeyDown={handleKeyDown}
               aria-label="Enter a partial quotient"
               aria-describedby={inputError ? "input-error" : undefined}
+              error={!!inputError}
             />
             <PrimaryButton onClick={handleSubmit}>Subtract</PrimaryButton>
           </div>
@@ -240,6 +241,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
               onKeyDown={handleKeyDown}
               aria-label="Enter the sum of partial quotients"
               aria-describedby={inputError ? "input-error" : undefined}
+              error={!!inputError}
             />
             <PrimaryButton onClick={handleSubmit}>Check</PrimaryButton>
           </div>

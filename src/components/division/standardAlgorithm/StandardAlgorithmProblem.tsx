@@ -161,6 +161,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
               onKeyDown={handleKeyDown}
               aria-label={`How many times does ${problem.divisor} go into ${currentStep.workingNumber}`}
               aria-describedby={inputError ? "input-error" : undefined}
+              error={!!inputError}
               className="w-24"
             />
             <PrimaryButton onClick={handleSubmit}>Check</PrimaryButton>

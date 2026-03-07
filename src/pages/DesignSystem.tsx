@@ -235,11 +235,11 @@ function InputAtoms() {
         />
       </Group>
       <Group>
-        <Title>NumberInput — error state (border-red-400 override)</Title>
+        <Title>NumberInput — error state</Title>
         <NumberInput
           defaultValue="abc"
           readOnly
-          className="border-red-400"
+          error
         />
         <ErrorText>Enter a whole number</ErrorText>
       </Group>

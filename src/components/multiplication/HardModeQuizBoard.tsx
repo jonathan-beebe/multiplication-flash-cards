@@ -150,6 +150,7 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
             aria-label="Enter your answer"
             aria-describedby={inputError ? "input-error" : showCorrect ? "correct-msg" : undefined}
             focusColor="indigo"
+            error={!!inputError}
           />
           <button
             onMouseDown={(e) => e.preventDefault()}

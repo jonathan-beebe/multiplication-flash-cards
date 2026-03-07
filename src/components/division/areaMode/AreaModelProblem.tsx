@@ -209,6 +209,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
               onKeyDown={handleKeyDown}
               aria-label="Enter a partial quotient"
               aria-describedby={inputError ? "input-error" : undefined}
+              error={!!inputError}
             />
             <PrimaryButton onClick={handleSubmit}>Place</PrimaryButton>
           </div>
@@ -235,6 +236,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
               onKeyDown={handleKeyDown}
               aria-label="Enter the sum of partial quotients"
               aria-describedby={inputError ? "input-error" : undefined}
+              error={!!inputError}
             />
             <PrimaryButton onClick={handleSubmit}>Check</PrimaryButton>
           </div>
