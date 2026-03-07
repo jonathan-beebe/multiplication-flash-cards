@@ -7,6 +7,11 @@ A math training PWA for grade school children, covering addition, subtraction, m
 - TypeScript, React, Tailwind CSS
 - Published as a PWA
 
+# Details
+
+- **Accessibility.** This app needs to adhere to strict WCAG guidelines. Always favor highly-accessible solutions.
+- **Tabular Numbers.** All numbers are represented using tabular numbers so they align well.
+
 # Principles
 
 - **Simplicity first.** Avoid over-engineering. The right amount of complexity is the minimum needed for the current task.
@@ -16,5 +21,6 @@ A math training PWA for grade school children, covering addition, subtraction, m
 
 # Worflow details
 
+- **Collaboration.** We work together in three steps: planning our work, then implementing, then reviewing and committing. DO NOT MAKE COMMITS UNTIL I REVIEW THE CHANGES.
 - **git commit messages.** We follow the git conventions for [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
 - **Plan before executing.** Always present a plan and get approval before implementing non-trivial changes.
