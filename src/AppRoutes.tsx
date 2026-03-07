@@ -20,6 +20,7 @@ import MultiplicationHardMode from '@/components/multiplication/HardModePractice
 import MultiplicationDrill from '@/components/multiplication/Drill.tsx'
 import DrillComplete from '@/components/multiplication/DrillComplete.tsx'
 
+import DesignSystem from '@/pages/DesignSystem.tsx'
 import DivisionMenu from '@/pages/DivisionMenu.tsx'
 import DivisionPractice from '@/components/division/areaMode/DivisionPractice.tsx'
 import StandardAlgorithmPractice from '@/pages/division/StandardAlgorithmPractice.tsx'
@@ -100,6 +101,9 @@ export function AppRoutes() {
       <Route path="/division/partial-quotients" element={<PartialQuotientsPractice />} />
       <Route path="/division-practice" element={<Navigate to="/division-practice/level-1" replace />} />
       <Route path="/division-practice/:level" element={<DivisionPractice />} />
+
+      {/* Design system / component playground */}
+      <Route path="/design-system" element={<DesignSystem />} />
 
       {/* Demo */}
       <Route path="/demo/drill-complete" element={<DrillComplete correctCount={42} wrongCount={8} />} />
