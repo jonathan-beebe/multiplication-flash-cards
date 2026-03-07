@@ -144,12 +144,17 @@ export default function PartialQuotientsDisplay({
                 style={{ width: `calc(1ch + ${numW}ch + 1.5ch + ${pqW}ch)` }}
               />
               <div className="flex items-center">
-                <span style={signSlot} />
                 <span
-                  className="text-sm text-slate-500 dark:text-slate-400"
-                  style={{ ...numSlot, fontSize: "0.75em" }}
+                  className="text-slate-500 dark:text-slate-400"
+                  style={{
+                    display: "inline-block",
+                    width: `calc(1ch + ${numW}ch)`,
+                    textAlign: "right",
+                    flexShrink: 0,
+                    fontSize: "0.75em",
+                  }}
                 >
-                  total
+                  sum
                 </span>
                 <span
                   className="font-bold text-teal-600 dark:text-teal-400 text-xl"
