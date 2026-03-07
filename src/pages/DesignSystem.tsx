@@ -14,6 +14,8 @@ import SecondaryText from "@/components/atoms/SecondaryText";
 import MonoText from "@/components/atoms/MonoText";
 import LongDivisionDisplay from "@/components/division/LongDivisionDisplay";
 import { computeLongDivisionSteps } from "@/lib/division/standardAlgorithm/longDivision";
+import PartialQuotientsDisplay from "@/components/division/PartialQuotientsDisplay";
+import type { Phase } from "@/components/division/PartialQuotientsDisplay";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -287,6 +289,40 @@ function LongDivisionDisplayFixtures() {
   );
 }
 
+// ─── Partial quotients fixtures ───────────────────────────────────────────────
+
+const PQ_SECTIONS_PARTIAL = [{ partialQuotient: 70, area: 490 }];
+const PQ_SECTIONS_FULL = [
+  { partialQuotient: 70, area: 490 },
+  { partialQuotient: 20, area: 140 },
+];
+
+const pqFixtures: { label: string; sections: typeof PQ_SECTIONS_FULL; remaining: number; phase: Phase }[] = [
+  { label: "New problem",  sections: [],                remaining: 630, phase: "building" },
+  { label: "In progress",  sections: PQ_SECTIONS_PARTIAL, remaining: 140, phase: "building" },
+  { label: "Summing",      sections: PQ_SECTIONS_FULL,  remaining: 0,   phase: "summing"  },
+  { label: "Completed",    sections: PQ_SECTIONS_FULL,  remaining: 0,   phase: "done"     },
+];
+
+function PartialQuotientsDisplayFixtures() {
+  return (
+    <div className="flex gap-2">
+      {pqFixtures.map(({ label, sections, remaining, phase }) => (
+        <div key={label} className="flex-1 flex flex-col items-center gap-2">
+          <PartialQuotientsDisplay
+            dividend={630}
+            divisor={7}
+            sections={sections}
+            remaining={remaining}
+            phase={phase}
+          />
+          <Label>{label}</Label>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function DesignSystem() {
@@ -323,6 +359,9 @@ export default function DesignSystem() {
         <Category title="Components">
           <Subsection title="LongDivisionDisplay — 657 ÷ 3 = 219">
             <LongDivisionDisplayFixtures />
+          </Subsection>
+          <Subsection title="PartialQuotientsDisplay — 630 ÷ 7 = 90">
+            <PartialQuotientsDisplayFixtures />
           </Subsection>
         </Category>
       </div>
