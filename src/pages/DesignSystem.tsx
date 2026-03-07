@@ -4,6 +4,7 @@ import HomeButton from "@/components/HomeButton";
 import QuizButton from "@/components/multiplication/QuizButton";
 import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
+import NumberInput from "@/components/atoms/NumberInput";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -193,27 +194,32 @@ function InputAtoms() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <p className="text-xs text-slate-400 mb-2">Number input — default</p>
-        <input
-          type="text"
-          inputMode="numeric"
-          pattern="[0-9]*"
+        <p className="text-xs text-slate-400 mb-2">NumberInput — teal focus (division)</p>
+        <NumberInput
           placeholder="0"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-teal-500 dark:focus:border-teal-400 tabular-nums"
+          focusColor="teal"
         />
       </div>
       <div>
-        <p className="text-xs text-slate-400 mb-2">Number input — error state</p>
+        <p className="text-xs text-slate-400 mb-2">NumberInput — indigo focus (multiplication)</p>
+        <NumberInput
+          placeholder="0"
+          defaultValue=""
+          focusColor="indigo"
+          readOnly
+        />
+      </div>
+      <div>
+        <p className="text-xs text-slate-400 mb-2">NumberInput — error state (border-red-400 override)</p>
         <div className="flex flex-col gap-1">
-          <input
-            type="text"
+          <NumberInput
             defaultValue="abc"
             readOnly
-            className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-red-400 bg-white dark:bg-slate-800 text-text px-3 py-2 tabular-nums"
+            className="border-red-400"
           />
-          <p className="text-sm font-medium text-red-600 dark:text-red-400">Enter a whole number</p>
+          <ErrorText>Enter a whole number</ErrorText>
         </div>
       </div>
     </div>
