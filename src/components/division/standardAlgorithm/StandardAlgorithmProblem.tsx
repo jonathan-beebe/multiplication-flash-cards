@@ -5,6 +5,7 @@ import {
   computeLongDivisionSteps,
   validateQuotientDigit,
 } from "@/lib/division/standardAlgorithm/longDivision";
+import ErrorText from "@/components/atoms/ErrorText";
 import type { LongDivisionStep } from "@/lib/division/standardAlgorithm/longDivision";
 
 interface ProblemState {
@@ -172,15 +173,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
             </button>
           </div>
 
-          {inputError && (
-            <p
-              id="input-error"
-              className="text-center text-sm font-medium text-red-600 dark:text-red-400"
-              role="alert"
-            >
-              {inputError}
-            </p>
-          )}
+          {inputError && <ErrorText id="input-error">{inputError}</ErrorText>}
         </div>
       )}
 

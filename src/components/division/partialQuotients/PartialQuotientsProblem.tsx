@@ -4,6 +4,7 @@ import {
   getHelpfulFacts,
   validatePartialQuotient,
 } from "@/lib/division/areaMode/divisionProblem";
+import ErrorText from "@/components/atoms/ErrorText";
 import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 
 type Phase = "building" | "summing" | "done";
@@ -220,15 +221,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
             </button>
           </div>
 
-          {inputError && (
-            <p
-              id="input-error"
-              className="text-center text-sm font-medium text-red-600 dark:text-red-400"
-              role="alert"
-            >
-              {inputError}
-            </p>
-          )}
+          {inputError && <ErrorText id="input-error">{inputError}</ErrorText>}
         </div>
       )}
 
@@ -266,15 +259,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
             </button>
           </div>
 
-          {inputError && (
-            <p
-              id="input-error"
-              className="text-center text-sm font-medium text-red-600 dark:text-red-400"
-              role="alert"
-            >
-              {inputError}
-            </p>
-          )}
+          {inputError && <ErrorText id="input-error">{inputError}</ErrorText>}
         </div>
       )}
 

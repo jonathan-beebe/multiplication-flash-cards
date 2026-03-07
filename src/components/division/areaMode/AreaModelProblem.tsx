@@ -4,6 +4,7 @@ import {
   getHelpfulFacts,
   validatePartialQuotient,
 } from "@/lib/division/areaMode/divisionProblem";
+import ErrorText from "@/components/atoms/ErrorText";
 import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
@@ -217,15 +218,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
             </button>
           </div>
 
-          {inputError && (
-            <p
-              id="input-error"
-              className="text-center text-sm font-medium text-red-600 dark:text-red-400"
-              role="alert"
-            >
-              {inputError}
-            </p>
-          )}
+          {inputError && <ErrorText id="input-error">{inputError}</ErrorText>}
         </div>
       )}
 
@@ -260,15 +253,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
             </button>
           </div>
 
-          {inputError && (
-            <p
-              id="input-error"
-              className="text-center text-sm font-medium text-red-600 dark:text-red-400"
-              role="alert"
-            >
-              {inputError}
-            </p>
-          )}
+          {inputError && <ErrorText id="input-error">{inputError}</ErrorText>}
         </div>
       )}
 
