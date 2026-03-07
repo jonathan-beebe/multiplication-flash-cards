@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import NavBar from "@/components/NavBar";
-import HomeButton from "@/components/HomeButton";
+import HomeButton from "@/components/atoms/HomeButton";
 import QuizButton from "@/components/multiplication/QuizButton";
 import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import clsx from "clsx";
 import NavBar from "@/components/NavBar";
-import HomeButton from "@/components/HomeButton";
+import HomeButton from "@/components/atoms/HomeButton";
 import { OPERATION_LEVELS, OPERATION_LEVEL_IDS, parseOperationLevel } from "@/lib/engine/operationLevels";
 
 function SubtractionMenu() {

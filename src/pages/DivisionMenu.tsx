@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
-import HomeButton from "@/components/HomeButton";
+import HomeButton from "@/components/atoms/HomeButton";
 
 function DivisionMenu() {
   useEffect(() => {

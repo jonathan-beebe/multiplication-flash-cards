@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import HomeButton from "@/components/HomeButton";
+import HomeButton from "@/components/atoms/HomeButton";
 
 function Home() {
   useEffect(() => {
