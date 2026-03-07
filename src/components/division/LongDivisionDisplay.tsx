@@ -110,15 +110,15 @@ export default function LongDivisionDisplay({
         const wLen = String(step.workingNumber).length;
         const ruleLeft = rightCol - wLen + 1; // leftmost column of this step's working number
 
-        const { signChar, slots } = buildSlots("−", step.product, rightCol, N);
+        const { signChar, slots } = buildSubtractSlots(step.product, rightCol, N);
 
         const isFinalDone = completedCount === steps.length && i === steps.length - 1;
 
         const nextStep = i < steps.length - 1 ? steps[i + 1] : null;
-        const nextRow = nextStep
-          ? buildSlots(" ", nextStep.workingNumber, rightCols[i + 1], N)
+        const nextSlots = nextStep
+          ? buildValueSlots(nextStep.workingNumber, rightCols[i + 1], N)
           : null;
-        const finalRow = isFinalDone ? buildSlots(" ", 0, rightCol, N) : null;
+        const finalSlots = isFinalDone ? buildValueSlots(0, rightCol, N) : null;
 
         return (
           <div key={i}>
@@ -153,12 +153,12 @@ export default function LongDivisionDisplay({
             />
 
             {/* Next working number (remainder + brought-down digit) */}
-            {nextRow && (
+            {nextSlots && (
               <div className="flex items-baseline">
                 <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
                 <span style={borderCompensation} />
                 <span style={slot(1)} />
-                {nextRow.slots.map((c, j) => (
+                {nextSlots.map((c, j) => (
                   <span key={j} style={slot()} className="text-text">
                     {c}
                   </span>
@@ -167,12 +167,12 @@ export default function LongDivisionDisplay({
             )}
 
             {/* Final remainder (0) */}
-            {finalRow && (
+            {finalSlots && (
               <div className="flex items-baseline">
                 <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
                 <span style={borderCompensation} />
                 <span style={slot(1)} />
-                {finalRow.slots.map((c, j) => (
+                {finalSlots.map((c, j) => (
                   <span
                     key={j}
                     style={slot()}
@@ -192,32 +192,35 @@ export default function LongDivisionDisplay({
 
 /**
  * Fills N digit-slots so that `value` is right-aligned to `rightCol`.
- * If the − sign fits in the grid (signCol ≥ 0), it is placed there and
- * signChar returns a space; otherwise signChar returns '−'.
+ * Returns just the slot array — use for working-number and remainder rows.
  */
-export function buildSlots(
-  sign: "−" | " ",
-  value: number,
-  rightCol: number,
-  N: number
-): { signChar: string; slots: string[] } {
+export function buildValueSlots(value: number, rightCol: number, N: number): string[] {
   const s = String(value);
   const len = s.length;
   const slots = Array<string>(N).fill("\u00A0");
-
   for (let j = 0; j < len; j++) {
     slots[rightCol - len + 1 + j] = s[j];
   }
+  return slots;
+}
 
-  if (sign === "−") {
-    const signCol = rightCol - len;
-    if (signCol >= 0) {
-      slots[signCol] = "−";
-      return { signChar: "\u00A0", slots };
-    }
-    return { signChar: "−", slots };
+/**
+ * Fills N digit-slots for a subtraction row, right-aligned to `rightCol`.
+ * Embeds the − sign into the grid when space allows (signCol ≥ 0);
+ * otherwise returns '−' as `signChar` for the dedicated sign slot.
+ */
+export function buildSubtractSlots(
+  product: number,
+  rightCol: number,
+  N: number
+): { signChar: string; slots: string[] } {
+  const slots = buildValueSlots(product, rightCol, N);
+  const len = String(product).length;
+  const signCol = rightCol - len;
+  if (signCol >= 0) {
+    slots[signCol] = "−";
+    return { signChar: "\u00A0", slots };
   }
-
-  return { signChar: "\u00A0", slots };
+  return { signChar: "−", slots };
 }
 
