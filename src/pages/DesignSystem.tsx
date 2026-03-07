@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import NavBar from "@/components/NavBar";
 import HomeButton from "@/components/HomeButton";
 import QuizButton from "@/components/multiplication/QuizButton";
+import ErrorText from "@/components/atoms/ErrorText";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -63,8 +64,8 @@ function TypographyAtoms() {
         <p className="text-2xl font-bold tabular-nums text-teal-600 dark:text-teal-400">219 ✓</p>
       </div>
       <div>
-        <p className="text-xs text-slate-400 mb-1">Error — text-red-600</p>
-        <p className="text-sm font-medium text-red-600 dark:text-red-400">Too big — only 57 remaining</p>
+        <p className="text-xs text-slate-400 mb-1">Error</p>
+        <ErrorText>Too big — only 57 remaining</ErrorText>
       </div>
     </div>
   );
