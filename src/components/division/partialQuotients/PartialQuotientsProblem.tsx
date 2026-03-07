@@ -6,6 +6,7 @@ import {
 } from "@/lib/division/areaMode/divisionProblem";
 import type { Level } from "@/lib/division/areaMode/divisionProblem";
 import {
+  computeRemaining,
   createSession,
   sessionReducer,
 } from "@/lib/division/partialQuotients/problemState";
@@ -31,7 +32,8 @@ export default function PartialQuotientsProblem({ level }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { problem, sections, phase, remaining, announcement } = session;
+  const { problem, sections, phase, announcement } = session;
+  const remaining = computeRemaining(problem, sections);
 
   useEffect(() => {
     if (phase === "done") {

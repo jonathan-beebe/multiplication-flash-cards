@@ -7,7 +7,6 @@ export interface SessionState {
   problem: Problem;
   sections: Section[];
   phase: Phase;
-  remaining: number;
   announcement: string;
 }
 
@@ -22,7 +21,6 @@ export function createSession(level: Level): SessionState {
     problem,
     sections: [],
     phase: "building",
-    remaining: problem.dividend,
     announcement: "",
   };
 }
@@ -36,8 +34,8 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
     case "SUBMIT_BUILDING": {
       const { problem, sections } = state;
       const area = action.partialQuotient * problem.divisor;
-      const newRemaining = state.remaining - area;
       const newSections = [...sections, { partialQuotient: action.partialQuotient, area }];
+      const newRemaining = computeRemaining(problem, newSections);
 
       if (newRemaining === 0) {
         const nextPhase: Phase = newSections.length === 1 ? "done" : "summing";
@@ -45,13 +43,12 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
           nextPhase === "summing"
             ? `${area.toLocaleString()} subtracted. Remainder is 0. Now add the partial quotients.`
             : `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`;
-        return { ...state, sections: newSections, phase: nextPhase, remaining: 0, announcement };
+        return { ...state, sections: newSections, phase: nextPhase, announcement };
       }
 
       return {
         ...state,
         sections: newSections,
-        remaining: newRemaining,
         announcement: `${area.toLocaleString()} subtracted. ${newRemaining.toLocaleString()} remaining.`,
       };
     }

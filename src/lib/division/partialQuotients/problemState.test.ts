@@ -10,12 +10,10 @@ import type { SessionState } from "./problemState";
 const PROBLEM = { dividend: 84, divisor: 4, quotient: 21 };
 
 function makeSession(overrides: Partial<SessionState> = {}): SessionState {
-  const sections = overrides.sections ?? [];
   return {
     problem: PROBLEM,
-    sections,
+    sections: [],
     phase: "building",
-    remaining: computeRemaining(PROBLEM, sections),
     announcement: "",
     ...overrides,
   };
@@ -33,9 +31,9 @@ describe("createSession", () => {
     expect(session.problem.dividend).toBe(session.problem.divisor * session.problem.quotient);
   });
 
-  it("sets remaining to the full dividend", () => {
+  it("starts with no sections, so remaining equals the full dividend", () => {
     const session = createSession(1);
-    expect(session.remaining).toBe(session.problem.dividend);
+    expect(computeRemaining(session.problem, session.sections)).toBe(session.problem.dividend);
   });
 });
 
@@ -69,7 +67,7 @@ describe("sessionReducer / SUBMIT_BUILDING", () => {
 
     expect(next.phase).toBe("building");
     expect(next.sections).toEqual([{ partialQuotient: 10, area: 40 }]);
-    expect(next.remaining).toBe(44);
+    expect(computeRemaining(next.problem, next.sections)).toBe(44);
   });
 
   it("includes the subtracted area and remaining in the announcement", () => {
@@ -88,7 +86,7 @@ describe("sessionReducer / SUBMIT_BUILDING", () => {
 
     expect(next.phase).toBe("summing");
     expect(next.sections).toHaveLength(2);
-    expect(next.remaining).toBe(0);
+    expect(computeRemaining(next.problem, next.sections)).toBe(0);
     expect(next.announcement).toContain("add the partial quotients");
   });
 
@@ -129,7 +127,6 @@ describe("sessionReducer / NEXT", () => {
     const state = makeSession({
       phase: "done",
       sections: [{ partialQuotient: 21, area: 84 }],
-      remaining: 0,
       announcement: "Correct!",
     });
     const next = sessionReducer(state, { type: "NEXT", level: 1 });
@@ -137,6 +134,6 @@ describe("sessionReducer / NEXT", () => {
     expect(next.phase).toBe("building");
     expect(next.sections).toEqual([]);
     expect(next.announcement).toBe("");
-    expect(next.remaining).toBe(next.problem.dividend);
+    expect(computeRemaining(next.problem, next.sections)).toBe(next.problem.dividend);
   });
 });
