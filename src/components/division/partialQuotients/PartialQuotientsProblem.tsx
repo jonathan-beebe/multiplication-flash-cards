@@ -162,9 +162,16 @@ export default function PartialQuotientsProblem({ level }: Props) {
       <div className="text-center">
         <p
           className="text-4xl font-bold tabular-nums text-text"
-          aria-label={`${problem.dividend} divided by ${problem.divisor}`}
+          aria-label={`${problem.dividend} divided by ${problem.divisor} equals ${phase === "done" ? problem.quotient : "unknown"}`}
         >
-          {problem.dividend.toLocaleString()} ÷ {problem.divisor} = ?
+          {problem.dividend.toLocaleString()} ÷ {problem.divisor} ={" "}
+          {phase === "done" ? (
+            <span className="text-teal-600 dark:text-teal-400">
+              {problem.quotient.toLocaleString()}
+            </span>
+          ) : (
+            "?"
+          )}
         </p>
       </div>
 
