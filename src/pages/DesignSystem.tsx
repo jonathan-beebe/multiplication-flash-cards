@@ -7,6 +7,7 @@ import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
 import ProblemHeading from "@/components/atoms/ProblemHeading";
+import PageHeading from "@/components/atoms/PageHeading";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -44,8 +45,8 @@ function TypographyAtoms() {
         <ProblemHeading>657 ÷ 3 = ?</ProblemHeading>
       </div>
       <div>
-        <p className="text-xs text-slate-400 mb-1">Page heading — text-2xl font-bold</p>
-        <p className="text-2xl font-bold text-text">Division Practice</p>
+        <p className="text-xs text-slate-400 mb-1">PageHeading</p>
+        <PageHeading>Division Practice</PageHeading>
       </div>
       <div>
         <p className="text-xs text-slate-400 mb-1">Subheading — text-lg font-semibold</p>
