@@ -16,6 +16,7 @@ import LongDivisionDisplay from "@/components/division/LongDivisionDisplay";
 import { computeLongDivisionSteps } from "@/lib/division/standardAlgorithm/longDivision";
 import PartialQuotientsDisplay from "@/components/division/PartialQuotientsDisplay";
 import type { Phase } from "@/components/division/PartialQuotientsDisplay";
+import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -323,6 +324,32 @@ function PartialQuotientsDisplayFixtures() {
   );
 }
 
+// ─── Area model fixtures ──────────────────────────────────────────────────────
+
+const amFixtures: { label: string; sections: typeof PQ_SECTIONS_FULL; remaining: number }[] = [
+  { label: "New problem", sections: [],                remaining: 630 },
+  { label: "In progress", sections: PQ_SECTIONS_PARTIAL, remaining: 140 },
+  { label: "Completed",   sections: PQ_SECTIONS_FULL,  remaining: 0   },
+];
+
+function AreaModelRectFixtures() {
+  return (
+    <div className="flex flex-col gap-6">
+      {amFixtures.map(({ label, sections, remaining }) => (
+        <div key={label} className="flex flex-col gap-2">
+          <Label>{label}</Label>
+          <AreaModelRect
+            dividend={630}
+            divisor={7}
+            sections={sections}
+            remaining={remaining}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function DesignSystem() {
@@ -362,6 +389,9 @@ export default function DesignSystem() {
           </Subsection>
           <Subsection title="PartialQuotientsDisplay — 630 ÷ 7 = 90">
             <PartialQuotientsDisplayFixtures />
+          </Subsection>
+          <Subsection title="AreaModelRect — 630 ÷ 7 = 90">
+            <AreaModelRectFixtures />
           </Subsection>
         </Category>
       </div>
