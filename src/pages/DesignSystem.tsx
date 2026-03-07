@@ -11,7 +11,7 @@ import PageHeading from "@/components/atoms/PageHeading";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Category({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-6">
       <h2 className="text-xl font-bold text-text border-b border-slate-200 dark:border-slate-700 pb-2">
@@ -35,43 +35,67 @@ function Subsection({ title, children }: { title: string; children: React.ReactN
   );
 }
 
+function Group({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-col gap-2">{children}</div>;
+}
+
+function Title({ children }: { children: React.ReactNode }) {
+  return <p className="text-xs text-slate-400">{children}</p>;
+}
+
+function Row({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={`flex flex-wrap gap-2 ${className ?? ""}`.trim()}>{children}</div>;
+}
+
+function Items({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-wrap gap-4">{children}</div>;
+}
+
+function Item({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-col items-center gap-1">{children}</div>;
+}
+
+function Label({ children }: { children: React.ReactNode }) {
+  return <span className="text-xs text-slate-400 text-center">{children}</span>;
+}
+
 // ─── Atoms ────────────────────────────────────────────────────────────────────
 
 function TypographyAtoms() {
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <p className="text-xs text-slate-400 mb-1">ProblemHeading</p>
+      <Group>
+        <Title>ProblemHeading</Title>
         <ProblemHeading>657 ÷ 3 = ?</ProblemHeading>
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-1">PageHeading</p>
+      </Group>
+      <Group>
+        <Title>PageHeading</Title>
         <PageHeading>Division Practice</PageHeading>
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-1">Subheading — text-lg font-semibold</p>
+      </Group>
+      <Group>
+        <Title>Subheading — text-lg font-semibold</Title>
         <p className="text-lg font-semibold text-text">Area model method</p>
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-1">Body — text-base</p>
+      </Group>
+      <Group>
+        <Title>Body — text-base</Title>
         <p className="text-base text-text">How many times does 3 go into 27?</p>
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-1">Secondary — text-sm text-slate-500</p>
+      </Group>
+      <Group>
+        <Title>Secondary — text-sm text-slate-500</Title>
         <p className="text-sm text-slate-500 dark:text-slate-400">2-digit answer, small divisor</p>
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-1">Mono numeric — font-mono tabular-nums text-xl</p>
+      </Group>
+      <Group>
+        <Title>Mono numeric — font-mono tabular-nums text-xl</Title>
         <p className="font-mono tabular-nums text-xl text-text">3 ) 657</p>
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-1">Success — SuccessText</p>
+      </Group>
+      <Group>
+        <Title>Success — SuccessText</Title>
         <SuccessText>219 ✓</SuccessText>
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-1">Error</p>
+      </Group>
+      <Group>
+        <Title>Error</Title>
         <ErrorText>Too big — only 57 remaining</ErrorText>
-      </div>
+      </Group>
     </div>
   );
 }
@@ -93,28 +117,28 @@ function ColorAtoms() {
   ];
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <p className="text-xs text-slate-400 mb-2">Custom tokens</p>
-        <div className="flex flex-wrap gap-3">
+      <Group>
+        <Title>Custom tokens</Title>
+        <Items>
           {tokens.map(({ label, className }) => (
-            <div key={label} className="flex flex-col items-center gap-1">
+            <Item key={label}>
               <div className={`w-12 h-12 rounded-lg ${className}`} />
-              <span className="text-xs text-slate-500">{label}</span>
-            </div>
+              <Label>{label}</Label>
+            </Item>
           ))}
-        </div>
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-2">Accent colors</p>
-        <div className="flex flex-wrap gap-3">
+        </Items>
+      </Group>
+      <Group>
+        <Title>Accent colors</Title>
+        <Items>
           {accents.map(({ label, className }) => (
-            <div key={label} className="flex flex-col items-center gap-1">
+            <Item key={label}>
               <div className={`w-12 h-12 rounded-lg ${className}`} />
-              <span className="text-xs text-slate-500 text-center" style={{ maxWidth: "4rem" }}>{label}</span>
-            </div>
+              <Label>{label}</Label>
+            </Item>
           ))}
-        </div>
-      </div>
+        </Items>
+      </Group>
     </div>
   );
 }
@@ -131,45 +155,41 @@ function ButtonAtoms() {
     <div className="flex flex-col gap-6">
 
       {/* HomeButton */}
-      <div>
-        <p className="text-xs text-slate-400 mb-2">HomeButton — all color variants</p>
+      <Group>
+        <Title>HomeButton — all color variants</Title>
         <div className="flex flex-col gap-2 max-w-xs">
           {(["teal", "indigo", "amber", "green", "rose", "pink", "red"] as const).map((color) => (
             <HomeButton key={color} to="#" color={color}>{color}</HomeButton>
           ))}
         </div>
-      </div>
+      </Group>
 
       {/* Primary action buttons */}
-      <div>
-        <p className="text-xs text-slate-400 mb-2">Primary action button</p>
-        <div className="flex flex-wrap gap-2">
+      <Group>
+        <Title>Primary action button</Title>
+        <Row>
           <PrimaryButton>Place</PrimaryButton>
           <PrimaryButton>Check</PrimaryButton>
           <PrimaryButton size="lg">Next problem →</PrimaryButton>
-        </div>
-      </div>
+        </Row>
+      </Group>
 
       {/* QuizButton */}
-      <div>
-        <p className="text-xs text-slate-400 mb-2">QuizButton — all states</p>
-        <div className="flex flex-wrap gap-2">
-          <QuizButton value={42} onClick={() => {}} disabled={false} state="default" />
-          <QuizButton value={42} onClick={() => {}} disabled={true} state="correct" />
-          <QuizButton value={42} onClick={() => {}} disabled={true} state="wrong" />
-          <QuizButton value={42} onClick={() => {}} disabled={true} state="fade-out" />
-        </div>
-        <div className="flex gap-4 mt-2 text-xs text-slate-400">
-          <span>default</span>
-          <span>correct</span>
-          <span>wrong</span>
-          <span>fade-out</span>
-        </div>
-      </div>
+      <Group>
+        <Title>QuizButton — all states</Title>
+        <Items>
+          {(["default", "correct", "wrong", "fade-out"] as const).map((state) => (
+            <Item key={state}>
+              <QuizButton value={42} onClick={() => {}} disabled={state !== "default"} state={state} />
+              <Label>{state}</Label>
+            </Item>
+          ))}
+        </Items>
+      </Group>
 
       {/* Shake */}
-      <div>
-        <p className="text-xs text-slate-400 mb-2">Shake feedback (error animation)</p>
+      <Group>
+        <Title>Shake feedback (error animation)</Title>
         <div className="flex items-center gap-3">
           <div className={shaking ? "shake" : ""}>
             <input
@@ -186,7 +206,7 @@ function ButtonAtoms() {
             Trigger shake
           </button>
         </div>
-      </div>
+      </Group>
     </div>
   );
 }
@@ -196,35 +216,33 @@ function InputAtoms() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <p className="text-xs text-slate-400 mb-2">NumberInput — teal focus (division)</p>
+      <Group>
+        <Title>NumberInput — teal focus (division)</Title>
         <NumberInput
           placeholder="0"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           focusColor="teal"
         />
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-2">NumberInput — indigo focus (multiplication)</p>
+      </Group>
+      <Group>
+        <Title>NumberInput — indigo focus (multiplication)</Title>
         <NumberInput
           placeholder="0"
           defaultValue=""
           focusColor="indigo"
           readOnly
         />
-      </div>
-      <div>
-        <p className="text-xs text-slate-400 mb-2">NumberInput — error state (border-red-400 override)</p>
-        <div className="flex flex-col gap-1">
-          <NumberInput
-            defaultValue="abc"
-            readOnly
-            className="border-red-400"
-          />
-          <ErrorText>Enter a whole number</ErrorText>
-        </div>
-      </div>
+      </Group>
+      <Group>
+        <Title>NumberInput — error state (border-red-400 override)</Title>
+        <NumberInput
+          defaultValue="abc"
+          readOnly
+          className="border-red-400"
+        />
+        <ErrorText>Enter a whole number</ErrorText>
+      </Group>
     </div>
   );
 }
@@ -246,7 +264,7 @@ export default function DesignSystem() {
         </div>
 
         {/* ── Atoms ──────────────────────────────────────────────── */}
-        <Section title="Atoms">
+        <Category title="Atoms">
           <Subsection title="Typography">
             <TypographyAtoms />
           </Subsection>
@@ -259,14 +277,14 @@ export default function DesignSystem() {
           <Subsection title="Inputs">
             <InputAtoms />
           </Subsection>
-        </Section>
+        </Category>
 
         {/* ── Components ─────────────────────────────────────────── */}
-        <Section title="Components">
+        <Category title="Components">
           <Subsection title="Placeholder">
             <p className="text-slate-500 dark:text-slate-400 text-sm">No components documented yet.</p>
           </Subsection>
-        </Section>
+        </Category>
       </div>
     </main>
   );
