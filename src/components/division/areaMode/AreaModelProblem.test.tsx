@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
-import AreaModelProblem from "@/components/division/AreaModelProblem";
+import AreaModelProblem from "@/components/division/areaMode/AreaModelProblem";
 
 vi.mock("@/lib/engine/updateScheduler", () => ({
   setInGame: vi.fn(),
@@ -10,8 +10,8 @@ vi.mock("@/lib/engine/updateScheduler", () => ({
 // Two-section path: enter 20 (area=60, remaining=12) → enter 4 (area=12, remaining=0) → summing
 // Summing path: enter 24 → done
 // Single-section path: enter 24 directly → done (skips summing)
-vi.mock("@/lib/division/divisionProblem", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/division/divisionProblem")>();
+vi.mock("@/lib/division/areaMode/divisionProblem", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/division/areaMode/divisionProblem")>();
   return {
     ...actual,
     generateProblem: vi.fn().mockReturnValue({ dividend: 72, divisor: 3, quotient: 24 }),

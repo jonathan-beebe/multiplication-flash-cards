@@ -3,9 +3,9 @@ import {
   generateProblem,
   getHelpfulFacts,
   validatePartialQuotient,
-} from "@/lib/division/divisionProblem";
-import type { Level, Problem, Section } from "@/lib/division/divisionProblem";
-import AreaModelRect from "@/components/division/AreaModelRect";
+} from "@/lib/division/areaMode/divisionProblem";
+import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
+import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
 type Phase = "building" | "summing" | "done";
 

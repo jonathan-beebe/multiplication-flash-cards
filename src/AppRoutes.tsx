@@ -20,7 +20,7 @@ import MultiplicationHardMode from '@/components/multiplication/HardModePractice
 import MultiplicationDrill from '@/components/multiplication/Drill.tsx'
 import DrillComplete from '@/components/multiplication/DrillComplete.tsx'
 
-import DivisionPractice from '@/components/division/DivisionPractice.tsx'
+import DivisionPractice from '@/components/division/areaMode/DivisionPractice.tsx'
 
 /**
  * Stamps id/tabindex on <main> after each route renders so the skip link

@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import clsx from "clsx";
 import NavBar from "@/components/NavBar";
-import AreaModelProblem from "@/components/division/AreaModelProblem";
-import { LEVELS } from "@/lib/division/divisionProblem";
-import type { Level } from "@/lib/division/divisionProblem";
+import AreaModelProblem from "@/components/division/areaMode/AreaModelProblem";
+import { LEVELS } from "@/lib/division/areaMode/divisionProblem";
+import type { Level } from "@/lib/division/areaMode/divisionProblem";
 
 const LEVEL_IDS: Level[] = [1, 2, 3, 4];
 

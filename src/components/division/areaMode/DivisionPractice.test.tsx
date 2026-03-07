@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import DivisionPractice from "@/components/division/DivisionPractice";
+import DivisionPractice from "@/components/division/areaMode/DivisionPractice";
 
-vi.mock("@/lib/division/divisionProblem", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/division/divisionProblem")>();
+vi.mock("@/lib/division/areaMode/divisionProblem", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/division/areaMode/divisionProblem")>();
   return {
     ...actual,
     generateProblem: vi.fn().mockReturnValue({ dividend: 72, divisor: 3, quotient: 24 }),
