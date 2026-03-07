@@ -12,6 +12,92 @@ const borderCompensation: React.CSSProperties = {
   flexShrink: 0,
 };
 
+// ── Row sub-components ────────────────────────────────────────────────────────
+// Each represents one horizontal row in the long division grid.
+
+function SubtractRow({ divW, divisor, signChar, slots }: {
+  divW: number; divisor: number; signChar: string; slots: string[];
+}) {
+  return (
+    <div className="flex items-baseline">
+      <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
+      <span style={borderCompensation} />
+      <span style={slot(1)} className="font-semibold text-slate-500 dark:text-slate-400">
+        {signChar}
+      </span>
+      {slots.map((c, j) => (
+        <span key={j} style={slot()} className="font-semibold text-slate-600 dark:text-slate-400">
+          {c}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function WorkingNumberRow({ divW, divisor, slots }: {
+  divW: number; divisor: number; slots: string[];
+}) {
+  return (
+    <div className="flex items-baseline">
+      <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
+      <span style={borderCompensation} />
+      <span style={slot(1)} />
+      {slots.map((c, j) => (
+        <span key={j} style={slot()} className="text-text">{c}</span>
+      ))}
+    </div>
+  );
+}
+
+function FinalRemainderRow({ divW, divisor, slots }: {
+  divW: number; divisor: number; slots: string[];
+}) {
+  return (
+    <div className="flex items-baseline">
+      <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
+      <span style={borderCompensation} />
+      <span style={slot(1)} />
+      {slots.map((c, j) => (
+        <span key={j} style={slot()} className="font-bold text-teal-600 dark:text-teal-400">{c}</span>
+      ))}
+    </div>
+  );
+}
+
+function StepRow({ step, stepIndex, steps, rightCols, completedCount, divW, divisor, N }: {
+  step: LongDivisionStep;
+  stepIndex: number;
+  steps: LongDivisionStep[];
+  rightCols: number[];
+  completedCount: number;
+  divW: number;
+  divisor: number;
+  N: number;
+}) {
+  const rightCol = rightCols[stepIndex];
+  const wLen = String(step.workingNumber).length;
+  const ruleLeft = rightCol - wLen + 1;
+  const { signChar, slots } = buildSubtractSlots(step.product, rightCol, N);
+  const isFinalDone = completedCount === steps.length && stepIndex === steps.length - 1;
+  const nextStep = stepIndex < steps.length - 1 ? steps[stepIndex + 1] : null;
+  const nextSlots = nextStep ? buildValueSlots(nextStep.workingNumber, rightCols[stepIndex + 1], N) : null;
+  const finalSlots = isFinalDone ? buildValueSlots(0, rightCol, N) : null;
+
+  return (
+    <div>
+      <SubtractRow divW={divW} divisor={divisor} signChar={signChar} slots={slots} />
+      <div
+        className="border-t border-slate-400 dark:border-slate-500"
+        style={{ marginLeft: `calc(${divW + 1 + ruleLeft}ch + 2px)`, width: `${wLen}ch` }}
+      />
+      {nextSlots && <WorkingNumberRow divW={divW} divisor={divisor} slots={nextSlots} />}
+      {finalSlots && <FinalRemainderRow divW={divW} divisor={divisor} slots={finalSlots} />}
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+
 export interface LongDivisionDisplayProps {
   dividend: number;
   divisor: number;
@@ -30,9 +116,8 @@ export interface LongDivisionDisplayProps {
  *   [1ch: sign slot (− or space)]
  *   [N × 1ch: digit slots, right-aligned to the step's rightCol]
  *
- * `buildSlots` places digits right-aligned within the N-slot grid and
- * embeds the − sign in the grid where it fits; otherwise it goes in the
- * dedicated sign slot. Raw (unformatted) numbers are used so ch widths
+ * `buildSubtractSlots` and `buildValueSlots` place digits right-aligned
+ * within the N-slot grid. Raw (unformatted) numbers are used so ch widths
  * stay accurate.
  */
 export default function LongDivisionDisplay({
@@ -48,7 +133,6 @@ export default function LongDivisionDisplay({
   // 0-based index of the rightmost dividend column consumed by each step.
   const rightCols = computeRightCols(steps);
   const quotientSlots = buildQuotientSlots(steps, rightCols, N, completedCount);
-
 
   return (
     <div
@@ -92,87 +176,19 @@ export default function LongDivisionDisplay({
       </div>
 
       {/* ── Completed step rows ───────────────────────────────────── */}
-      {steps.slice(0, completedCount).map((step, i) => {
-        const rightCol = rightCols[i];
-        const wLen = String(step.workingNumber).length;
-        const ruleLeft = rightCol - wLen + 1; // leftmost column of this step's working number
-
-        const { signChar, slots } = buildSubtractSlots(step.product, rightCol, N);
-
-        const isFinalDone = completedCount === steps.length && i === steps.length - 1;
-
-        const nextStep = i < steps.length - 1 ? steps[i + 1] : null;
-        const nextSlots = nextStep
-          ? buildValueSlots(nextStep.workingNumber, rightCols[i + 1], N)
-          : null;
-        const finalSlots = isFinalDone ? buildValueSlots(0, rightCol, N) : null;
-
-        return (
-          <div key={i}>
-            {/* Subtract row */}
-            <div className="flex items-baseline">
-              <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
-              <span style={borderCompensation} />
-              <span
-                style={slot(1)}
-                className="font-semibold text-slate-500 dark:text-slate-400"
-              >
-                {signChar}
-              </span>
-              {slots.map((c, j) => (
-                <span
-                  key={j}
-                  style={slot()}
-                  className="font-semibold text-slate-600 dark:text-slate-400"
-                >
-                  {c}
-                </span>
-              ))}
-            </div>
-
-            {/* Rule — anchored to the digit grid using calc() */}
-            <div
-              className="border-t border-slate-400 dark:border-slate-500"
-              style={{
-                marginLeft: `calc(${divW + 1 + ruleLeft}ch + 2px)`,
-                width: `${wLen}ch`,
-              }}
-            />
-
-            {/* Next working number (remainder + brought-down digit) */}
-            {nextSlots && (
-              <div className="flex items-baseline">
-                <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
-                <span style={borderCompensation} />
-                <span style={slot(1)} />
-                {nextSlots.map((c, j) => (
-                  <span key={j} style={slot()} className="text-text">
-                    {c}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Final remainder (0) */}
-            {finalSlots && (
-              <div className="flex items-baseline">
-                <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
-                <span style={borderCompensation} />
-                <span style={slot(1)} />
-                {finalSlots.map((c, j) => (
-                  <span
-                    key={j}
-                    style={slot()}
-                    className="font-bold text-teal-600 dark:text-teal-400"
-                  >
-                    {c}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      })}
+      {steps.slice(0, completedCount).map((step, i) => (
+        <StepRow
+          key={i}
+          step={step}
+          stepIndex={i}
+          steps={steps}
+          rightCols={rightCols}
+          completedCount={completedCount}
+          divW={divW}
+          divisor={divisor}
+          N={N}
+        />
+      ))}
     </div>
   );
 }
