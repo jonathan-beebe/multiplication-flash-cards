@@ -1,12 +1,12 @@
 import type { Section } from "@/lib/division/areaMode/divisionProblem";
+import type { Phase } from "@/lib/division/partialQuotients/problemState";
 
-export type Phase = "building" | "summing" | "done";
+export type { Phase };
 
 export interface PartialQuotientsDisplayProps {
   dividend: number;
   divisor: number;
   sections: Section[];
-  remaining: number;
   phase: Phase;
 }
 
@@ -26,7 +26,6 @@ export default function PartialQuotientsDisplay({
   dividend,
   divisor,
   sections,
-  remaining,
   phase,
 }: PartialQuotientsDisplayProps) {
   const showTotal = phase === "done" && sections.length > 1;

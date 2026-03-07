@@ -1,45 +1,35 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useReducer, useState, useRef, useEffect, useCallback } from "react";
+import { getHelpfulFacts, validatePartialQuotient } from "@/lib/division/areaMode/divisionProblem";
+import type { Level } from "@/lib/division/areaMode/divisionProblem";
 import {
-  generateProblem,
-  getHelpfulFacts,
-  validatePartialQuotient,
-} from "@/lib/division/areaMode/divisionProblem";
+  createSession,
+  computeRemaining,
+  sessionReducer,
+} from "@/lib/division/partialQuotients/problemState";
 import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
 import ProblemHeading from "@/components/atoms/ProblemHeading";
 import Subheading from "@/components/atoms/Subheading";
-import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
-import PartialQuotientsDisplay, { type Phase } from "@/components/division/PartialQuotientsDisplay";
-
-interface ProblemState {
-  problem: Problem;
-  sections: Section[];
-  remaining: number;
-  phase: Phase;
-}
-
-function createInitialState(level: Level): ProblemState {
-  const problem = generateProblem(level);
-  return { problem, sections: [], remaining: problem.dividend, phase: "building" };
-}
+import PartialQuotientsDisplay from "@/components/division/PartialQuotientsDisplay";
 
 interface Props {
   level: Level;
 }
 
 export default function PartialQuotientsProblem({ level }: Props) {
-  const [{ problem, sections, remaining, phase }, setProblemState] =
-    useState<ProblemState>(() => createInitialState(level));
+  const [session, dispatch] = useReducer(sessionReducer, level, createSession);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
   const [hintsOpen, setHintsOpen] = useState(false);
-  const [announcement, setAnnouncement] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
+
+  const { problem, sections, phase, announcement } = session;
+  const remaining = computeRemaining(problem, sections);
 
   useEffect(() => {
     if (phase === "done") {
@@ -74,42 +64,10 @@ export default function PartialQuotientsProblem({ level }: Props) {
       return;
     }
 
-    const area = value * problem.divisor;
-    const newRemaining = remaining - area;
-    const newSections = [...sections, { partialQuotient: value, area }];
-
     setInputValue("");
     setInputError(null);
-    inputRef.current?.focus();
-
-    if (newRemaining === 0) {
-      const nextPhase = newSections.length === 1 ? "done" : "summing";
-      setProblemState((s) => ({
-        ...s,
-        sections: newSections,
-        remaining: 0,
-        phase: nextPhase,
-      }));
-      if (nextPhase === "summing") {
-        setAnnouncement(
-          `${area.toLocaleString()} subtracted. Remainder is 0. Now add the partial quotients.`
-        );
-      } else {
-        setAnnouncement(
-          `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
-        );
-      }
-    } else {
-      setProblemState((s) => ({
-        ...s,
-        sections: newSections,
-        remaining: newRemaining,
-      }));
-      setAnnouncement(
-        `${area.toLocaleString()} subtracted. ${newRemaining.toLocaleString()} remaining.`
-      );
-    }
-  }, [inputValue, problem, remaining, sections]);
+    dispatch({ type: "SUBMIT_BUILDING", partialQuotient: value });
+  }, [inputValue, problem.divisor, remaining]);
 
   const handleSummingSubmit = useCallback(() => {
     const value = parseInt(inputValue, 10);
@@ -126,15 +84,12 @@ export default function PartialQuotientsProblem({ level }: Props) {
 
     if (value === problem.quotient) {
       setInputError(null);
-      setProblemState((s) => ({ ...s, phase: "done" }));
-      setAnnouncement(
-        `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
-      );
+      dispatch({ type: "SUBMIT_SUMMING" });
     } else {
       triggerShake();
       setInputError("Not quite — check your addition and try again");
     }
-  }, [inputValue, problem]);
+  }, [inputValue, problem.quotient]);
 
   function handleSubmit() {
     if (phase === "building") handleBuildingSubmit();
@@ -149,8 +104,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
     setInputValue("");
     setInputError(null);
     setHintsOpen(false);
-    setAnnouncement("");
-    setProblemState(createInitialState(level));
+    dispatch({ type: "NEXT", level });
   }
 
   const helpfulFacts = getHelpfulFacts(problem.divisor, problem.dividend);
@@ -184,7 +138,6 @@ export default function PartialQuotientsProblem({ level }: Props) {
         dividend={problem.dividend}
         divisor={problem.divisor}
         sections={sections}
-        remaining={remaining}
         phase={phase}
       />
 
