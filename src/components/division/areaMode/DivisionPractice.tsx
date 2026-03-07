@@ -32,7 +32,7 @@ export default function DivisionPractice() {
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-background px-4 pt-20 pb-12">
-      <NavBar />
+      <NavBar backTo="/division" />
 
       <div className="w-full max-w-xl flex flex-col items-center gap-8">
         <div className="text-center">

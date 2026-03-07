@@ -288,7 +288,7 @@ describe("App user journeys", () => {
       expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
     });
 
-    it("division practice → Home via NavBar", () => {
+    it("division practice → Division menu via NavBar back", () => {
       render(
         <MemoryRouter initialEntries={["/division-practice/level-1"]}>
           <AppRoutes />
@@ -297,8 +297,8 @@ describe("App user journeys", () => {
 
       expect(screen.getByRole("heading", { name: /division practice/i })).toBeInTheDocument();
 
-      fireEvent.click(screen.getByRole("link", { name: /home/i }));
-      expect(screen.getByRole("heading", { name: /math flash\s*cards/i })).toBeInTheDocument();
+      fireEvent.click(screen.getByRole("link", { name: /back/i }));
+      expect(screen.getByRole("heading", { name: /^division$/i })).toBeInTheDocument();
     });
   });
 
