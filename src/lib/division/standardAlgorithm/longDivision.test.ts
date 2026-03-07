@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   computeLongDivisionSteps,
+  computeRightCols,
   validateQuotientDigit,
 } from "./longDivision";
 
@@ -76,6 +77,40 @@ describe("computeLongDivisionSteps", () => {
     const steps = computeLongDivisionSteps(657, 3);
     for (const step of steps) {
       expect(step.product).toBe(step.quotientDigit * 3);
+    }
+  });
+});
+
+// ─── computeRightCols ─────────────────────────────────────────────────────────
+
+describe("computeRightCols", () => {
+  it("657 ÷ 3 = 219 → each step aligns to successive dividend columns", () => {
+    const steps = computeLongDivisionSteps(657, 3);
+    expect(computeRightCols(steps)).toEqual([0, 1, 2]);
+  });
+
+  it("144 ÷ 12 = 12 → two-digit lead skips first column", () => {
+    // "14" aligns to col 1, "24" aligns to col 2
+    const steps = computeLongDivisionSteps(144, 12);
+    expect(computeRightCols(steps)).toEqual([1, 2]);
+  });
+
+  it("306 ÷ 3 = 102 → zero-digit step still advances one column", () => {
+    const steps = computeLongDivisionSteps(306, 3);
+    expect(computeRightCols(steps)).toEqual([0, 1, 2]);
+  });
+
+  it("9996 ÷ 4 = 2499 → four steps align to columns 0–3", () => {
+    const steps = computeLongDivisionSteps(9996, 4);
+    expect(computeRightCols(steps)).toEqual([0, 1, 2, 3]);
+  });
+
+  it("last rightCol is always dividendLength - 1", () => {
+    const cases = [[657, 3], [306, 3], [144, 12], [9999, 9]] as const;
+    for (const [dividend, divisor] of cases) {
+      const steps = computeLongDivisionSteps(dividend, divisor);
+      const cols = computeRightCols(steps);
+      expect(cols.at(-1)).toBe(String(dividend).length - 1);
     }
   });
 });

@@ -47,6 +47,27 @@ export function computeLongDivisionSteps(
 }
 
 /**
+ * Computes the 0-based index of the rightmost dividend column consumed by
+ * each step. Runs in O(n) by accumulating consumed digits instead of
+ * recomputing from the start for every step.
+ *
+ * For example, 657 ÷ 3 = 219 yields [0, 1, 2] — each step aligns to the
+ * next dividend digit column.
+ */
+export function computeRightCols(steps: LongDivisionStep[]): number[] {
+  const result: number[] = [];
+  let consumed = 0;
+  for (let i = 0; i < steps.length; i++) {
+    const wLen = String(steps[i].workingNumber).length;
+    const prevRem = i === 0 ? 0 : steps[i - 1].remainder;
+    const prevRemLen = prevRem === 0 ? 0 : String(prevRem).length;
+    consumed += wLen - prevRemLen;
+    result.push(consumed - 1);
+  }
+  return result;
+}
+
+/**
  * Validates that the value entered by the student is the correct quotient
  * digit for the current step.
  */

@@ -1,4 +1,4 @@
-import type { LongDivisionStep } from "@/lib/division/standardAlgorithm/longDivision";
+import { type LongDivisionStep, computeRightCols } from "@/lib/division/standardAlgorithm/longDivision";
 
 export interface LongDivisionDisplayProps {
   dividend: number;
@@ -34,7 +34,7 @@ export default function LongDivisionDisplay({
   const divW = String(divisor).length;
 
   // 0-based index of the rightmost dividend column consumed by each step.
-  const rightCols = steps.map((_, i) => alignmentForStep(steps, i) - 1);
+  const rightCols = computeRightCols(steps);
 
   // Quotient slots: each step's digit at its rightCol position.
   const quotientSlots: { char: string; completed: boolean }[] = Array.from(
@@ -221,17 +221,3 @@ export function buildSlots(
   return { signChar: "\u00A0", slots };
 }
 
-/**
- * Returns the 1-indexed count of dividend digits consumed through step[i].
- * Subtract 1 to get the 0-based rightmost column index for that step.
- */
-export function alignmentForStep(steps: LongDivisionStep[], stepIndex: number): number {
-  let consumed = 0;
-  for (let i = 0; i <= stepIndex; i++) {
-    const wLen = String(steps[i].workingNumber).length;
-    const prevRem = i === 0 ? 0 : steps[i - 1].remainder;
-    const prevRemLen = prevRem === 0 ? 0 : String(prevRem).length;
-    consumed += wLen - prevRemLen;
-  }
-  return consumed;
-}

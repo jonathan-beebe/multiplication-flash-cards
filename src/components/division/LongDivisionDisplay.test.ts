@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildSlots, alignmentForStep } from "./LongDivisionDisplay";
-import { computeLongDivisionSteps } from "@/lib/division/standardAlgorithm/longDivision";
+import { buildSlots } from "./LongDivisionDisplay";
 
 const NBSP = "\u00A0";
 
@@ -52,38 +51,3 @@ describe("buildSlots", () => {
   });
 });
 
-// ─── alignmentForStep ─────────────────────────────────────────────────────────
-
-describe("alignmentForStep", () => {
-  it("maps each step to its 1-indexed column for 657 ÷ 3 = 219", () => {
-    // Dividend "657": step 0 → col 1 (digit '6'), step 1 → col 2 (digit '5'), step 2 → col 3 (digit '7')
-    const steps = computeLongDivisionSteps(657, 3);
-    expect(alignmentForStep(steps, 0)).toBe(1);
-    expect(alignmentForStep(steps, 1)).toBe(2);
-    expect(alignmentForStep(steps, 2)).toBe(3);
-  });
-
-  it("skips leading digits when divisor requires two digits to start (144 ÷ 12 = 12)", () => {
-    // Dividend "144": step 0 uses "14" → rightmost column is 2, step 1 uses "24" → col 3
-    const steps = computeLongDivisionSteps(144, 12);
-    expect(alignmentForStep(steps, 0)).toBe(2);
-    expect(alignmentForStep(steps, 1)).toBe(3);
-  });
-
-  it("accounts for remainder digits carrying over (306 ÷ 3 = 102)", () => {
-    // step 0: working=3, rem=0 → col 1
-    // step 1: working=0, rem=0 → col 2 (zero-digit step)
-    // step 2: working=6, rem=0 → col 3
-    const steps = computeLongDivisionSteps(306, 3);
-    expect(alignmentForStep(steps, 0)).toBe(1);
-    expect(alignmentForStep(steps, 1)).toBe(2);
-    expect(alignmentForStep(steps, 2)).toBe(3);
-  });
-
-  it("handles a 4-digit dividend (9996 ÷ 4 = 2499)", () => {
-    const steps = computeLongDivisionSteps(9996, 4);
-    // Each step consumes one digit of "9996"
-    expect(alignmentForStep(steps, 0)).toBe(1);
-    expect(alignmentForStep(steps, steps.length - 1)).toBe(4);
-  });
-});
