@@ -15,7 +15,7 @@ import MonoText from "@/components/atoms/MonoText";
 import LongDivisionDisplay from "@/components/division/standardAlgorithm/LongDivisionDisplay";
 import { computeLongDivisionSteps } from "@/lib/division/standardAlgorithm/longDivision";
 import PartialQuotientsDisplay from "@/components/division/partialQuotients/PartialQuotientsDisplay";
-import type { Phase } from "@/lib/division/partialQuotients/problemState";
+
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
@@ -298,24 +298,24 @@ const PQ_SECTIONS_FULL = [
   { partialQuotient: 20, area: 140 },
 ];
 
-const pqFixtures: { label: string; sections: typeof PQ_SECTIONS_FULL; remaining: number; phase: Phase }[] = [
-  { label: "New problem",  sections: [],                remaining: 630, phase: "building" },
-  { label: "In progress",  sections: PQ_SECTIONS_PARTIAL, remaining: 140, phase: "building" },
-  { label: "Summing",      sections: PQ_SECTIONS_FULL,  remaining: 0,   phase: "summing"  },
-  { label: "Completed",    sections: PQ_SECTIONS_FULL,  remaining: 0,   phase: "done"     },
+const pqFixtures: { label: string; sections: typeof PQ_SECTIONS_FULL; showTotal: boolean }[] = [
+  { label: "New problem",  sections: [],                showTotal: false },
+  { label: "In progress",  sections: PQ_SECTIONS_PARTIAL, showTotal: false },
+  { label: "Summing",      sections: PQ_SECTIONS_FULL,  showTotal: false },
+  { label: "Completed",    sections: PQ_SECTIONS_FULL,  showTotal: true  },
 ];
 
 function PartialQuotientsDisplayFixtures() {
   return (
     <div className="flex gap-2">
-      {pqFixtures.map(({ label, sections, remaining, phase }) => (
+      {pqFixtures.map(({ label, sections, showTotal }) => (
         <div key={label} className="flex-1 flex flex-col items-center gap-2">
           <PartialQuotientsDisplay
             dividend={630}
             divisor={7}
+            quotient={90}
             sections={sections}
-            remaining={remaining}
-            phase={phase}
+            showTotal={showTotal}
           />
           <Label>{label}</Label>
         </div>
