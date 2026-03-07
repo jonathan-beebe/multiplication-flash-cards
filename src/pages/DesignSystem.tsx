@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import HomeButton from "@/components/HomeButton";
 import QuizButton from "@/components/multiplication/QuizButton";
 import ErrorText from "@/components/atoms/ErrorText";
+import PrimaryButton from "@/components/atoms/PrimaryButton";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -139,15 +140,9 @@ function ButtonAtoms() {
       <div>
         <p className="text-xs text-slate-400 mb-2">Primary action button</p>
         <div className="flex flex-wrap gap-2">
-          <button className="rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all">
-            Place
-          </button>
-          <button className="rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all">
-            Check
-          </button>
-          <button className="rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-8 py-3 text-lg shadow-md transition-all">
-            Next problem →
-          </button>
+          <PrimaryButton>Place</PrimaryButton>
+          <PrimaryButton>Check</PrimaryButton>
+          <PrimaryButton size="lg">Next problem →</PrimaryButton>
         </div>
       </div>
 
