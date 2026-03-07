@@ -111,3 +111,16 @@ export function validatePartialQuotient(
   }
   return { valid: true };
 }
+
+export function validateSummingAnswer(
+  value: number,
+  quotient: number
+): { valid: true } | { valid: false; error: string } {
+  if (!Number.isInteger(value) || value <= 0) {
+    return { valid: false, error: "Enter a whole number" };
+  }
+  if (value !== quotient) {
+    return { valid: false, error: "Not quite — check your addition and try again" };
+  }
+  return { valid: true };
+}

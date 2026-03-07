@@ -3,6 +3,7 @@ import {
   generateProblem,
   getHelpfulFacts,
   validatePartialQuotient,
+  validateSummingAnswer,
   LEVELS,
 } from "@/lib/division/areaMode/divisionProblem";
 import type { Level } from "@/lib/division/areaMode/divisionProblem";
@@ -82,6 +83,42 @@ describe("validatePartialQuotient", () => {
 
   it("returns an error for a non-integer float", () => {
     const result = validatePartialQuotient(1.5, 3, 72);
+    expect(result.valid).toBe(false);
+  });
+});
+
+// ─── validateSummingAnswer ────────────────────────────────────────────────────
+
+describe("validateSummingAnswer", () => {
+  it("returns valid when the value matches the quotient", () => {
+    expect(validateSummingAnswer(21, 21)).toEqual({ valid: true });
+  });
+
+  it("returns an error when the value is wrong", () => {
+    const result = validateSummingAnswer(20, 21);
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.error).toMatch(/check your addition/i);
+    }
+  });
+
+  it("returns an error for zero", () => {
+    const result = validateSummingAnswer(0, 21);
+    expect(result.valid).toBe(false);
+  });
+
+  it("returns an error for a negative number", () => {
+    const result = validateSummingAnswer(-1, 21);
+    expect(result.valid).toBe(false);
+  });
+
+  it("returns an error for NaN (unparseable input)", () => {
+    const result = validateSummingAnswer(NaN, 21);
+    expect(result.valid).toBe(false);
+  });
+
+  it("returns an error for a non-integer float", () => {
+    const result = validateSummingAnswer(20.5, 21);
     expect(result.valid).toBe(false);
   });
 });

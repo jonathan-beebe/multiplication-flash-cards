@@ -1,13 +1,11 @@
 import type { Section } from "@/lib/division/areaMode/divisionProblem";
-import type { Phase } from "@/lib/division/partialQuotients/problemState";
-
-export type { Phase };
 
 export interface PartialQuotientsDisplayProps {
   dividend: number;
   divisor: number;
+  quotient: number;
   sections: Section[];
-  phase: Phase;
+  showTotal: boolean;
 }
 
 /**
@@ -25,15 +23,13 @@ export interface PartialQuotientsDisplayProps {
 export default function PartialQuotientsDisplay({
   dividend,
   divisor,
+  quotient,
   sections,
-  phase,
+  showTotal,
 }: PartialQuotientsDisplayProps) {
-  const showTotal = phase === "done" && sections.length > 1;
-
   // Column widths in ch units — use raw digit count, not toLocaleString,
   // so widths stay accurate in the monospace grid.
   const numW = String(dividend).length;
-  const quotient = Math.round(dividend / divisor);
   const pqW = Math.max(String(quotient).length, 2);
 
   // Pre-compute running remainders after each section.

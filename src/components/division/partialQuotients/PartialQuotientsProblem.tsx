@@ -1,9 +1,12 @@
 import { useReducer, useState, useRef, useEffect, useCallback } from "react";
-import { getHelpfulFacts, validatePartialQuotient } from "@/lib/division/areaMode/divisionProblem";
+import {
+  getHelpfulFacts,
+  validatePartialQuotient,
+  validateSummingAnswer,
+} from "@/lib/division/areaMode/divisionProblem";
 import type { Level } from "@/lib/division/areaMode/divisionProblem";
 import {
   createSession,
-  computeRemaining,
   sessionReducer,
 } from "@/lib/division/partialQuotients/problemState";
 import ErrorText from "@/components/atoms/ErrorText";
@@ -27,9 +30,9 @@ export default function PartialQuotientsProblem({ level }: Props) {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { problem, sections, phase, announcement } = session;
-  const remaining = computeRemaining(problem, sections);
+  const { problem, sections, phase, remaining, announcement } = session;
 
   useEffect(() => {
     if (phase === "done") {
@@ -41,21 +44,20 @@ export default function PartialQuotientsProblem({ level }: Props) {
     }
   }, [phase]);
 
+  useEffect(() => {
+    return () => {
+      if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+    };
+  }, []);
+
   function triggerShake() {
+    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
     setIsShaking(true);
-    setTimeout(() => setIsShaking(false), 400);
+    shakeTimerRef.current = setTimeout(() => setIsShaking(false), 400);
   }
 
   const handleBuildingSubmit = useCallback(() => {
     const value = parseInt(inputValue, 10);
-
-    if (isNaN(value)) {
-      triggerShake();
-      setInputError("Enter a whole number");
-      inputRef.current?.focus();
-      return;
-    }
-
     const result = validatePartialQuotient(value, problem.divisor, remaining);
     if (!result.valid) {
       triggerShake();
@@ -71,24 +73,18 @@ export default function PartialQuotientsProblem({ level }: Props) {
 
   const handleSummingSubmit = useCallback(() => {
     const value = parseInt(inputValue, 10);
-
-    if (isNaN(value)) {
+    const result = validateSummingAnswer(value, problem.quotient);
+    if (!result.valid) {
       triggerShake();
-      setInputError("Enter a whole number");
+      setInputError(result.error);
       inputRef.current?.focus();
       return;
     }
 
     setInputValue("");
+    setInputError(null);
     inputRef.current?.focus();
-
-    if (value === problem.quotient) {
-      setInputError(null);
-      dispatch({ type: "SUBMIT_SUMMING" });
-    } else {
-      triggerShake();
-      setInputError("Not quite — check your addition and try again");
-    }
+    dispatch({ type: "SUBMIT_SUMMING" });
   }, [inputValue, problem.quotient]);
 
   function handleSubmit() {
@@ -137,8 +133,9 @@ export default function PartialQuotientsProblem({ level }: Props) {
       <PartialQuotientsDisplay
         dividend={problem.dividend}
         divisor={problem.divisor}
+        quotient={problem.quotient}
         sections={sections}
-        phase={phase}
+        showTotal={phase === "done" && sections.length > 1}
       />
 
       {/* Building phase */}
