@@ -270,9 +270,9 @@ function LongDivisionDisplayFixtures() {
   ];
 
   return (
-    <Items>
+    <div className="flex gap-2">
       {fixtures.map(({ label, completedCount }) => (
-        <Item key={label}>
+        <div key={label} className="flex-1 flex flex-col items-center gap-2">
           <LongDivisionDisplay
             dividend={657}
             divisor={3}
@@ -281,9 +281,9 @@ function LongDivisionDisplayFixtures() {
             quotientDigits={quotientDigits}
           />
           <Label>{label}</Label>
-        </Item>
+        </div>
       ))}
-    </Items>
+    </div>
   );
 }
 
