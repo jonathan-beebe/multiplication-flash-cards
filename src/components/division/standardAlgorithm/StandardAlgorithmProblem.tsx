@@ -16,13 +16,12 @@ import LongDivisionDisplay from "@/components/division/LongDivisionDisplay";
 interface ProblemState {
   problem: Problem;
   steps: LongDivisionStep[];
-  completedCount: number;
 }
 
 function createInitialState(level: Level): ProblemState {
   const problem = generateProblem(level);
   const steps = computeLongDivisionSteps(problem.dividend, problem.divisor);
-  return { problem, steps, completedCount: 0 };
+  return { problem, steps };
 }
 
 interface Props {
@@ -31,6 +30,7 @@ interface Props {
 
 export default function StandardAlgorithmProblem({ level }: Props) {
   const [state, setState] = useState<ProblemState>(() => createInitialState(level));
+  const [completedCount, setCompletedCount] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
@@ -40,7 +40,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { problem, steps, completedCount } = state;
+  const { problem, steps } = state;
   const isDone = completedCount === steps.length;
   const currentStep = isDone ? null : steps[completedCount];
 
@@ -81,7 +81,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
     const nextCompleted = completedCount + 1;
     setInputValue("");
     setInputError(null);
-    setState((s) => ({ ...s, completedCount: nextCompleted }));
+    setCompletedCount(nextCompleted);
 
     if (nextCompleted === steps.length) {
       setAnnouncement(
@@ -104,14 +104,10 @@ export default function StandardAlgorithmProblem({ level }: Props) {
     setHintsOpen(false);
     setAnnouncement("");
     setState(createInitialState(level));
+    setCompletedCount(0);
   }
 
   const helpfulFacts = getHelpfulFacts(problem.divisor, problem.dividend);
-
-  // Build the quotient display string
-  const quotientDigits = steps.map((s, i) =>
-    i < completedCount ? String(s.quotientDigit) : "_"
-  );
 
   return (
     <div className="w-full max-w-xl flex flex-col gap-6">
@@ -134,7 +130,6 @@ export default function StandardAlgorithmProblem({ level }: Props) {
         divisor={problem.divisor}
         steps={steps}
         completedCount={completedCount}
-        quotientDigits={quotientDigits}
       />
       </div>
 

@@ -47,19 +47,6 @@ export function computeLongDivisionSteps(
 }
 
 /**
- * Returns the quotient string built from completed steps, padded with
- * underscores for remaining steps. E.g. for 3 total steps, 1 done: "2__"
- */
-export function buildQuotientDisplay(
-  steps: LongDivisionStep[],
-  completedCount: number
-): string {
-  return steps
-    .map((s, i) => (i < completedCount ? String(s.quotientDigit) : "_"))
-    .join("");
-}
-
-/**
  * Validates that the value entered by the student is the correct quotient
  * digit for the current step.
  */

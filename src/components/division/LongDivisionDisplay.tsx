@@ -5,7 +5,6 @@ export interface LongDivisionDisplayProps {
   divisor: number;
   steps: LongDivisionStep[];
   completedCount: number;
-  quotientDigits: string[];
 }
 
 /**
@@ -29,7 +28,6 @@ export default function LongDivisionDisplay({
   divisor,
   steps,
   completedCount,
-  quotientDigits,
 }: LongDivisionDisplayProps) {
   const dividendStr = String(dividend);
   const N = dividendStr.length;
@@ -38,36 +36,6 @@ export default function LongDivisionDisplay({
   // 0-based index of the rightmost dividend column consumed by each step.
   const rightCols = steps.map((_, i) => alignmentForStep(steps, i) - 1);
 
-  /**
-   * Fills N digit-slots so that `value` is right-aligned to `rightCol`.
-   * If the − sign fits in the grid (signCol ≥ 0), it is placed there and
-   * signChar returns a space; otherwise signChar returns '−'.
-   */
-  function buildSlots(
-    sign: "−" | " ",
-    value: number,
-    rightCol: number
-  ): { signChar: string; slots: string[] } {
-    const s = String(value);
-    const len = s.length;
-    const slots = Array<string>(N).fill("\u00A0");
-
-    for (let j = 0; j < len; j++) {
-      slots[rightCol - len + 1 + j] = s[j];
-    }
-
-    if (sign === "−") {
-      const signCol = rightCol - len;
-      if (signCol >= 0) {
-        slots[signCol] = "−";
-        return { signChar: "\u00A0", slots };
-      }
-      return { signChar: "−", slots };
-    }
-
-    return { signChar: "\u00A0", slots };
-  }
-
   // Quotient slots: each step's digit at its rightCol position.
   const quotientSlots: { char: string; completed: boolean }[] = Array.from(
     { length: N },
@@ -75,7 +43,7 @@ export default function LongDivisionDisplay({
   );
   steps.forEach((s, i) => {
     quotientSlots[rightCols[i]] = {
-      char: i < completedCount ? quotientDigits[i] : "_",
+      char: i < completedCount ? String(s.quotientDigit) : "_",
       completed: i < completedCount,
     };
   });
@@ -142,15 +110,15 @@ export default function LongDivisionDisplay({
         const wLen = String(step.workingNumber).length;
         const ruleLeft = rightCol - wLen + 1; // leftmost column of this step's working number
 
-        const { signChar, slots } = buildSlots("−", step.product, rightCol);
+        const { signChar, slots } = buildSlots("−", step.product, rightCol, N);
 
-        const isFinalDone = i === completedCount - 1 && completedCount === steps.length;
+        const isFinalDone = completedCount === steps.length && i === steps.length - 1;
 
         const nextStep = i < steps.length - 1 ? steps[i + 1] : null;
         const nextRow = nextStep
-          ? buildSlots(" ", nextStep.workingNumber, rightCols[i + 1])
+          ? buildSlots(" ", nextStep.workingNumber, rightCols[i + 1], N)
           : null;
-        const finalRow = isFinalDone ? buildSlots(" ", 0, rightCol) : null;
+        const finalRow = isFinalDone ? buildSlots(" ", 0, rightCol, N) : null;
 
         return (
           <div key={i}>
@@ -223,10 +191,41 @@ export default function LongDivisionDisplay({
 }
 
 /**
+ * Fills N digit-slots so that `value` is right-aligned to `rightCol`.
+ * If the − sign fits in the grid (signCol ≥ 0), it is placed there and
+ * signChar returns a space; otherwise signChar returns '−'.
+ */
+export function buildSlots(
+  sign: "−" | " ",
+  value: number,
+  rightCol: number,
+  N: number
+): { signChar: string; slots: string[] } {
+  const s = String(value);
+  const len = s.length;
+  const slots = Array<string>(N).fill("\u00A0");
+
+  for (let j = 0; j < len; j++) {
+    slots[rightCol - len + 1 + j] = s[j];
+  }
+
+  if (sign === "−") {
+    const signCol = rightCol - len;
+    if (signCol >= 0) {
+      slots[signCol] = "−";
+      return { signChar: "\u00A0", slots };
+    }
+    return { signChar: "−", slots };
+  }
+
+  return { signChar: "\u00A0", slots };
+}
+
+/**
  * Returns the 1-indexed count of dividend digits consumed through step[i].
  * Subtract 1 to get the 0-based rightmost column index for that step.
  */
-function alignmentForStep(steps: LongDivisionStep[], stepIndex: number): number {
+export function alignmentForStep(steps: LongDivisionStep[], stepIndex: number): number {
   let consumed = 0;
   for (let i = 0; i <= stepIndex; i++) {
     const wLen = String(steps[i].workingNumber).length;

@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
   computeLongDivisionSteps,
-  buildQuotientDisplay,
   validateQuotientDigit,
 } from "./longDivision";
 
@@ -78,18 +77,6 @@ describe("computeLongDivisionSteps", () => {
     for (const step of steps) {
       expect(step.product).toBe(step.quotientDigit * 3);
     }
-  });
-});
-
-// ─── buildQuotientDisplay ─────────────────────────────────────────────────────
-
-describe("buildQuotientDisplay", () => {
-  it("shows underscores for unfinished steps", () => {
-    const steps = computeLongDivisionSteps(657, 3);
-    expect(buildQuotientDisplay(steps, 0)).toBe("___");
-    expect(buildQuotientDisplay(steps, 1)).toBe("2__");
-    expect(buildQuotientDisplay(steps, 2)).toBe("21_");
-    expect(buildQuotientDisplay(steps, 3)).toBe("219");
   });
 });
 
