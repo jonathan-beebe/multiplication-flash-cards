@@ -5,6 +5,7 @@ import {
   validatePartialQuotient,
 } from "@/lib/division/areaMode/divisionProblem";
 import ErrorText from "@/components/atoms/ErrorText";
+import PrimaryButton from "@/components/atoms/PrimaryButton";
 import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
@@ -210,12 +211,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
               aria-describedby={inputError ? "input-error" : undefined}
               className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-teal-500 dark:focus:border-teal-400 tabular-nums"
             />
-            <button
-              onClick={handleSubmit}
-              className="rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all"
-            >
-              Place
-            </button>
+            <PrimaryButton onClick={handleSubmit}>Place</PrimaryButton>
           </div>
 
           {inputError && <ErrorText id="input-error">{inputError}</ErrorText>}
@@ -245,12 +241,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
               aria-describedby={inputError ? "input-error" : undefined}
               className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-teal-500 dark:focus:border-teal-400 tabular-nums"
             />
-            <button
-              onClick={handleSubmit}
-              className="rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-5 py-2 shadow-md transition-all"
-            >
-              Check
-            </button>
+            <PrimaryButton onClick={handleSubmit}>Check</PrimaryButton>
           </div>
 
           {inputError && <ErrorText id="input-error">{inputError}</ErrorText>}
@@ -269,14 +260,9 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
               {problem.quotient.toLocaleString()} ✓
             </span>
           </p>
-          <button
-            ref={nextButtonRef}
-            onClick={handleNext}
-            aria-label="Next problem"
-            className="rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-8 py-3 text-lg shadow-md transition-all"
-          >
+          <PrimaryButton ref={nextButtonRef} onClick={handleNext} aria-label="Next problem" size="lg">
             <span aria-hidden="true">Next problem →</span>
-          </button>
+          </PrimaryButton>
         </div>
       )}
 
