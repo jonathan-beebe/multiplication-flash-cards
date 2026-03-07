@@ -83,7 +83,6 @@ export default function PartialQuotientsProblem({ level }: Props) {
 
     setInputValue("");
     setInputError(null);
-    inputRef.current?.focus();
     dispatch({ type: "SUBMIT_SUMMING" });
   }, [inputValue, problem.quotient]);
 
