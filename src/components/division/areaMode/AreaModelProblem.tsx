@@ -9,6 +9,7 @@ import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
 import ProblemHeading from "@/components/atoms/ProblemHeading";
+import Subheading from "@/components/atoms/Subheading";
 import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
@@ -221,9 +222,9 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
       {/* Summing phase */}
       {phase === "summing" && (
         <div className="flex flex-col gap-3">
-          <p className="text-center text-lg font-semibold text-text" aria-label={`Add the partial quotients: ${sumEquation} equals what?`}>
+          <Subheading className="text-center" aria-label={`Add the partial quotients: ${sumEquation} equals what?`}>
             {sumEquation} = ?
-          </p>
+          </Subheading>
 
           <div className={`flex gap-3 justify-center ${isShaking ? "shake" : ""}`}>
             <NumberInput

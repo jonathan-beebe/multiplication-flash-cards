@@ -8,6 +8,10 @@ import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
 import ProblemHeading from "@/components/atoms/ProblemHeading";
 import PageHeading from "@/components/atoms/PageHeading";
+import Subheading from "@/components/atoms/Subheading";
+import BodyText from "@/components/atoms/BodyText";
+import SecondaryText from "@/components/atoms/SecondaryText";
+import MonoText from "@/components/atoms/MonoText";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -78,19 +82,19 @@ function TypographyAtoms() {
       </Group>
       <Group>
         <Title>Subheading — text-lg font-semibold</Title>
-        <p className="text-lg font-semibold text-text">Area model method</p>
+        <Subheading>Area model method</Subheading>
       </Group>
       <Group>
         <Title>Body — text-base</Title>
-        <p className="text-base text-text">How many times does 3 go into 27?</p>
+        <BodyText>How many times does 3 go into 27?</BodyText>
       </Group>
       <Group>
         <Title>Secondary — text-sm text-slate-500</Title>
-        <p className="text-sm text-slate-500 dark:text-slate-400">2-digit answer, small divisor</p>
+        <SecondaryText>2-digit answer, small divisor</SecondaryText>
       </Group>
       <Group>
         <Title>Mono numeric — font-mono tabular-nums text-xl</Title>
-        <p className="font-mono tabular-nums text-xl text-text">3 ) 657</p>
+        <MonoText>3 ) 657</MonoText>
       </Group>
       <Group>
         <Title>Success — SuccessText</Title>

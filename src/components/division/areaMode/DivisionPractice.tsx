@@ -6,6 +6,7 @@ import AreaModelProblem from "@/components/division/areaMode/AreaModelProblem";
 import { LEVELS } from "@/lib/division/areaMode/divisionProblem";
 import type { Level } from "@/lib/division/areaMode/divisionProblem";
 import PageHeading from "@/components/atoms/PageHeading";
+import SecondaryText from "@/components/atoms/SecondaryText";
 
 const LEVEL_IDS: Level[] = [1, 2, 3, 4];
 
@@ -38,9 +39,9 @@ export default function DivisionPractice() {
       <div className="w-full max-w-xl flex flex-col items-center gap-8">
         <div className="text-center">
           <PageHeading>Division Practice</PageHeading>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <SecondaryText className="mt-1">
             Area model method
-          </p>
+          </SecondaryText>
         </div>
 
         {/* Level picker */}
