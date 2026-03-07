@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useReducer, useState, useRef, useEffect, useCallback } from "react";
 import { generateProblem, getHelpfulFacts } from "@/lib/division/areaMode/divisionProblem";
 import type { Level, Problem } from "@/lib/division/areaMode/divisionProblem";
 import {
@@ -14,34 +14,66 @@ import ProblemHeading from "@/components/atoms/ProblemHeading";
 import type { LongDivisionStep } from "@/lib/division/standardAlgorithm/longDivision";
 import LongDivisionDisplay from "@/components/division/LongDivisionDisplay";
 
-interface ProblemState {
+// ── Session state ─────────────────────────────────────────────────────────────
+// Groups the problem, its steps, progress cursor, and screen-reader
+// announcement so they always reset atomically when moving to the next problem.
+
+interface SessionState {
   problem: Problem;
   steps: LongDivisionStep[];
+  currentStepIndex: number;
+  announcement: string;
 }
 
-function createInitialState(level: Level): ProblemState {
+type SessionAction =
+  | { type: "ADVANCE"; value: number }
+  | { type: "NEXT"; level: Level };
+
+function createSession(level: Level): SessionState {
   const problem = generateProblem(level);
   const steps = computeLongDivisionSteps(problem.dividend, problem.divisor);
-  return { problem, steps };
+  return { problem, steps, currentStepIndex: 0, announcement: "" };
 }
+
+function sessionReducer(state: SessionState, action: SessionAction): SessionState {
+  switch (action.type) {
+    case "ADVANCE": {
+      const currentStep = state.steps[state.currentStepIndex];
+      const nextStepIndex = state.currentStepIndex + 1;
+      return {
+        ...state,
+        currentStepIndex: nextStepIndex,
+        announcement: buildAnnouncement(
+          action.value,
+          currentStep,
+          state.problem,
+          nextStepIndex,
+          state.steps.length
+        ),
+      };
+    }
+    case "NEXT":
+      return createSession(action.level);
+  }
+}
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 interface Props {
   level: Level;
 }
 
 export default function StandardAlgorithmProblem({ level }: Props) {
-  const [state, setState] = useState<ProblemState>(() => createInitialState(level));
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [session, dispatch] = useReducer(sessionReducer, level, createSession);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
   const [hintsOpen, setHintsOpen] = useState(false);
-  const [announcement, setAnnouncement] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { problem, steps } = state;
+  const { problem, steps, currentStepIndex, announcement } = session;
   const isDone = currentStepIndex === steps.length;
   const currentStep = isDone ? null : steps[currentStepIndex];
 
@@ -79,13 +111,10 @@ export default function StandardAlgorithmProblem({ level }: Props) {
       return;
     }
 
-    const nextStepIndex = currentStepIndex + 1;
     setInputValue("");
     setInputError(null);
-    setCurrentStepIndex(nextStepIndex);
-
-    setAnnouncement(buildAnnouncement(value, currentStep, problem, nextStepIndex, steps.length));
-  }, [inputValue, currentStep, currentStepIndex, steps.length, problem]);
+    dispatch({ type: "ADVANCE", value });
+  }, [inputValue, currentStep]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter") handleSubmit();
@@ -95,9 +124,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
     setInputValue("");
     setInputError(null);
     setHintsOpen(false);
-    setAnnouncement("");
-    setState(createInitialState(level));
-    setCurrentStepIndex(0);
+    dispatch({ type: "NEXT", level });
   }
 
   const helpfulFacts = getHelpfulFacts(problem.divisor, problem.dividend);
