@@ -12,7 +12,7 @@ import Subheading from "@/components/atoms/Subheading";
 import BodyText from "@/components/atoms/BodyText";
 import SecondaryText from "@/components/atoms/SecondaryText";
 import MonoText from "@/components/atoms/MonoText";
-import LongDivisionDisplay from "@/components/division/LongDivisionDisplay";
+import LongDivisionDisplay from "@/components/division/standardAlgorithm/LongDivisionDisplay";
 import { computeLongDivisionSteps } from "@/lib/division/standardAlgorithm/longDivision";
 import PartialQuotientsDisplay from "@/components/division/PartialQuotientsDisplay";
 import type { Phase } from "@/components/division/PartialQuotientsDisplay";

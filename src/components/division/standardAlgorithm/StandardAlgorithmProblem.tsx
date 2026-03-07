@@ -12,7 +12,7 @@ import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
 import ProblemHeading from "@/components/atoms/ProblemHeading";
 import type { LongDivisionStep } from "@/lib/division/standardAlgorithm/longDivision";
-import LongDivisionDisplay from "@/components/division/LongDivisionDisplay";
+import LongDivisionDisplay from "./LongDivisionDisplay";
 
 // ── Session state ─────────────────────────────────────────────────────────────
 // Groups the problem, its steps, progress cursor, and screen-reader

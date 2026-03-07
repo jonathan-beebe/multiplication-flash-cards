@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildQuotientSlots, buildValueSlots, buildSubtractSlots } from "./LongDivisionDisplay";
+import { buildQuotientSlots, buildValueSlots, buildSubtractSlots } from "./longDivisionDisplay.utils";
 import { computeLongDivisionSteps, computeRightCols } from "@/lib/division/standardAlgorithm/longDivision";
 
 const NBSP = "\u00A0";
@@ -35,7 +35,6 @@ describe("buildQuotientSlots", () => {
   it("places digits at correct columns when divisor requires two leading digits (144 ÷ 12 = 12)", () => {
     const steps = computeLongDivisionSteps(144, 12);
     const rightCols = computeRightCols(steps);
-    const NBSP = "\u00A0";
     const slots = buildQuotientSlots(steps, rightCols, 3, 2);
     expect(slots.map((s) => s.char)).toEqual([NBSP, "1", "2"]);
   });
@@ -91,4 +90,3 @@ describe("buildSubtractSlots", () => {
     expect(slots).toEqual(["2", "7"]);
   });
 });
-
