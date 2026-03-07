@@ -125,6 +125,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
       </div>
 
       {/* Long division display */}
+      <div className="flex justify-center">
       <LongDivisionDisplay
         dividend={problem.dividend}
         divisor={problem.divisor}
@@ -132,6 +133,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
         completedCount={completedCount}
         quotientDigits={quotientDigits}
       />
+      </div>
 
       {/* Step prompt */}
       {!isDone && currentStep && (
@@ -386,10 +388,9 @@ function LongDivisionDisplay({
 
         const { signChar, slots } = buildSlots("−", step.product, rightCol);
 
-        const isLast = i === completedCount - 1;
-        const isFinalDone = isLast && completedCount === steps.length;
+        const isFinalDone = i === completedCount - 1 && completedCount === steps.length;
 
-        const nextStep = !isLast ? steps[i + 1] : null;
+        const nextStep = i < steps.length - 1 ? steps[i + 1] : null;
         const nextRow = nextStep
           ? buildSlots(" ", nextStep.workingNumber, rightCols[i + 1])
           : null;
