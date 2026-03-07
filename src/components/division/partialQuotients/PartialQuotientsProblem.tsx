@@ -30,7 +30,6 @@ export default function PartialQuotientsProblem({ level }: Props) {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
-  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { problem, sections, phase, remaining, announcement } = session;
 
@@ -44,16 +43,9 @@ export default function PartialQuotientsProblem({ level }: Props) {
     }
   }, [phase]);
 
-  useEffect(() => {
-    return () => {
-      if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
-    };
-  }, []);
-
   function triggerShake() {
-    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
     setIsShaking(true);
-    shakeTimerRef.current = setTimeout(() => setIsShaking(false), 400);
+    setTimeout(() => setIsShaking(false), 400);
   }
 
   const handleBuildingSubmit = useCallback(() => {
