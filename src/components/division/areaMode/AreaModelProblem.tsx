@@ -7,6 +7,7 @@ import {
 import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
+import SuccessText from "@/components/atoms/SuccessText";
 import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
@@ -244,15 +245,12 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
       {/* Done phase */}
       {phase === "done" && (
         <div className="flex flex-col items-center gap-4">
-          <p
-            className="text-2xl font-bold tabular-nums text-teal-600 dark:text-teal-400"
-            aria-label={`${problem.dividend} divided by ${problem.divisor} equals ${problem.quotient}, correct`}
-          >
+          <SuccessText aria-label={`${problem.dividend} divided by ${problem.divisor} equals ${problem.quotient}, correct`}>
             <span aria-hidden="true">
               {problem.dividend.toLocaleString()} ÷ {problem.divisor} ={" "}
               {problem.quotient.toLocaleString()} ✓
             </span>
-          </p>
+          </SuccessText>
           <PrimaryButton ref={nextButtonRef} onClick={handleNext} aria-label="Next problem" size="lg">
             <span aria-hidden="true">Next problem →</span>
           </PrimaryButton>
