@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { generateProblem, getHelpfulFacts } from "@/lib/division/areaMode/divisionProblem";
 import type { Level, Problem } from "@/lib/division/areaMode/divisionProblem";
 import {
+  buildAnnouncement,
   computeLongDivisionSteps,
   validateQuotientDigit,
 } from "@/lib/division/standardAlgorithm/longDivision";
@@ -83,15 +84,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
     setInputError(null);
     setCurrentStepIndex(nextStepIndex);
 
-    if (nextStepIndex === steps.length) {
-      setAnnouncement(
-        `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
-      );
-    } else {
-      setAnnouncement(
-        `${value} is correct. ${currentStep.product} subtracted, ${currentStep.remainder} remaining. Bring down the next digit.`
-      );
-    }
+    setAnnouncement(buildAnnouncement(value, currentStep, problem, nextStepIndex, steps.length));
   }, [inputValue, currentStep, currentStepIndex, steps.length, problem]);
 
   function handleKeyDown(e: React.KeyboardEvent) {

@@ -68,6 +68,24 @@ export function computeRightCols(steps: LongDivisionStep[]): number[] {
 }
 
 /**
+ * Builds the screen-reader announcement string after a correct answer.
+ * Returns the final "problem complete" message when nextStepIndex equals
+ * steps.length, or an intermediate progress message otherwise.
+ */
+export function buildAnnouncement(
+  value: number,
+  step: LongDivisionStep,
+  problem: { dividend: number; divisor: number; quotient: number },
+  nextStepIndex: number,
+  stepsLength: number
+): string {
+  if (nextStepIndex === stepsLength) {
+    return `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`;
+  }
+  return `${value} is correct. ${step.product} subtracted, ${step.remainder} remaining. Bring down the next digit.`;
+}
+
+/**
  * Validates that the value entered by the student is the correct quotient
  * digit for the current step.
  */

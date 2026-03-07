@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  buildAnnouncement,
   computeLongDivisionSteps,
   computeRightCols,
   validateQuotientDigit,
@@ -78,6 +79,30 @@ describe("computeLongDivisionSteps", () => {
     for (const step of steps) {
       expect(step.product).toBe(step.quotientDigit * 3);
     }
+  });
+});
+
+// ─── buildAnnouncement ────────────────────────────────────────────────────────
+
+describe("buildAnnouncement", () => {
+  const problem = { dividend: 657, divisor: 3, quotient: 219 };
+  const step = { workingNumber: 27, quotientDigit: 9, product: 27, remainder: 0 };
+
+  it("returns a completion message on the last step", () => {
+    const msg = buildAnnouncement(9, step, problem, 3, 3);
+    expect(msg).toBe("Correct! 657 divided by 3 equals 219.");
+  });
+
+  it("uses toLocaleString for large dividends in the completion message", () => {
+    const bigProblem = { dividend: 1_000_000, divisor: 4, quotient: 250_000 };
+    const msg = buildAnnouncement(2, step, bigProblem, 7, 7);
+    expect(msg).toContain("1,000,000");
+  });
+
+  it("returns a progress message for intermediate steps", () => {
+    const midStep = { workingNumber: 6, quotientDigit: 2, product: 6, remainder: 0 };
+    const msg = buildAnnouncement(2, midStep, problem, 1, 3);
+    expect(msg).toBe("2 is correct. 6 subtracted, 0 remaining. Bring down the next digit.");
   });
 });
 
