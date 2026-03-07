@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import NavBar from "@/components/NavBar";
 import HomeButton from "@/components/atoms/HomeButton";
 import QuizButton from "@/components/multiplication/QuizButton";
@@ -12,6 +12,8 @@ import Subheading from "@/components/atoms/Subheading";
 import BodyText from "@/components/atoms/BodyText";
 import SecondaryText from "@/components/atoms/SecondaryText";
 import MonoText from "@/components/atoms/MonoText";
+import LongDivisionDisplay from "@/components/division/LongDivisionDisplay";
+import { computeLongDivisionSteps } from "@/lib/division/standardAlgorithm/longDivision";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -255,6 +257,36 @@ function InputAtoms() {
   );
 }
 
+// ─── Division components ──────────────────────────────────────────────────────
+
+function LongDivisionDisplayFixtures() {
+  const steps = useMemo(() => computeLongDivisionSteps(657, 3), []);
+  const quotientDigits = steps.map((s) => String(s.quotientDigit));
+
+  const fixtures: { label: string; completedCount: number }[] = [
+    { label: "New problem", completedCount: 0 },
+    { label: "In progress", completedCount: 1 },
+    { label: "Completed", completedCount: steps.length },
+  ];
+
+  return (
+    <Items>
+      {fixtures.map(({ label, completedCount }) => (
+        <Item key={label}>
+          <LongDivisionDisplay
+            dividend={657}
+            divisor={3}
+            steps={steps}
+            completedCount={completedCount}
+            quotientDigits={quotientDigits}
+          />
+          <Label>{label}</Label>
+        </Item>
+      ))}
+    </Items>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function DesignSystem() {
@@ -289,8 +321,8 @@ export default function DesignSystem() {
 
         {/* ── Components ─────────────────────────────────────────── */}
         <Category title="Components">
-          <Subsection title="Placeholder">
-            <p className="text-slate-500 dark:text-slate-400 text-sm">No components documented yet.</p>
+          <Subsection title="LongDivisionDisplay — 657 ÷ 3 = 219">
+            <LongDivisionDisplayFixtures />
           </Subsection>
         </Category>
       </div>
