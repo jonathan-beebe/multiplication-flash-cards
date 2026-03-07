@@ -3,6 +3,7 @@ import type { Section } from "@/lib/division/areaMode/divisionProblem";
 export interface PartialQuotientsDisplayProps {
   dividend: number;
   divisor: number;
+  /** Used only to size the partial-quotient column; never rendered directly. */
   quotient: number;
   sections: Section[];
   showTotal: boolean;
