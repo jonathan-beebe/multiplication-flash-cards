@@ -237,7 +237,7 @@ describe("App user journeys", () => {
 
   // ─── 7. Division practice flow ─────────────────────────────────────
   describe("Division practice flow", () => {
-    it("Home → Division → division practice screen", () => {
+    it("Home → Division → division menu screen", () => {
       render(
         <MemoryRouter initialEntries={["/"]}>
           <AppRoutes />
@@ -245,7 +245,10 @@ describe("App user journeys", () => {
       );
 
       fireEvent.click(screen.getByRole("link", { name: /division/i }));
-      expect(screen.getByRole("heading", { name: /division practice/i })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /^division$/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /area model/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /standard algorithm/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /partial quotients/i })).toBeInTheDocument();
     });
 
     it("/division-practice redirects to /division-practice/level-1", () => {

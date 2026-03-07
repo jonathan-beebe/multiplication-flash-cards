@@ -20,7 +20,10 @@ import MultiplicationHardMode from '@/components/multiplication/HardModePractice
 import MultiplicationDrill from '@/components/multiplication/Drill.tsx'
 import DrillComplete from '@/components/multiplication/DrillComplete.tsx'
 
+import DivisionMenu from '@/pages/DivisionMenu.tsx'
 import DivisionPractice from '@/components/division/areaMode/DivisionPractice.tsx'
+import StandardAlgorithmPlaceholder from '@/pages/division/StandardAlgorithmPlaceholder.tsx'
+import PartialQuotientsPlaceholder from '@/pages/division/PartialQuotientsPlaceholder.tsx'
 
 /**
  * Stamps id/tabindex on <main> after each route renders so the skip link
@@ -92,7 +95,9 @@ export function AppRoutes() {
       <Route path="/multiplication/5-minute-drill/success" element={<DrillComplete />} />
 
       {/* Division */}
-      <Route path="/division" element={<Navigate to="/division-practice/level-1" replace />} />
+      <Route path="/division" element={<DivisionMenu />} />
+      <Route path="/division/standard-algorithm" element={<StandardAlgorithmPlaceholder />} />
+      <Route path="/division/partial-quotients" element={<PartialQuotientsPlaceholder />} />
       <Route path="/division-practice" element={<Navigate to="/division-practice/level-1" replace />} />
       <Route path="/division-practice/:level" element={<DivisionPractice />} />
 
