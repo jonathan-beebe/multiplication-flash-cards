@@ -6,6 +6,7 @@ import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
+import ProblemHeading from "@/components/atoms/ProblemHeading";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -39,8 +40,8 @@ function TypographyAtoms() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <p className="text-xs text-slate-400 mb-1">Problem heading — text-4xl font-bold tabular-nums</p>
-        <p className="text-4xl font-bold tabular-nums text-text">657 ÷ 3 = ?</p>
+        <p className="text-xs text-slate-400 mb-1">ProblemHeading</p>
+        <ProblemHeading>657 ÷ 3 = ?</ProblemHeading>
       </div>
       <div>
         <p className="text-xs text-slate-400 mb-1">Page heading — text-2xl font-bold</p>
