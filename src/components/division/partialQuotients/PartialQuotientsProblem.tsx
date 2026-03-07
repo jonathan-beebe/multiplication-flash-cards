@@ -174,6 +174,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
         divisor={problem.divisor}
         sections={sections}
         remaining={remaining}
+        phase={phase}
       />
 
       {/* Building phase */}
@@ -335,6 +336,7 @@ interface DisplayProps {
   divisor: number;
   sections: Section[];
   remaining: number;
+  phase: Phase;
 }
 
 /**
@@ -354,8 +356,9 @@ function PartialQuotientsDisplay({
   divisor,
   sections,
   remaining,
+  phase,
 }: DisplayProps) {
-  const isDone = remaining === 0 && sections.length > 0;
+  const showTotal = phase === "done" && sections.length > 1;
 
   // Column widths in ch units — use raw digit count, not toLocaleString,
   // so widths stay accurate in the monospace grid.
@@ -466,7 +469,7 @@ function PartialQuotientsDisplay({
           })}
 
           {/* ── Total row (when done, multiple sections) ──────────── */}
-          {isDone && sections.length > 1 && (
+          {showTotal && (
             <div style={{ paddingLeft: "0.25rem" }}>
               {/* Double rule across sign + number + pq */}
               <div
