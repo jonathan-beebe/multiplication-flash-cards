@@ -14,8 +14,8 @@ import SecondaryText from "@/components/atoms/SecondaryText";
 import MonoText from "@/components/atoms/MonoText";
 import LongDivisionDisplay from "@/components/division/standardAlgorithm/LongDivisionDisplay";
 import { computeLongDivisionSteps } from "@/lib/division/standardAlgorithm/longDivision";
-import PartialQuotientsDisplay from "@/components/division/PartialQuotientsDisplay";
-import type { Phase } from "@/components/division/PartialQuotientsDisplay";
+import PartialQuotientsDisplay from "@/components/division/partialQuotients/PartialQuotientsDisplay";
+import type { Phase } from "@/lib/division/partialQuotients/problemState";
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────

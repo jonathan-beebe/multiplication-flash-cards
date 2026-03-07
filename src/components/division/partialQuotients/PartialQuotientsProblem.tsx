@@ -15,7 +15,7 @@ import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
 import ProblemHeading from "@/components/atoms/ProblemHeading";
 import Subheading from "@/components/atoms/Subheading";
-import PartialQuotientsDisplay from "@/components/division/PartialQuotientsDisplay";
+import PartialQuotientsDisplay from "@/components/division/partialQuotients/PartialQuotientsDisplay";
 
 interface Props {
   level: Level;
