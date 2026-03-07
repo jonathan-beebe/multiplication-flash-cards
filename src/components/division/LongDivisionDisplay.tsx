@@ -47,18 +47,7 @@ export default function LongDivisionDisplay({
 
   // 0-based index of the rightmost dividend column consumed by each step.
   const rightCols = computeRightCols(steps);
-
-  // Quotient slots: each step's digit at its rightCol position.
-  const quotientSlots: { char: string; completed: boolean }[] = Array.from(
-    { length: N },
-    () => ({ char: "\u00A0", completed: false })
-  );
-  steps.forEach((s, i) => {
-    quotientSlots[rightCols[i]] = {
-      char: i < completedCount ? String(s.quotientDigit) : "_",
-      completed: i < completedCount,
-    };
-  });
+  const quotientSlots = buildQuotientSlots(steps, rightCols, N, completedCount);
 
 
   return (
@@ -186,6 +175,30 @@ export default function LongDivisionDisplay({
       })}
     </div>
   );
+}
+
+/**
+ * Builds the N quotient slots shown above the bracket. Each step's digit
+ * is placed at its rightCol; completed steps show the digit, pending steps
+ * show "_", and unused columns show a non-breaking space.
+ */
+export function buildQuotientSlots(
+  steps: LongDivisionStep[],
+  rightCols: number[],
+  N: number,
+  completedCount: number
+): { char: string; completed: boolean }[] {
+  const slots: { char: string; completed: boolean }[] = Array.from(
+    { length: N },
+    () => ({ char: "\u00A0", completed: false })
+  );
+  steps.forEach((s, i) => {
+    slots[rightCols[i]] = {
+      char: i < completedCount ? String(s.quotientDigit) : "_",
+      completed: i < completedCount,
+    };
+  });
+  return slots;
 }
 
 /**
