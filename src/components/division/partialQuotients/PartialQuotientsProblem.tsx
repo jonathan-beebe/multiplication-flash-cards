@@ -48,40 +48,33 @@ export default function PartialQuotientsProblem({ level }: Props) {
     setTimeout(() => setIsShaking(false), 400);
   }
 
-  const handleBuildingSubmit = useCallback(() => {
+  const handleSubmit = useCallback(() => {
     const value = parseInt(inputValue, 10);
-    const result = validatePartialQuotient(value, problem.divisor, remaining);
-    if (!result.valid) {
-      triggerShake();
-      setInputError(result.error);
-      inputRef.current?.focus();
-      return;
+
+    if (phase === "building") {
+      const result = validatePartialQuotient(value, problem.divisor, remaining);
+      if (!result.valid) {
+        triggerShake();
+        setInputError(result.error);
+        inputRef.current?.focus();
+        return;
+      }
+      setInputValue("");
+      setInputError(null);
+      dispatch({ type: "SUBMIT_BUILDING", partialQuotient: value });
+    } else if (phase === "summing") {
+      const result = validateSummingAnswer(value, problem.quotient);
+      if (!result.valid) {
+        triggerShake();
+        setInputError(result.error);
+        inputRef.current?.focus();
+        return;
+      }
+      setInputValue("");
+      setInputError(null);
+      dispatch({ type: "SUBMIT_SUMMING" });
     }
-
-    setInputValue("");
-    setInputError(null);
-    dispatch({ type: "SUBMIT_BUILDING", partialQuotient: value });
-  }, [inputValue, problem.divisor, remaining]);
-
-  const handleSummingSubmit = useCallback(() => {
-    const value = parseInt(inputValue, 10);
-    const result = validateSummingAnswer(value, problem.quotient);
-    if (!result.valid) {
-      triggerShake();
-      setInputError(result.error);
-      inputRef.current?.focus();
-      return;
-    }
-
-    setInputValue("");
-    setInputError(null);
-    dispatch({ type: "SUBMIT_SUMMING" });
-  }, [inputValue, problem.quotient]);
-
-  function handleSubmit() {
-    if (phase === "building") handleBuildingSubmit();
-    else if (phase === "summing") handleSummingSubmit();
-  }
+  }, [inputValue, phase, problem.divisor, problem.quotient, remaining]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter") handleSubmit();
