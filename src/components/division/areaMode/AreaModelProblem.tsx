@@ -8,6 +8,7 @@ import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
+import ProblemHeading from "@/components/atoms/ProblemHeading";
 import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
@@ -171,9 +172,9 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
 
       {/* Problem heading */}
       <div className="text-center">
-        <p className="text-4xl font-bold tabular-nums text-text" aria-label={`${problem.dividend} divided by ${problem.divisor}`}>
+        <ProblemHeading aria-label={`${problem.dividend} divided by ${problem.divisor}`}>
           {problem.dividend.toLocaleString()} ÷ {problem.divisor} = ?
-        </p>
+        </ProblemHeading>
       </div>
 
       {/* Area model rectangle */}

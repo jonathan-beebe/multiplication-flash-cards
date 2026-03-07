@@ -9,6 +9,7 @@ import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
+import ProblemHeading from "@/components/atoms/ProblemHeading";
 import type { LongDivisionStep } from "@/lib/division/standardAlgorithm/longDivision";
 
 interface ProblemState {
@@ -120,12 +121,9 @@ export default function StandardAlgorithmProblem({ level }: Props) {
 
       {/* Problem heading */}
       <div className="text-center">
-        <p
-          className="text-4xl font-bold tabular-nums text-text"
-          aria-label={`${problem.dividend} divided by ${problem.divisor}`}
-        >
+        <ProblemHeading aria-label={`${problem.dividend} divided by ${problem.divisor}`}>
           {problem.dividend.toLocaleString()} ÷ {problem.divisor} = ?
-        </p>
+        </ProblemHeading>
       </div>
 
       {/* Long division display */}

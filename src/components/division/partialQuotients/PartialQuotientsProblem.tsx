@@ -8,6 +8,7 @@ import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
+import ProblemHeading from "@/components/atoms/ProblemHeading";
 import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 
 type Phase = "building" | "summing" | "done";
@@ -164,8 +165,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
 
       {/* Problem heading */}
       <div className="text-center">
-        <p
-          className="text-4xl font-bold tabular-nums text-text"
+        <ProblemHeading
           aria-label={`${problem.dividend} divided by ${problem.divisor} equals ${phase === "done" ? problem.quotient : "unknown"}`}
         >
           {problem.dividend.toLocaleString()} ÷ {problem.divisor} ={" "}
@@ -176,7 +176,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
           ) : (
             "?"
           )}
-        </p>
+        </ProblemHeading>
       </div>
 
       {/* Stacked partial quotients display */}
