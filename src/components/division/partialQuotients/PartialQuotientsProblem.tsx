@@ -337,6 +337,18 @@ interface DisplayProps {
   remaining: number;
 }
 
+/**
+ * Renders the partial quotients stacked-subtraction layout.
+ *
+ * Grid structure — every content row shares three fixed-width ch slots so
+ * numbers always right-align to the same column:
+ *
+ *   [sign: 1ch] [number: numW ch, right-aligned] [pq: pqW ch, right-aligned]
+ *
+ * A continuous border-l-2 runs down the left of all content rows;
+ * border-t-2 appears only on the header row, forming the traditional ⟌ bracket.
+ * Raw (unformatted) numbers are used inside the grid so ch units stay accurate.
+ */
 function PartialQuotientsDisplay({
   dividend,
   divisor,
@@ -345,82 +357,141 @@ function PartialQuotientsDisplay({
 }: DisplayProps) {
   const isDone = remaining === 0 && sections.length > 0;
 
+  // Column widths in ch units — use raw digit count, not toLocaleString,
+  // so widths stay accurate in the monospace grid.
+  const numW = String(dividend).length;
+  const quotient = Math.round(dividend / divisor);
+  const pqW = Math.max(String(quotient).length, 2);
+
+  // Pre-compute running remainders after each section.
+  const remainders: number[] = [];
+  let running = dividend;
+  for (const s of sections) {
+    running -= s.area;
+    remainders.push(running);
+  }
+
+  const total = sections.reduce((acc, s) => acc + s.partialQuotient, 0);
+
+  // Shared slot styles
+  const signSlot: React.CSSProperties = {
+    display: "inline-block",
+    width: "1ch",
+    flexShrink: 0,
+    textAlign: "center",
+  };
+  const numSlot: React.CSSProperties = {
+    display: "inline-block",
+    width: `${numW}ch`,
+    textAlign: "right",
+    flexShrink: 0,
+  };
+  const pqSlot: React.CSSProperties = {
+    display: "inline-block",
+    width: `${pqW}ch`,
+    textAlign: "right",
+    flexShrink: 0,
+    paddingLeft: "1.5ch",
+  };
+
   return (
     <div
-      className="font-mono tabular-nums select-none mx-auto w-full max-w-sm"
+      className="font-mono tabular-nums select-none text-lg leading-snug mx-auto"
+      style={{ width: "fit-content" }}
       aria-hidden="true"
     >
-      {/* Header: divisor ⟌ dividend with top/left border */}
-      <div className="flex items-end mb-1">
-        <span className="text-lg font-bold text-text pr-1">{divisor}</span>
-        <div className="flex-1 border-t-2 border-l-2 border-slate-500 dark:border-slate-400 pl-3">
-          <span className="text-lg font-bold text-text tabular-nums">
-            {dividend.toLocaleString()}
-          </span>
-        </div>
-        {/* Partial quotients column header */}
-        <div className="w-20 text-right text-xs text-slate-400 dark:text-slate-500 pb-0.5 pl-2">
-          quotients
-        </div>
-      </div>
+      {/* Outer row: divisor label + bracketed content area */}
+      <div className="flex items-stretch">
+        {/* Divisor label — sits outside the bracket */}
+        <span
+          className="font-bold text-text self-end pb-0.5 pr-0.5"
+          style={{ flexShrink: 0 }}
+        >
+          {divisor}
+        </span>
 
-      {/* Each completed subtraction chunk */}
-      {sections.map((section, i) => {
-        const valueAfter =
-          i === sections.length - 1
-            ? remaining
-            : sections
-                .slice(i + 1)
-                .reduce((acc, s) => acc + s.area, remaining);
-        // running value before this subtraction
-        const valueBefore = valueAfter + section.area;
+        {/* Content area: continuous border-l-2; header row gets border-t-2 too */}
+        <div className="border-l-2 border-slate-500 dark:border-slate-400 flex flex-col">
+          {/* ── Header row: dividend ─────────────────────────────── */}
+          <div
+            className="flex items-center border-t-2 border-slate-500 dark:border-slate-400"
+            style={{ paddingLeft: "0.25rem" }}
+          >
+            <span style={signSlot} />
+            <span className="font-bold text-text" style={numSlot}>
+              {dividend}
+            </span>
+          </div>
 
-        return (
-          <div key={i} className="flex items-stretch">
-            {/* Left column: subtraction work */}
-            <div className="flex-1 flex flex-col border-l-2 border-slate-300 dark:border-slate-600 pl-3">
-              {/* − product */}
-              <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400">
-                <span className="text-sm">−</span>
-                <span className="text-lg font-semibold tabular-nums">
-                  {section.area.toLocaleString()}
+          {/* ── Subtraction steps ─────────────────────────────────── */}
+          {sections.map((section, i) => {
+            const rem = remainders[i];
+            return (
+              <div
+                key={i}
+                className="flex flex-col"
+                style={{ paddingLeft: "0.25rem" }}
+              >
+                {/* Subtract row */}
+                <div className="flex items-center text-slate-600 dark:text-slate-400 font-semibold">
+                  <span style={signSlot}>−</span>
+                  <span style={numSlot}>{section.area}</span>
+                  <span
+                    className="font-bold text-teal-600 dark:text-teal-400"
+                    style={pqSlot}
+                  >
+                    {section.partialQuotient}
+                  </span>
+                </div>
+
+                {/* Rule — spans sign + number slots only */}
+                <div
+                  className="border-t border-slate-400 dark:border-slate-500"
+                  style={{ width: `calc(1ch + ${numW}ch)` }}
+                />
+
+                {/* Remainder */}
+                <div
+                  className={`flex items-center font-bold ${
+                    rem === 0
+                      ? "text-teal-600 dark:text-teal-400"
+                      : "text-text"
+                  }`}
+                >
+                  <span style={signSlot} />
+                  <span style={numSlot}>{rem}</span>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* ── Total row (when done, multiple sections) ──────────── */}
+          {isDone && sections.length > 1 && (
+            <div style={{ paddingLeft: "0.25rem" }}>
+              {/* Double rule across sign + number + pq */}
+              <div
+                className="border-t-2 border-slate-500 dark:border-slate-400"
+                style={{ width: `calc(1ch + ${numW}ch + 1.5ch + ${pqW}ch)` }}
+              />
+              <div className="flex items-center">
+                <span style={signSlot} />
+                <span
+                  className="text-sm text-slate-500 dark:text-slate-400"
+                  style={{ ...numSlot, fontSize: "0.75em" }}
+                >
+                  total
+                </span>
+                <span
+                  className="font-bold text-teal-600 dark:text-teal-400 text-xl"
+                  style={pqSlot}
+                >
+                  {total}
                 </span>
               </div>
-              {/* Rule */}
-              <div className="border-t border-slate-400 dark:border-slate-500 my-0.5 mr-4" />
-              {/* Remainder */}
-              <div
-                className={`text-lg font-bold tabular-nums mb-1 ${
-                  valueAfter === 0
-                    ? "text-teal-600 dark:text-teal-400"
-                    : "text-text"
-                }`}
-              >
-                {valueAfter.toLocaleString()}
-              </div>
             </div>
-
-            {/* Right column: partial quotient */}
-            <div className="w-20 text-right text-lg font-bold tabular-nums text-teal-600 dark:text-teal-400 pl-2">
-              {section.partialQuotient.toLocaleString()}
-            </div>
-          </div>
-        );
-      })}
-
-      {/* Sum row when done */}
-      {isDone && sections.length > 1 && (
-        <div className="flex items-center border-t-2 border-slate-400 dark:border-slate-500 mt-1 pt-1">
-          <div className="flex-1 text-sm text-slate-500 dark:text-slate-400 pl-3">
-            Total
-          </div>
-          <div className="w-20 text-right text-xl font-bold tabular-nums text-teal-600 dark:text-teal-400">
-            {sections
-              .reduce((acc, s) => acc + s.partialQuotient, 0)
-              .toLocaleString()}
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
