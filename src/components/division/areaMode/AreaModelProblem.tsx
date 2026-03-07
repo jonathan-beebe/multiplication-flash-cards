@@ -6,6 +6,7 @@ import {
 } from "@/lib/division/areaMode/divisionProblem";
 import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
+import NumberInput from "@/components/atoms/NumberInput";
 import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 
@@ -196,11 +197,8 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
           </p>
 
           <div className={`flex gap-3 justify-center ${isShaking ? "shake" : ""}`}>
-            <input
+            <NumberInput
               ref={inputRef}
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
@@ -209,7 +207,6 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
               onKeyDown={handleKeyDown}
               aria-label="Enter a partial quotient"
               aria-describedby={inputError ? "input-error" : undefined}
-              className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-teal-500 dark:focus:border-teal-400 tabular-nums"
             />
             <PrimaryButton onClick={handleSubmit}>Place</PrimaryButton>
           </div>
@@ -226,11 +223,8 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
           </p>
 
           <div className={`flex gap-3 justify-center ${isShaking ? "shake" : ""}`}>
-            <input
+            <NumberInput
               ref={inputRef}
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
@@ -239,7 +233,6 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
               onKeyDown={handleKeyDown}
               aria-label="Enter the sum of partial quotients"
               aria-describedby={inputError ? "input-error" : undefined}
-              className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-teal-500 dark:focus:border-teal-400 tabular-nums"
             />
             <PrimaryButton onClick={handleSubmit}>Check</PrimaryButton>
           </div>

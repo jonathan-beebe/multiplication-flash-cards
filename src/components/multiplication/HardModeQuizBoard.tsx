@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import NumberInput from "@/components/atoms/NumberInput";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
 
@@ -137,11 +138,8 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
 
       <div className="flex flex-col items-center gap-3">
         <div className={`flex gap-3 justify-center ${isShaking ? "shake" : ""}`}>
-          <input
+          <NumberInput
             ref={inputRef}
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
             value={inputValue}
             onChange={(e) => {
               if (lockedRef.current) return;
@@ -151,7 +149,7 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
             onKeyDown={handleKeyDown}
             aria-label="Enter your answer"
             aria-describedby={inputError ? "input-error" : showCorrect ? "correct-msg" : undefined}
-            className="w-32 text-center text-2xl font-bold rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-text px-3 py-2 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 tabular-nums"
+            focusColor="indigo"
           />
           <button
             onMouseDown={(e) => e.preventDefault()}
