@@ -30,7 +30,7 @@ interface Props {
 
 export default function StandardAlgorithmProblem({ level }: Props) {
   const [state, setState] = useState<ProblemState>(() => createInitialState(level));
-  const [completedCount, setCompletedCount] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
@@ -41,8 +41,8 @@ export default function StandardAlgorithmProblem({ level }: Props) {
   const nextButtonRef = useRef<HTMLButtonElement>(null);
 
   const { problem, steps } = state;
-  const isDone = completedCount === steps.length;
-  const currentStep = isDone ? null : steps[completedCount];
+  const isDone = currentStepIndex === steps.length;
+  const currentStep = isDone ? null : steps[currentStepIndex];
 
   useEffect(() => {
     if (isDone) {
@@ -52,7 +52,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
       const id = setTimeout(() => inputRef.current?.focus(), 50);
       return () => clearTimeout(id);
     }
-  }, [isDone, completedCount]);
+  }, [isDone, currentStepIndex]);
 
   function triggerShake() {
     setIsShaking(true);
@@ -78,12 +78,12 @@ export default function StandardAlgorithmProblem({ level }: Props) {
       return;
     }
 
-    const nextCompleted = completedCount + 1;
+    const nextStepIndex = currentStepIndex + 1;
     setInputValue("");
     setInputError(null);
-    setCompletedCount(nextCompleted);
+    setCurrentStepIndex(nextStepIndex);
 
-    if (nextCompleted === steps.length) {
+    if (nextStepIndex === steps.length) {
       setAnnouncement(
         `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
       );
@@ -92,7 +92,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
         `${value} is correct. ${currentStep.product} subtracted, ${currentStep.remainder} remaining. Bring down the next digit.`
       );
     }
-  }, [inputValue, currentStep, completedCount, steps.length, problem]);
+  }, [inputValue, currentStep, currentStepIndex, steps.length, problem]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter") handleSubmit();
@@ -104,7 +104,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
     setHintsOpen(false);
     setAnnouncement("");
     setState(createInitialState(level));
-    setCompletedCount(0);
+    setCurrentStepIndex(0);
   }
 
   const helpfulFacts = getHelpfulFacts(problem.divisor, problem.dividend);
@@ -129,7 +129,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
         dividend={problem.dividend}
         divisor={problem.divisor}
         steps={steps}
-        completedCount={completedCount}
+        completedCount={currentStepIndex}
       />
       </div>
 
