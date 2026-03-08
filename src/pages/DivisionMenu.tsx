@@ -13,14 +13,14 @@ function DivisionMenu() {
       <div className="flex w-full max-w-md flex-col items-center text-center">
         <h1 className="mb-8 text-4xl font-bold text-text">Division</h1>
         <div className="flex w-full max-w-xs flex-col items-center gap-4">
-          <HomeButton to="/division-practice/level-1" color="teal">
-            Area Model
-          </HomeButton>
           <HomeButton to="/division/standard-algorithm" color="teal">
             Standard Algorithm
           </HomeButton>
           <HomeButton to="/division/partial-quotients" color="teal">
             Partial Quotients
+          </HomeButton>
+          <HomeButton to="/division-practice/level-1" color="teal">
+            Area Model
           </HomeButton>
         </div>
       </div>
