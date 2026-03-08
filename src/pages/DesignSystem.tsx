@@ -266,7 +266,6 @@ function InputAtoms() {
 
 function LongDivisionDisplayFixtures() {
   const steps = useMemo(() => computeLongDivisionSteps(657, 3), []);
-  const quotientDigits = steps.map((s) => String(s.quotientDigit));
 
   const fixtures: { label: string; completedCount: number }[] = [
     { label: "New problem", completedCount: 0 },
@@ -283,7 +282,6 @@ function LongDivisionDisplayFixtures() {
             divisor={3}
             steps={steps}
             completedCount={completedCount}
-            quotientDigits={quotientDigits}
           />
           <Label>{label}</Label>
         </div>
