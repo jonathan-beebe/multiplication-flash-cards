@@ -292,10 +292,12 @@ function LongDivisionDisplayFixtures() {
 
 // ─── Partial quotients fixtures ───────────────────────────────────────────────
 
-const PQ_SECTIONS_PARTIAL = [{ partialQuotient: 70, area: 490 }];
+// 1263 ÷ 3 = 421 — partial quotients span 3, 2, and 1 digits to test alignment.
+const PQ_SECTIONS_PARTIAL = [{ partialQuotient: 400, area: 1200 }];
 const PQ_SECTIONS_FULL = [
-  { partialQuotient: 70, area: 490 },
-  { partialQuotient: 20, area: 140 },
+  { partialQuotient: 400, area: 1200 },
+  { partialQuotient: 20,  area: 60   },
+  { partialQuotient: 1,   area: 3    },
 ];
 
 const pqFixtures: { label: string; sections: typeof PQ_SECTIONS_FULL; showTotal: boolean }[] = [
@@ -311,9 +313,9 @@ function PartialQuotientsDisplayFixtures() {
       {pqFixtures.map(({ label, sections, showTotal }) => (
         <div key={label} className="flex-1 flex flex-col items-center gap-2">
           <PartialQuotientsDisplay
-            dividend={630}
-            divisor={7}
-            quotient={90}
+            dividend={1263}
+            divisor={3}
+            quotient={421}
             sections={sections}
             showTotal={showTotal}
           />
@@ -387,7 +389,7 @@ export default function DesignSystem() {
           <Subsection title="LongDivisionDisplay — 657 ÷ 3 = 219">
             <LongDivisionDisplayFixtures />
           </Subsection>
-          <Subsection title="PartialQuotientsDisplay — 630 ÷ 7 = 90">
+          <Subsection title="PartialQuotientsDisplay — 1263 ÷ 3 = 421">
             <PartialQuotientsDisplayFixtures />
           </Subsection>
           <Subsection title="AreaModelRect — 630 ÷ 7 = 90">
