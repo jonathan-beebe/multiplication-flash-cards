@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import QuizButton from "@/components/multiplication/QuizButton";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
+import { useAnnouncement } from "@/lib/useAnnouncement";
 
 export interface CardAnimationProps {
   className?: string;
@@ -26,17 +27,10 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
   const [showCorrect, setShowCorrect] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideRotation, setSlideRotation] = useState(0);
-  const [announcement, setAnnouncement] = useState("");
-  const announceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { announcement, announce } = useAnnouncement();
   const choicesRef = useRef<HTMLDivElement>(null);
   const questionStartRef = useRef<number>(now());
   const mountedRef = useRef(false);
-
-  const announce = useCallback((text: string) => {
-    setAnnouncement("");
-    if (announceTimer.current) clearTimeout(announceTimer.current);
-    announceTimer.current = setTimeout(() => setAnnouncement(text), 50);
-  }, []);
 
   const choices = useMemo(() => {
     return generator.generateChoices(question);

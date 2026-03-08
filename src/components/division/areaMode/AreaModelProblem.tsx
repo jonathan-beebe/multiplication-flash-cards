@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useAnnouncement } from "@/lib/useAnnouncement";
 import {
   generateProblem,
   getHelpfulFacts,
@@ -39,7 +40,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
   const [inputError, setInputError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
   const [hintsOpen, setHintsOpen] = useState(false);
-  const [announcement, setAnnouncement] = useState("");
+  const { announcement, announce } = useAnnouncement();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
@@ -98,11 +99,11 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
         phase: nextPhase,
       }));
       if (nextPhase === "summing") {
-        setAnnouncement(
+        announce(
           `${area.toLocaleString()} placed. Rectangle complete. Now add up the partial quotients.`
         );
       } else {
-        setAnnouncement(
+        announce(
           `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
         );
       }
@@ -112,7 +113,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
         sections: newSections,
         remaining: newRemaining,
       }));
-      setAnnouncement(
+      announce(
         `${area.toLocaleString()} placed. ${newRemaining.toLocaleString()} remaining.`
       );
     }
@@ -134,7 +135,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
     if (value === problem.quotient) {
       setInputError(null);
       setProblemState((s) => ({ ...s, phase: "done" }));
-      setAnnouncement(
+      announce(
         `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
       );
     } else {
@@ -156,7 +157,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
     setInputValue("");
     setInputError(null);
     setHintsOpen(false);
-    setAnnouncement("");
+    announce("");
     setProblemState(createInitialState(level));
   }
 

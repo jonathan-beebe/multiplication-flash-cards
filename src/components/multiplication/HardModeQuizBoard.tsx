@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import NumberInput from "@/components/atoms/NumberInput";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
+import { useAnnouncement } from "@/lib/useAnnouncement";
 
 interface HardModeQuizBoardProps<Q> {
   generator: QuestionGenerator<Q>;
@@ -22,22 +23,14 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
   const [showCorrect, setShowCorrect] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideRotation, setSlideRotation] = useState(0);
-  const [announcement, setAnnouncement] = useState("");
-
+  const { announcement, announce } = useAnnouncement();
   const inputRef = useRef<HTMLInputElement>(null);
-  const announceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lockedRef = useRef(false);
   const mountedRef = useRef(false);
 
   useEffect(() => {
     const id = setTimeout(() => inputRef.current?.focus(), 50);
     return () => clearTimeout(id);
-  }, []);
-
-  const announce = useCallback((text: string) => {
-    setAnnouncement("");
-    if (announceTimer.current) clearTimeout(announceTimer.current);
-    announceTimer.current = setTimeout(() => setAnnouncement(text), 50);
   }, []);
 
   function triggerShake() {
