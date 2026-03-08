@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import QuizBoard from "@/components/quiz/QuizBoard";
@@ -8,6 +8,7 @@ import DrillTimerBar from "@/components/quiz/DrillTimerBar";
 import type { Question } from "@/lib/multiplication/multiplicationGenerator";
 import { multiplicationGenerator } from "@/lib/multiplication/multiplicationGenerator";
 import { useMultiplicationGameEngine } from "@/lib/multiplication/useMultiplicationGameEngine";
+import { useDrillTimer } from "@/lib/useDrillTimer";
 
 interface DrillProps {
   durationMinutes: number;
@@ -20,55 +21,19 @@ function renderQuestion(q: Question, animProps: CardAnimationProps) {
 function Drill({ durationMinutes }: DrillProps) {
   const navigate = useNavigate();
   const engine = useMultiplicationGameEngine();
-  const [timeRemaining, setTimeRemaining] = useState(durationMinutes * 60);
-  const [timerAnnouncement, setTimerAnnouncement] = useState("");
+  const { timeRemaining, timerAnnouncement, recordCorrect, recordWrong } = useDrillTimer(
+    durationMinutes,
+    {
+      onComplete: (correctCount, wrongCount) =>
+        navigate("success", { state: { correctCount, wrongCount }, replace: true }),
+    }
+  );
 
   useEffect(() => {
     document.title = `${durationMinutes} Minute Drill — Multiplication Flash Cards`;
     engine.start();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [durationMinutes, engine.start]);
-
-  const correctCountRef = useRef(0);
-  const wrongCountRef = useRef(0);
-
-  useEffect(() => {
-    if (timeRemaining <= 0) return;
-
-    const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeRemaining]);
-
-  useEffect(() => {
-    if (timeRemaining === 0) {
-      navigate("success", {
-        state: { correctCount: correctCountRef.current, wrongCount: wrongCountRef.current },
-        replace: true,
-      });
-    } else if (timeRemaining === 60) {
-      setTimerAnnouncement("1 minute remaining");
-    } else if (timeRemaining === 30) {
-      setTimerAnnouncement("30 seconds remaining");
-    } else if (timeRemaining === 10) {
-      setTimerAnnouncement("10 seconds remaining");
-    }
-  }, [timeRemaining, navigate]);
-
-  const handleCorrect = useCallback(() => {
-    correctCountRef.current += 1;
-  }, []);
-
-  const handleWrong = useCallback(() => {
-    wrongCountRef.current += 1;
-  }, []);
 
   const handleAnswer = useCallback(
     (question: Question, correct: boolean, durationMs: number) => {
@@ -89,8 +54,8 @@ function Drill({ durationMinutes }: DrillProps) {
       <NavBar />
       <QuizBoard
         generator={multiplicationGenerator}
-        onCorrect={handleCorrect}
-        onWrong={handleWrong}
+        onCorrect={recordCorrect}
+        onWrong={recordWrong}
         getNextQuestion={engine.getNextQuestion}
         renderQuestion={renderQuestion}
         onAnswer={handleAnswer}
