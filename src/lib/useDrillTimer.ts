@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from "react";
 
 interface UseDrillTimerOptions {
   onComplete: (correctCount: number, wrongCount: number) => void;
@@ -16,11 +16,12 @@ function useDrillTimer(
   { onComplete }: UseDrillTimerOptions
 ): UseDrillTimerResult {
   const [timeRemaining, setTimeRemaining] = useState(durationMinutes * 60);
-  const [timerAnnouncement, setTimerAnnouncement] = useState("");
   const correctCountRef = useRef(0);
   const wrongCountRef = useRef(0);
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+  useLayoutEffect(() => {
+    onCompleteRef.current = onComplete;
+  });
 
   useEffect(() => {
     if (timeRemaining <= 0) return;
@@ -30,15 +31,16 @@ function useDrillTimer(
     return () => clearInterval(timer);
   }, [timeRemaining]);
 
+  const timerAnnouncement = useMemo(() => {
+    if (timeRemaining === 60) return "1 minute remaining";
+    if (timeRemaining === 30) return "30 seconds remaining";
+    if (timeRemaining === 10) return "10 seconds remaining";
+    return "";
+  }, [timeRemaining]);
+
   useEffect(() => {
     if (timeRemaining === 0) {
       onCompleteRef.current(correctCountRef.current, wrongCountRef.current);
-    } else if (timeRemaining === 60) {
-      setTimerAnnouncement("1 minute remaining");
-    } else if (timeRemaining === 30) {
-      setTimerAnnouncement("30 seconds remaining");
-    } else if (timeRemaining === 10) {
-      setTimerAnnouncement("10 seconds remaining");
     }
   }, [timeRemaining]);
 

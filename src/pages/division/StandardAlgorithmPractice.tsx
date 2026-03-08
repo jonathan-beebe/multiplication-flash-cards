@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import clsx from "clsx";
 import NavBar from "@/components/NavBar";
 import StandardAlgorithmProblem from "@/components/division/standardAlgorithm/StandardAlgorithmProblem";
