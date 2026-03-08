@@ -4,9 +4,10 @@ import type { ReactNode } from "react";
 export function ErrorFallback() {
   return (
     <main className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
-      <h1 className="text-2xl font-bold">Something went wrong</h1>
+      <div className="text-5xl">😬</div>
+      <h1 className="text-2xl font-bold">Oops! We made a math mistake.</h1>
       <p className="text-slate-600 dark:text-slate-400">
-        Try refreshing the page.
+        Skill issue on our end, ngl. Let's get you back home.
       </p>
       <button
         onClick={() => window.location.assign("/")}
