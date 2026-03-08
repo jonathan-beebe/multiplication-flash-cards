@@ -1,49 +1,37 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import { useAnnouncement } from "@/lib/useAnnouncement";
+import { useState, useRef, useEffect, useCallback, useReducer } from "react";
 import {
-  generateProblem,
   getHelpfulFacts,
   validatePartialQuotient,
+  validateSummingAnswer,
 } from "@/lib/division/areaMode/divisionProblem";
+import type { Level } from "@/lib/division/areaMode/divisionProblem";
+import {
+  createAreaModelSession,
+  areaModelSessionReducer,
+} from "@/lib/division/areaMode/areaModelState";
 import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";
 import SuccessText from "@/components/atoms/SuccessText";
 import ProblemHeading from "@/components/atoms/ProblemHeading";
 import Subheading from "@/components/atoms/Subheading";
-import type { Level, Problem, Section } from "@/lib/division/areaMode/divisionProblem";
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
-
-type Phase = "building" | "summing" | "done";
-
-interface ProblemState {
-  problem: Problem;
-  sections: Section[];
-  remaining: number;
-  phase: Phase;
-}
-
-function createInitialState(level: Level): ProblemState {
-  const problem = generateProblem(level);
-  return { problem, sections: [], remaining: problem.dividend, phase: "building" };
-}
 
 interface AreaModelProblemProps {
   level: Level;
 }
 
 export default function AreaModelProblem({ level }: AreaModelProblemProps) {
-  const [{ problem, sections, remaining, phase }, setProblemState] = useState<ProblemState>(
-    () => createInitialState(level)
-  );
+  const [session, dispatch] = useReducer(areaModelSessionReducer, level, createAreaModelSession);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
   const [hintsOpen, setHintsOpen] = useState(false);
-  const { announcement, announce } = useAnnouncement();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
+
+  const { problem, sections, remaining, phase, announcement } = session;
 
   // Focus the input whenever the phase changes (building or summing),
   // or the "Next problem" button when done. The delay prevents the Enter
@@ -63,91 +51,33 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
     setTimeout(() => setIsShaking(false), 400);
   }
 
-  const handleBuildingSubmit = useCallback(() => {
+  const handleSubmit = useCallback(() => {
     const value = parseInt(inputValue, 10);
 
-    if (isNaN(value)) {
-      triggerShake();
-      setInputError("Enter a whole number");
-      inputRef.current?.focus();
-      return;
-    }
-
-    const result = validatePartialQuotient(value, problem.divisor, remaining);
-    if (!result.valid) {
-      triggerShake();
-      setInputError(result.error);
-      inputRef.current?.focus();
-      return;
-    }
-
-    const area = value * problem.divisor;
-    const newRemaining = remaining - area;
-    const newSections = [...sections, { partialQuotient: value, area }];
-
-    setInputValue("");
-    setInputError(null);
-    inputRef.current?.focus();
-
-    if (newRemaining === 0) {
-      // Single section → skip summing, answer is the partial quotient itself.
-      const nextPhase = newSections.length === 1 ? "done" : "summing";
-      setProblemState((s) => ({
-        ...s,
-        sections: newSections,
-        remaining: 0,
-        phase: nextPhase,
-      }));
-      if (nextPhase === "summing") {
-        announce(
-          `${area.toLocaleString()} placed. Rectangle complete. Now add up the partial quotients.`
-        );
-      } else {
-        announce(
-          `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
-        );
+    if (phase === "building") {
+      const result = validatePartialQuotient(value, problem.divisor, remaining);
+      if (!result.valid) {
+        triggerShake();
+        setInputError(result.error);
+        inputRef.current?.focus();
+        return;
       }
-    } else {
-      setProblemState((s) => ({
-        ...s,
-        sections: newSections,
-        remaining: newRemaining,
-      }));
-      announce(
-        `${area.toLocaleString()} placed. ${newRemaining.toLocaleString()} remaining.`
-      );
-    }
-  }, [inputValue, problem, remaining, sections]);
-
-  const handleSummingSubmit = useCallback(() => {
-    const value = parseInt(inputValue, 10);
-
-    if (isNaN(value)) {
-      triggerShake();
-      setInputError("Enter a whole number");
-      inputRef.current?.focus();
-      return;
-    }
-
-    setInputValue("");
-    inputRef.current?.focus();
-
-    if (value === problem.quotient) {
+      setInputValue("");
       setInputError(null);
-      setProblemState((s) => ({ ...s, phase: "done" }));
-      announce(
-        `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
-      );
-    } else {
-      triggerShake();
-      setInputError("Not quite — check your addition and try again");
+      dispatch({ type: "SUBMIT_BUILDING", partialQuotient: value });
+    } else if (phase === "summing") {
+      const result = validateSummingAnswer(value, problem.quotient);
+      if (!result.valid) {
+        triggerShake();
+        setInputError(result.error);
+        inputRef.current?.focus();
+        return;
+      }
+      setInputValue("");
+      setInputError(null);
+      dispatch({ type: "SUBMIT_SUMMING" });
     }
-  }, [inputValue, problem]);
-
-  function handleSubmit() {
-    if (phase === "building") handleBuildingSubmit();
-    else if (phase === "summing") handleSummingSubmit();
-  }
+  }, [inputValue, phase, problem.divisor, problem.quotient, remaining]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter") handleSubmit();
@@ -157,12 +87,10 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
     setInputValue("");
     setInputError(null);
     setHintsOpen(false);
-    announce("");
-    setProblemState(createInitialState(level));
+    dispatch({ type: "NEXT", level });
   }
 
   const helpfulFacts = getHelpfulFacts(problem.divisor, problem.dividend);
-
   const sumEquation = sections.map((s) => s.partialQuotient.toLocaleString()).join(" + ");
 
   return (
