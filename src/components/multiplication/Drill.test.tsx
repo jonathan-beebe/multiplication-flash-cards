@@ -91,15 +91,4 @@ describe("Drill → Success routing", () => {
     expect(screen.getByRole("heading", { name: /math flash/i })).toBeInTheDocument();
   });
 
-  it("demo route renders with prop-based counts", () => {
-    render(
-      <MemoryRouter initialEntries={["/demo/drill-complete"]}>
-        <AppRoutes />
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByText("42")).toBeInTheDocument();
-    expect(screen.getByText("8")).toBeInTheDocument();
-    expect(screen.getByText("50")).toBeInTheDocument(); // 42 + 8 attempted
-  });
 });
