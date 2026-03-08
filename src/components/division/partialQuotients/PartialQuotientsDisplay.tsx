@@ -145,16 +145,19 @@ export default function PartialQuotientsDisplay({
               />
               <div className="flex items-center">
                 <span
-                  className="text-slate-500 dark:text-slate-400"
                   style={{
                     display: "inline-block",
                     width: `calc(1ch + ${numW}ch)`,
                     textAlign: "right",
                     flexShrink: 0,
-                    fontSize: "0.75em",
                   }}
                 >
-                  sum
+                  <span
+                    className="text-slate-500 dark:text-slate-400"
+                    style={{ fontSize: "0.75em" }}
+                  >
+                    sum
+                  </span>
                 </span>
                 <span
                   className="font-bold text-teal-600 dark:text-teal-400"
