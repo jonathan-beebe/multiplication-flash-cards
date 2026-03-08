@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import QuizButton from "@/components/multiplication/QuizButton";
+import QuizButton from "@/components/quiz/QuizButton";
 
 const defaults = { value: 42, onClick: () => {}, disabled: false, state: "default" as const };
 

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import QuizBoard from "@/components/multiplication/QuizBoard";
-import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
+import QuizBoard from "@/components/quiz/QuizBoard";
+import type { CardAnimationProps } from "@/components/quiz/QuizBoard";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 
 interface MockQuestion {

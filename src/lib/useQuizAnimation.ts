@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
+import type { CardAnimationProps } from "@/components/quiz/QuizBoard";
 
 interface UseQuizAnimationOptions<Q> {
   getNextQuestion: () => Q;

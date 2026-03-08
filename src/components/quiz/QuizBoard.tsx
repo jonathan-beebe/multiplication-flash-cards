@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import QuizButton from "@/components/multiplication/QuizButton";
+import QuizButton from "@/components/quiz/QuizButton";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 import { useAnnouncement } from "@/lib/useAnnouncement";
 import { useQuizAnimation } from "@/lib/useQuizAnimation";

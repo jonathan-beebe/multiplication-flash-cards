@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
-import QuizBoard from "@/components/multiplication/QuizBoard";
+import QuizBoard from "@/components/quiz/QuizBoard";
 import Card from "@/components/Card";
-import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
-import DrillTimerBar from "@/components/multiplication/DrillTimerBar";
+import type { CardAnimationProps } from "@/components/quiz/QuizBoard";
+import DrillTimerBar from "@/components/quiz/DrillTimerBar";
 import type { Question } from "@/lib/multiplication/multiplicationGenerator";
 import { multiplicationGenerator } from "@/lib/multiplication/multiplicationGenerator";
 import { useMultiplicationGameEngine } from "@/lib/multiplication/useMultiplicationGameEngine";

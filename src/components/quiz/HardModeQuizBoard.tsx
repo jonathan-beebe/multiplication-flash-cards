@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import NumberInput from "@/components/atoms/NumberInput";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
-import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
+import type { CardAnimationProps } from "@/components/quiz/QuizBoard";
 import { useAnnouncement } from "@/lib/useAnnouncement";
 
 interface HardModeQuizBoardProps<Q> {

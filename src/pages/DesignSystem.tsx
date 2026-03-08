@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import NavBar from "@/components/NavBar";
 import HomeButton from "@/components/atoms/HomeButton";
-import QuizButton from "@/components/multiplication/QuizButton";
+import QuizButton from "@/components/quiz/QuizButton";
 import ErrorText from "@/components/atoms/ErrorText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import NumberInput from "@/components/atoms/NumberInput";

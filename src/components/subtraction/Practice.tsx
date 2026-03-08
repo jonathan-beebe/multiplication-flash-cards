@@ -1,9 +1,9 @@
 import { useEffect, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import NavBar from "@/components/NavBar";
-import QuizBoard from "@/components/multiplication/QuizBoard";
+import QuizBoard from "@/components/quiz/QuizBoard";
 import Card from "@/components/Card";
-import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
+import type { CardAnimationProps } from "@/components/quiz/QuizBoard";
 import type { SubtractionQuestion } from "@/lib/subtraction/subtractionGenerator";
 import { createSubtractionGenerator } from "@/lib/subtraction/subtractionGenerator";
 import { useOperationGameEngine } from "@/lib/engine/useOperationGameEngine";

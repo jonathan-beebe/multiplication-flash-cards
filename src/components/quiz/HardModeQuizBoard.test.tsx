@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
-import HardModeQuizBoard from "@/components/multiplication/HardModeQuizBoard";
-import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
+import HardModeQuizBoard from "@/components/quiz/HardModeQuizBoard";
+import type { CardAnimationProps } from "@/components/quiz/QuizBoard";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 
 interface MockQuestion {

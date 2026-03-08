@@ -1,8 +1,8 @@
 import { useEffect, useCallback } from "react";
 import NavBar from "@/components/NavBar";
-import HardModeQuizBoard from "@/components/multiplication/HardModeQuizBoard";
+import HardModeQuizBoard from "@/components/quiz/HardModeQuizBoard";
 import Card from "@/components/Card";
-import type { CardAnimationProps } from "@/components/multiplication/QuizBoard";
+import type { CardAnimationProps } from "@/components/quiz/QuizBoard";
 import type { Question } from "@/lib/multiplication/multiplicationGenerator";
 import { multiplicationGenerator } from "@/lib/multiplication/multiplicationGenerator";
 import { useMultiplicationGameEngine } from "@/lib/multiplication/useMultiplicationGameEngine";
