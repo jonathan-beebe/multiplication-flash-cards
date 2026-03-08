@@ -107,8 +107,6 @@ export function AppRoutes() {
       {/* Design system / component playground */}
       <Route path="/design-system" element={<DesignSystem />} />
 
-      {/* Demo */}
-      <Route path="/demo/drill-complete" element={<DrillComplete correctCount={42} wrongCount={8} />} />
     </Routes>
       </ErrorBoundary>
     </>

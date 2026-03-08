@@ -18,6 +18,7 @@ import PartialQuotientsDisplay from "@/components/division/partialQuotients/Part
 
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 import { ErrorFallback } from "@/components/ErrorBoundary";
+import { DrillCompleteContent } from "@/components/multiplication/DrillComplete";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -402,6 +403,15 @@ export default function DesignSystem() {
           </Subsection>
           <Subsection title="AreaModelRect — 630 ÷ 7 = 90">
             <AreaModelRectFixtures />
+          </Subsection>
+        </Category>
+
+        {/* ── Demos ──────────────────────────────────────────────── */}
+        <Category title="Demos">
+          <Subsection title="DrillComplete — 42 correct, 8 wrong">
+            <div className="flex items-center justify-center py-8">
+              <DrillCompleteContent correctCount={42} wrongCount={8} />
+            </div>
           </Subsection>
         </Category>
       </div>
