@@ -1,14 +1,27 @@
-import { Component } from "react";
+import { Component, useState } from "react";
 import type { ReactNode } from "react";
 
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const ERROR_IMAGES = [
+  `${BASE}/error/cat-001.gif`,
+  `${BASE}/error/cat-002.gif`,
+  `${BASE}/error/cat-003.gif`,
+  `${BASE}/error/cat-004.gif`,
+  `${BASE}/error/cat-005.gif`,
+  `${BASE}/error/cat-006.gif`,
+];
+
 export function ErrorFallback() {
+  const [src] = useState(
+    () => ERROR_IMAGES[Math.floor(Math.random() * ERROR_IMAGES.length)]
+  );
+
   return (
     <main className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
-      <div className="text-5xl">😬</div>
-      <h1 className="text-2xl font-bold">Oops! We made a math mistake.</h1>
-      <p className="text-slate-600 dark:text-slate-400">
-        Skill issue on our end, ngl. Let's get you back home.
-      </p>
+      <img src={src} alt="A silly cat causing chaos" className="h-40 rounded-xl object-cover" />
+      <h1 className="text-2xl font-bold">Oops! Something went horribly wrong.</h1>
+      <p className="text-slate-600 dark:text-slate-400">Skill issue on our end, ngl. Let’s get you back home to try again.</p>
       <button
         onClick={() => window.location.assign("/")}
         className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white shadow hover:bg-teal-700"

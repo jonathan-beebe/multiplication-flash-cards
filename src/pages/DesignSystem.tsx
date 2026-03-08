@@ -388,9 +388,7 @@ export default function DesignSystem() {
         {/* ── Error boundary ─────────────────────────────────────── */}
         <Category title="Error Boundary">
           <Subsection title="ErrorFallback — full-page error screen">
-            <div className="h-64">
-              <ErrorFallback />
-            </div>
+            <ErrorFallback />
           </Subsection>
         </Category>
 
