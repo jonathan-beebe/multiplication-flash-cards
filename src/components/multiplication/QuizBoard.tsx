@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import QuizButton from "@/components/multiplication/QuizButton";
 import type { QuestionGenerator } from "@/lib/engine/gameEngine";
 import { useAnnouncement } from "@/lib/useAnnouncement";
+import { useQuizAnimation } from "@/lib/useQuizAnimation";
 
 export interface CardAnimationProps {
   className?: string;
@@ -22,15 +23,20 @@ interface QuizBoardProps<Q> {
 
 export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestion, onCorrect, onWrong, onAnswer, now = Date.now }: QuizBoardProps<Q>) {
   const [question, setQuestion] = useState<Q>(() => getNextQuestion());
-  const [nextQuestion, setNextQuestion] = useState<Q | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set());
-  const [showCorrect, setShowCorrect] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [slideRotation, setSlideRotation] = useState(0);
   const { announcement, announce } = useAnnouncement();
   const choicesRef = useRef<HTMLDivElement>(null);
   const questionStartRef = useRef<number>(now());
   const mountedRef = useRef(false);
+
+  const { nextQuestion, showCorrect, isAnimating, frontCardProps, backCardProps, triggerCorrect } =
+    useQuizAnimation({
+      getNextQuestion,
+      onSettled: (nextQ) => {
+        setQuestion(nextQ);
+        setWrongAnswers(new Set());
+      },
+    });
 
   const choices = useMemo(() => {
     return generator.generateChoices(question);
@@ -42,13 +48,7 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
         const durationMs = now() - questionStartRef.current;
         onAnswer?.(question, wrongAnswers.size === 0, durationMs);
         onCorrect?.();
-        setShowCorrect(true);
-        setTimeout(() => {
-          setNextQuestion(getNextQuestion());
-          setSlideRotation(Math.random() * 70 - 35);
-          setIsAnimating(true);
-          setShowCorrect(false);
-        }, 300);
+        triggerCorrect();
       } else {
         if (!wrongAnswers.has(answer)) {
           onWrong?.();
@@ -57,18 +57,7 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
         setWrongAnswers((prev) => new Set(prev).add(answer));
       }
     },
-    [generator, question, wrongAnswers, onCorrect, onWrong, onAnswer, getNextQuestion, announce, now]
-  );
-
-  const handleTransitionEnd = useCallback(
-    (e: React.TransitionEvent) => {
-      if (e.propertyName !== "transform") return;
-      setQuestion(nextQuestion!);
-      setNextQuestion(null);
-      setWrongAnswers(new Set());
-      setIsAnimating(false);
-    },
-    [nextQuestion]
+    [generator, question, wrongAnswers, onCorrect, onWrong, onAnswer, triggerCorrect, announce, now]
   );
 
   useEffect(() => {
@@ -96,21 +85,8 @@ export default function QuizBoard<Q>({ generator, getNextQuestion, renderQuestio
         {announcement}
       </span>
       <div className="card-stack">
-        {renderQuestion(backQuestion, {
-          'aria-hidden': true,
-          className: isAnimating ? "card-zoom-in" : undefined,
-          style: { zIndex: 1, transform: isAnimating ? undefined : "scale(0.8)" },
-        })}
-        {renderQuestion(question, {
-          className: isAnimating ? "card-slide-out" : undefined,
-          style: {
-            zIndex: 2,
-            ...(isAnimating && {
-              transform: `translateX(calc(50vw + 100%)) rotate(${slideRotation}deg)`,
-            }),
-          },
-          onTransitionEnd: isAnimating ? handleTransitionEnd : undefined,
-        })}
+        {renderQuestion(backQuestion, backCardProps)}
+        {renderQuestion(question, frontCardProps)}
       </div>
       <div
         ref={choicesRef}
