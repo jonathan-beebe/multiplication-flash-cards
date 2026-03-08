@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "ci": "npm run lint && npx tsc --noEmit 2>&1 && npm run test -- --run && npm run build"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
