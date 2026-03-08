@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { additionGenerator } from "./additionGenerator";
 
-const { questionKey, parseQuestionKey, getNextQuestion, evaluate, generateChoices, displayText } =
+const { questionKey, getNextQuestion, evaluate, generateChoices, displayText } =
   additionGenerator;
 
 describe("additionGenerator", () => {
@@ -13,14 +13,6 @@ describe("additionGenerator", () => {
 
     it("handles zeros", () => {
       expect(questionKey({ a: 0, b: 5 })).toBe("0+5");
-    });
-  });
-
-  describe("parseQuestionKey", () => {
-    it("round-trips through questionKey", () => {
-      const q = { a: 12, b: 34 };
-      const parsed = parseQuestionKey(questionKey(q));
-      expect(parsed.a + parsed.b).toBe(q.a + q.b);
     });
   });
 

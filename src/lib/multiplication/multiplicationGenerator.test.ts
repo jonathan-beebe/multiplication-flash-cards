@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { multiplicationGenerator, type Question } from "./multiplicationGenerator";
 import type { QuestionResult } from "../engine/gameEngine";
 
-const { questionKey, parseQuestionKey, getNextQuestion, evaluate, generateChoices, displayText } = multiplicationGenerator;
+const { questionKey, getNextQuestion, evaluate, generateChoices, displayText } = multiplicationGenerator;
 
 // ---------------------------------------------------------------------------
 // questionKey
@@ -16,24 +16,6 @@ describe("questionKey", () => {
 
   it("handles equal factors", () => {
     expect(questionKey({ a: 5, b: 5 })).toBe("5x5");
-  });
-});
-
-// ---------------------------------------------------------------------------
-// parseQuestionKey
-// ---------------------------------------------------------------------------
-
-describe("parseQuestionKey", () => {
-  it("parses a question key into a Question", () => {
-    expect(parseQuestionKey("9x11")).toEqual({ a: 9, b: 11 });
-  });
-
-  it("handles equal factors", () => {
-    expect(parseQuestionKey("5x5")).toEqual({ a: 5, b: 5 });
-  });
-
-  it("preserves factor order from key", () => {
-    expect(parseQuestionKey("3x7")).toEqual({ a: 3, b: 7 });
   });
 });
 

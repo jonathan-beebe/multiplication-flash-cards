@@ -1,4 +1,4 @@
-import type { QuestionGenerator, QuestionResult, QuestionStats } from "../engine/gameEngine";
+import type { QuestionGenerator, QuestionResult } from "../engine/gameEngine";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -16,11 +16,6 @@ export interface SubtractionQuestion {
 /** Key preserves order since subtraction is not commutative. */
 function questionKey(q: SubtractionQuestion): string {
   return `${q.a}-${q.b}`;
-}
-
-function parseQuestionKey(key: string): SubtractionQuestion {
-  const idx = key.indexOf("-");
-  return { a: Number(key.slice(0, idx)), b: Number(key.slice(idx + 1)) };
 }
 
 /**
@@ -66,45 +61,9 @@ function getNextQuestion(
   return getNextQuestionInRange(previousResults, randomValue, 1, 9999, 2, 9999);
 }
 
-function computeQuestionStats(
-  results: readonly QuestionResult<SubtractionQuestion>[],
-): QuestionStats<SubtractionQuestion>[] {
-  const map = new Map<
-    string,
-    { question: SubtractionQuestion; attempts: number; firstTryCorrect: number; needed_hints: number }
-  >();
-
-  for (const r of results) {
-    const key = questionKey(r.question);
-    const entry = map.get(key) ?? {
-      question: parseQuestionKey(key),
-      attempts: 0,
-      firstTryCorrect: 0,
-      needed_hints: 0,
-    };
-    entry.attempts++;
-    if (r.correct) {
-      entry.firstTryCorrect++;
-    } else {
-      entry.needed_hints++;
-    }
-    map.set(key, entry);
-  }
-
-  return Array.from(map.values()).map((e) => ({
-    ...e,
-    successRate: e.attempts === 0 ? 0 : e.firstTryCorrect / e.attempts,
-  }));
-}
-
-// Keep the linter happy — computeQuestionStats is available for future use.
-void computeQuestionStats;
-
 export function createSubtractionGenerator(aMin: number, aMax: number, bMin: number, bMax: number): QuestionGenerator<SubtractionQuestion> {
   return {
-    storageKey: `subtraction-game-state-${aMin}-${aMax}-${bMin}-${bMax}`,
     questionKey,
-    parseQuestionKey,
     getNextQuestion: (results, random) => getNextQuestionInRange(results, random, aMin, aMax, bMin, bMax),
     evaluate,
     generateChoices,
@@ -150,9 +109,7 @@ function displayText(question: SubtractionQuestion): string {
 }
 
 export const subtractionGenerator: QuestionGenerator<SubtractionQuestion> = {
-  storageKey: "subtraction-game-state",
   questionKey,
-  parseQuestionKey,
   getNextQuestion,
   evaluate,
   generateChoices,

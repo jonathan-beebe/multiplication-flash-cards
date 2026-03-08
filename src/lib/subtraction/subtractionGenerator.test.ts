@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { subtractionGenerator } from "./subtractionGenerator";
 
-const { questionKey, parseQuestionKey, getNextQuestion, evaluate, generateChoices, displayText } =
+const { questionKey, getNextQuestion, evaluate, generateChoices, displayText } =
   subtractionGenerator;
 
 describe("subtractionGenerator", () => {
@@ -13,15 +13,6 @@ describe("subtractionGenerator", () => {
 
     it("handles zeros", () => {
       expect(questionKey({ a: 5, b: 0 })).toBe("5-0");
-    });
-  });
-
-  describe("parseQuestionKey", () => {
-    it("round-trips through questionKey", () => {
-      const q = { a: 1234, b: 567 };
-      const parsed = parseQuestionKey(questionKey(q));
-      expect(parsed.a).toBe(q.a);
-      expect(parsed.b).toBe(q.b);
     });
   });
 

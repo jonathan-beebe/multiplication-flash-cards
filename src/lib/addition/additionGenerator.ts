@@ -1,4 +1,4 @@
-import type { QuestionGenerator, QuestionResult, QuestionStats } from "../engine/gameEngine";
+import type { QuestionGenerator, QuestionResult } from "../engine/gameEngine";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -18,11 +18,6 @@ function questionKey(q: AdditionQuestion): string {
   const lo = Math.min(q.a, q.b);
   const hi = Math.max(q.a, q.b);
   return `${lo}+${hi}`;
-}
-
-function parseQuestionKey(key: string): AdditionQuestion {
-  const [aStr, bStr] = key.split("+");
-  return { a: Number(aStr), b: Number(bStr) };
 }
 
 /**
@@ -63,40 +58,6 @@ function getNextQuestion(
 ): AdditionQuestion {
   return getNextQuestionInRange(previousResults, randomValue, 0, 9999, 0, 9999);
 }
-
-function computeQuestionStats(
-  results: readonly QuestionResult<AdditionQuestion>[],
-): QuestionStats<AdditionQuestion>[] {
-  const map = new Map<
-    string,
-    { question: AdditionQuestion; attempts: number; firstTryCorrect: number; needed_hints: number }
-  >();
-
-  for (const r of results) {
-    const key = questionKey(r.question);
-    const entry = map.get(key) ?? {
-      question: parseQuestionKey(key),
-      attempts: 0,
-      firstTryCorrect: 0,
-      needed_hints: 0,
-    };
-    entry.attempts++;
-    if (r.correct) {
-      entry.firstTryCorrect++;
-    } else {
-      entry.needed_hints++;
-    }
-    map.set(key, entry);
-  }
-
-  return Array.from(map.values()).map((e) => ({
-    ...e,
-    successRate: e.attempts === 0 ? 0 : e.firstTryCorrect / e.attempts,
-  }));
-}
-
-// Keep the linter happy — computeQuestionStats is available for future use.
-void computeQuestionStats;
 
 function evaluate(question: AdditionQuestion, answer: number): boolean {
   return answer === question.a + question.b;
@@ -142,9 +103,7 @@ function displayText(question: AdditionQuestion): string {
 
 export function createAdditionGenerator(aMin: number, aMax: number, bMin: number, bMax: number): QuestionGenerator<AdditionQuestion> {
   return {
-    storageKey: `addition-game-state-${aMin}-${aMax}-${bMin}-${bMax}`,
     questionKey,
-    parseQuestionKey,
     getNextQuestion: (results, random) => getNextQuestionInRange(results, random, aMin, aMax, bMin, bMax),
     evaluate,
     generateChoices,
@@ -153,9 +112,7 @@ export function createAdditionGenerator(aMin: number, aMax: number, bMin: number
 }
 
 export const additionGenerator: QuestionGenerator<AdditionQuestion> = {
-  storageKey: "addition-game-state",
   questionKey,
-  parseQuestionKey,
   getNextQuestion,
   evaluate,
   generateChoices,

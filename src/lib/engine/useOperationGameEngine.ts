@@ -1,17 +1,10 @@
-import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo } from "react";
 import {
   startSession,
   recordResult,
-  getCurrentSession,
-  summarize,
-  strugglingQuestions,
   allResults,
-  loadGameState,
-  saveGameState,
+  createGameState,
   type GameState,
-  type PeriodSummary,
-  type QuestionStats,
-  type Session,
   type QuestionGenerator,
   type QuestionResult,
 } from "./gameEngine";
@@ -33,18 +26,7 @@ export function useOperationGameEngine<Q>(
   deps?: Partial<GameEngineDeps>,
 ) {
   const { now, generateId, random } = { ...defaultDeps, ...deps };
-  const [state, setState] = useState<GameState<Q>>(() =>
-    loadGameState(generator),
-  );
-  const isInitialMount = useRef(true);
-
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    saveGameState(state, generator);
-  }, [state, generator]);
+  const [state, setState] = useState<GameState<Q>>(() => createGameState<Q>());
 
   const start = useCallback(() => {
     setState((s) => {
@@ -71,31 +53,12 @@ export function useOperationGameEngine<Q>(
     [state, random, generator],
   );
 
-  const currentSession: Session<Q> | null = useMemo(
-    () => getCurrentSession(state),
-    [state],
-  );
-
-  const currentSummary: PeriodSummary = useMemo(
-    () => (currentSession ? summarize(currentSession.results) : summarize([])),
-    [currentSession],
-  );
-
-  const struggling: QuestionStats<Q>[] = useMemo(
-    () => strugglingQuestions(allResults(state), generator, 2, 10),
-    [state, generator],
-  );
-
   return useMemo(
     () => ({
       start,
       recordResult: record,
       getNextQuestion: nextQuestion,
-      currentSession,
-      currentSummary,
-      struggling,
-      state,
     }),
-    [start, record, nextQuestion, currentSession, currentSummary, struggling, state],
+    [start, record, nextQuestion],
   );
 }

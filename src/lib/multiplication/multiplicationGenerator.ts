@@ -1,4 +1,13 @@
-import type { QuestionGenerator, QuestionResult, QuestionStats } from "../engine/gameEngine";
+import type { QuestionGenerator, QuestionResult } from "../engine/gameEngine";
+
+// Internal stats shape used for question weighting
+interface QuestionStat {
+  question: Question;
+  attempts: number;
+  firstTryCorrect: number;
+  needed_hints: number;
+  successRate: number;
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -57,7 +66,7 @@ function getNextQuestion(
 
   // Compute per-question stats for weighting
   const stats = computeQuestionStats(previousResults);
-  const statsMap = new Map<string, QuestionStats<Question>>();
+  const statsMap = new Map<string, QuestionStat>();
   for (const s of stats) {
     statsMap.set(questionKey(s.question), s);
   }
@@ -99,14 +108,11 @@ function getNextQuestion(
   return q;
 }
 
-/** Inline stats computation used by getNextQuestion to avoid circular dependency. */
+/** Inline stats computation used by getNextQuestion for adaptive weighting. */
 function computeQuestionStats(
   results: readonly QuestionResult<Question>[],
-): QuestionStats<Question>[] {
-  const map = new Map<
-    string,
-    { question: Question; attempts: number; firstTryCorrect: number; needed_hints: number }
-  >();
+): QuestionStat[] {
+  const map = new Map<string, Omit<QuestionStat, "successRate">>();
 
   for (const r of results) {
     const key = questionKey(r.question);
@@ -173,9 +179,7 @@ function displayText(question: Question): string {
 }
 
 export const multiplicationGenerator: QuestionGenerator<Question> = {
-  storageKey: "multiplication-game-state",
   questionKey,
-  parseQuestionKey,
   getNextQuestion,
   evaluate,
   generateChoices,
