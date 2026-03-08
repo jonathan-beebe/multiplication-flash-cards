@@ -58,7 +58,7 @@ export default function PartialQuotientsDisplay({
   };
   const pqSlot: React.CSSProperties = {
     display: "inline-block",
-    width: `${pqW}ch`,
+    width: `calc(${pqW}ch + 1.5ch)`,
     textAlign: "right",
     flexShrink: 0,
     paddingLeft: "1.5ch",
@@ -157,7 +157,7 @@ export default function PartialQuotientsDisplay({
                   sum
                 </span>
                 <span
-                  className="font-bold text-teal-600 dark:text-teal-400 text-xl"
+                  className="font-bold text-teal-600 dark:text-teal-400"
                   style={pqSlot}
                 >
                   {total}
