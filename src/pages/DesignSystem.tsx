@@ -17,6 +17,7 @@ import { computeLongDivisionSteps } from "@/lib/division/standardAlgorithm/longD
 import PartialQuotientsDisplay from "@/components/division/partialQuotients/PartialQuotientsDisplay";
 
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
+import { ErrorFallback } from "@/components/ErrorBoundary";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -381,6 +382,15 @@ export default function DesignSystem() {
           </Subsection>
           <Subsection title="Inputs">
             <InputAtoms />
+          </Subsection>
+        </Category>
+
+        {/* ── Error boundary ─────────────────────────────────────── */}
+        <Category title="Error Boundary">
+          <Subsection title="ErrorFallback — full-page error screen">
+            <div className="h-64">
+              <ErrorFallback />
+            </div>
           </Subsection>
         </Category>
 

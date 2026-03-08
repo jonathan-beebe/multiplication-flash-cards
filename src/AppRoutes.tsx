@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
 import { UpdateBanner } from '@/components/UpdateBanner'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Home from '@/pages/Home.tsx'
 import About from '@/pages/About.tsx'
 import AdditionMenu from '@/pages/AdditionMenu.tsx'
@@ -56,6 +57,7 @@ export function AppRoutes() {
         Skip to main content
       </a>
       <RouteFocusManager />
+      <ErrorBoundary>
       <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
@@ -108,6 +110,7 @@ export function AppRoutes() {
       {/* Demo */}
       <Route path="/demo/drill-complete" element={<DrillComplete correctCount={42} wrongCount={8} />} />
     </Routes>
+      </ErrorBoundary>
     </>
   )
 }
