@@ -19,6 +19,7 @@ import PartialQuotientsDisplay from "@/components/division/partialQuotients/Part
 import AreaModelRect from "@/components/division/areaMode/AreaModelRect";
 import { ErrorFallback } from "@/components/ErrorBoundary";
 import { DrillCompleteContent } from "@/components/multiplication/DrillComplete";
+import { UpdateBannerContent } from "@/components/UpdateBanner";
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -393,6 +394,11 @@ export default function DesignSystem() {
 
         {/* ── Components ─────────────────────────────────────────── */}
         <Category title="Components">
+          <Subsection title="UpdateBanner — new version available">
+            <div className="flex justify-center">
+              <UpdateBannerContent />
+            </div>
+          </Subsection>
           <Subsection title="LongDivisionDisplay — 657 ÷ 3 = 219">
             <LongDivisionDisplayFixtures />
           </Subsection>
