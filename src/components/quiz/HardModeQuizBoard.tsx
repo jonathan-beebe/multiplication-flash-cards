@@ -141,7 +141,7 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
             }}
             onKeyDown={handleKeyDown}
             aria-label="Enter your answer"
-            aria-describedby={inputError ? "input-error" : showCorrect ? "correct-msg" : undefined}
+            aria-describedby="answer-feedback"
             focusColor="indigo"
             error={!!inputError}
           />
@@ -161,7 +161,7 @@ export default function HardModeQuizBoard<Q>({ generator, getNextQuestion, rende
         </div>
 
         <p
-          id={inputError ? "input-error" : "correct-msg"}
+          id="answer-feedback"
           className={`text-center text-sm font-medium min-h-[1.25rem] ${
             showCorrect
               ? "font-bold text-green-600 dark:text-green-400"
