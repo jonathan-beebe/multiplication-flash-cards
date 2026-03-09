@@ -50,27 +50,27 @@ describe("DivisionPractice", () => {
 
   it("selects Level 1 by default", () => {
     renderPage();
-    expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("link", { name: /level 2/i })).toHaveAttribute("aria-pressed", "false");
-    expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-pressed", "false");
-    expect(screen.getByRole("link", { name: /level 4/i })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: /level 2/i })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("link", { name: /level 3/i })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("link", { name: /level 4/i })).not.toHaveAttribute("aria-current");
   });
 
   it("selects the clicked level and deselects the previous one", () => {
     renderPage();
     fireEvent.click(screen.getByRole("link", { name: /level 3/i }));
-    expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: /level 1/i })).not.toHaveAttribute("aria-current");
   });
 
   it("only one level is selected at a time", () => {
     renderPage();
     fireEvent.click(screen.getByRole("link", { name: /level 2/i }));
-    const pressed = screen
+    const current = screen
       .getAllByRole("link", { name: /level \d/i })
-      .filter((el) => el.getAttribute("aria-pressed") === "true");
-    expect(pressed).toHaveLength(1);
-    expect(pressed[0]).toHaveTextContent(/level 2/i);
+      .filter((el) => el.getAttribute("aria-current") === "page");
+    expect(current).toHaveLength(1);
+    expect(current[0]).toHaveTextContent(/level 2/i);
   });
 
   it("shows the building-phase input on load", () => {
@@ -98,7 +98,7 @@ describe("DivisionPractice", () => {
 
   it("renders the correct level when navigated to directly", () => {
     renderPage(3);
-    expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: /level 1/i })).not.toHaveAttribute("aria-current");
   });
 });

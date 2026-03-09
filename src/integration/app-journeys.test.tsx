@@ -259,7 +259,7 @@ describe("App user journeys", () => {
       );
 
       expect(screen.getByRole("heading", { name: /division practice/i })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "true");
+      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-current", "page");
     });
 
     it("/division-practice/level-3 renders with Level 3 selected", () => {
@@ -269,8 +269,8 @@ describe("App user journeys", () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-pressed", "true");
-      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
+      expect(screen.getByRole("link", { name: /level 3/i })).toHaveAttribute("aria-current", "page");
+      expect(screen.getByRole("link", { name: /level 1/i })).not.toHaveAttribute("aria-current");
     });
 
     it("clicking a level link updates the selected level", () => {
@@ -280,12 +280,12 @@ describe("App user journeys", () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "true");
+      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-current", "page");
 
       fireEvent.click(screen.getByRole("link", { name: /level 2/i }));
 
-      expect(screen.getByRole("link", { name: /level 2/i })).toHaveAttribute("aria-pressed", "true");
-      expect(screen.getByRole("link", { name: /level 1/i })).toHaveAttribute("aria-pressed", "false");
+      expect(screen.getByRole("link", { name: /level 2/i })).toHaveAttribute("aria-current", "page");
+      expect(screen.getByRole("link", { name: /level 1/i })).not.toHaveAttribute("aria-current");
     });
 
     it("division practice → Division menu via NavBar back", () => {
