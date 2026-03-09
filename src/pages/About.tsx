@@ -82,7 +82,7 @@ function About() {
           apps list, and works offline.
         </p>
 
-        <p className="text-xs tabular-nums text-slate-500 dark:text-slate-400 mt-4">
+        <p className="text-xs tabular-nums text-slate-600 dark:text-slate-400 mt-4">
           version {__COMMIT_HASH__}
         </p>
       </div>
