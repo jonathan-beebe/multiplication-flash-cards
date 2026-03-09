@@ -13,7 +13,7 @@ export function UpdateBanner() {
       <span>A new version is available.</span>
       <button
         onClick={applyUpdate}
-        className="rounded bg-amber-500 px-3 py-1 font-semibold text-white hover:bg-amber-600 focus-visible:outline-offset-2"
+        className="rounded bg-amber-700 px-3 py-1 font-semibold text-white hover:bg-amber-800 focus-visible:outline-offset-2"
       >
         Update
       </button>
