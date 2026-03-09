@@ -29,15 +29,17 @@ export default function StandardAlgorithmPractice() {
         </div>
 
         {/* Level picker */}
-        <nav
-          className="flex gap-1 rounded-xl border border-slate-200 dark:border-slate-700 p-1 bg-slate-100 dark:bg-slate-800/50"
+        <div
+          role="radiogroup"
           aria-label="Difficulty level"
+          className="flex gap-1 rounded-xl border border-slate-200 dark:border-slate-700 p-1 bg-slate-100 dark:bg-slate-800/50"
         >
           {LEVEL_IDS.map((l) => (
             <button
               key={l}
+              role="radio"
+              aria-checked={level === l}
               onClick={() => setLevel(l)}
-              aria-pressed={level === l ? "true" : "false"}
               title={LEVELS[l].description}
               className={clsx(
                 "px-4 py-2 rounded-lg text-sm font-semibold transition-all",
@@ -49,7 +51,7 @@ export default function StandardAlgorithmPractice() {
               {LEVELS[l].label}
             </button>
           ))}
-        </nav>
+        </div>
 
         {/* Problem — keyed on level so state resets on level change */}
         <StandardAlgorithmProblem key={level} level={level} />
