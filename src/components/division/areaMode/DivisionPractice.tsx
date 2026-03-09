@@ -53,7 +53,7 @@ export default function DivisionPractice() {
             <Link
               key={l}
               to={`/division-practice/level-${l}`}
-              aria-pressed={level === l ? "true" : "false"}
+              aria-current={level === l ? "page" : undefined}
               title={LEVELS[l].description}
               className={clsx(
                 "px-4 py-2 rounded-lg text-sm font-semibold transition-all",
