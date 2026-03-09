@@ -17,7 +17,7 @@ function AdditionMenu() {
   }, [levelParam, level, navigate]);
 
   useEffect(() => {
-    document.title = "Addition — Flash Cards";
+    document.title = "Addition — Math Flash Cards";
   }, []);
 
   return (

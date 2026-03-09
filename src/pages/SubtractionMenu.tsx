@@ -17,7 +17,7 @@ function SubtractionMenu() {
   }, [levelParam, level, navigate]);
 
   useEffect(() => {
-    document.title = "Subtraction — Flash Cards";
+    document.title = "Subtraction — Math Flash Cards";
   }, []);
 
   return (

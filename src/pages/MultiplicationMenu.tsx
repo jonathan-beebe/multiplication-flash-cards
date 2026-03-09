@@ -4,7 +4,7 @@ import HomeButton from "@/components/atoms/HomeButton";
 
 function MultiplicationMenu() {
   useEffect(() => {
-    document.title = "Multiplication — Flash Cards";
+    document.title = "Multiplication — Math Flash Cards";
   }, []);
 
   return (
