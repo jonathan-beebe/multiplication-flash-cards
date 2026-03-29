@@ -44,6 +44,35 @@ describe('getNextQuestion', () => {
     }
   })
 
+  it('presents both factor orderings (a×b and b×a) across different randomValues', () => {
+    // For a non-square question, we should see both orderings when varying randomValue.
+    // The bug: randomValue < 0.5 always gives a×b and >= 0.5 always gives b×a,
+    // so factor order is correlated with question selection rather than independent.
+    const seen = new Set<string>()
+    const N = 100
+    for (let i = 0; i < N; i++) {
+      const q = getNextQuestion([], i / N)
+      // Track which ordering appears for each canonical question
+      const key = questionKey(q)
+      if (key !== `${q.a}x${q.b}`) {
+        seen.add(`${key}-reversed`)
+      } else {
+        seen.add(`${key}-normal`)
+      }
+    }
+    // We should see at least one question that appears in both orderings
+    const keys = [...seen]
+    const canonicalKeys = new Set(keys.map((k) => k.replace(/-(?:normal|reversed)$/, '')))
+    let anyBothOrderings = false
+    for (const ck of canonicalKeys) {
+      if (keys.includes(`${ck}-normal`) && keys.includes(`${ck}-reversed`)) {
+        anyBothOrderings = true
+        break
+      }
+    }
+    expect(anyBothOrderings).toBe(true)
+  })
+
   it('is deterministic with the same randomValue', () => {
     const a = getNextQuestion([], 0.42)
     const b = getNextQuestion([], 0.42)
