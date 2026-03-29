@@ -9,6 +9,7 @@ import { createAreaModelSession, areaModelSessionReducer } from '@/lib/division/
 import ErrorText from '@/components/atoms/ErrorText'
 import PrimaryButton from '@/components/atoms/PrimaryButton'
 import NumberInput from '@/components/atoms/NumberInput'
+import { parseInputValue } from '@/components/atoms/parseInputValue'
 import SuccessText from '@/components/atoms/SuccessText'
 import ProblemHeading from '@/components/atoms/ProblemHeading'
 import Subheading from '@/components/atoms/Subheading'
@@ -49,8 +50,8 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
   }
 
   const handleSubmit = useCallback(() => {
-    const value = parseInt(inputValue, 10)
-    if (inputValue.trim() === '' || isNaN(value)) return
+    const value = parseInputValue(inputValue)
+    if (value === null) return
 
     if (phase === 'building') {
       const result = validatePartialQuotient(value, problem.divisor, remaining)

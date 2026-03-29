@@ -9,6 +9,7 @@ import {
 import ErrorText from '@/components/atoms/ErrorText'
 import PrimaryButton from '@/components/atoms/PrimaryButton'
 import NumberInput from '@/components/atoms/NumberInput'
+import { parseInputValue } from '@/components/atoms/parseInputValue'
 import SuccessText from '@/components/atoms/SuccessText'
 import ProblemHeading from '@/components/atoms/ProblemHeading'
 import type { LongDivisionStep } from '@/lib/division/standardAlgorithm/longDivision'
@@ -87,8 +88,8 @@ export default function StandardAlgorithmProblem({ level }: Props) {
   const handleSubmit = useCallback(() => {
     if (!currentStep) return
 
-    const value = parseInt(inputValue, 10)
-    if (inputValue.trim() === '' || isNaN(value)) return
+    const value = parseInputValue(inputValue)
+    if (value === null) return
 
     const result = validateQuotientDigit(value, currentStep)
     if (!result.valid) {
