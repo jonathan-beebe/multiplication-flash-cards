@@ -36,6 +36,9 @@ export function useQuizAnimation<Q>({
 
   const triggerCorrect = useCallback(() => {
     setShowCorrect(true)
+    // Intentionally captures getNextQuestion at call time, not at timeout time.
+    // This ensures the next question is selected without the just-recorded answer,
+    // so the same question isn't immediately resurfaced after a wrong answer.
     timeoutRef.current = setTimeout(() => {
       setNextQuestion(getNextQuestion())
       setSlideRotation(Math.random() * 70 - 35)
