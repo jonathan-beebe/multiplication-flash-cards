@@ -36,9 +36,12 @@ export function useQuizAnimation<Q>({
     getNextQuestionRef.current = getNextQuestion
   }, [getNextQuestion])
 
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  useEffect(() => () => clearTimeout(timeoutRef.current), [])
+
   const triggerCorrect = useCallback(() => {
     setShowCorrect(true)
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setNextQuestion(getNextQuestionRef.current())
       setSlideRotation(Math.random() * 70 - 35)
       setIsAnimating(true)

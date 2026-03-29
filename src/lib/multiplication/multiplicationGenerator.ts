@@ -82,7 +82,7 @@ function getNextQuestion(previousResults: readonly QuestionResult<Question>[], r
   if (totalWeight === 0) {
     const idx = Math.floor(randomValue * pool.length)
     const q = pool[idx]
-    return randomValue < 0.5 ? q : { a: q.b, b: q.a }
+    return (randomValue * 7919) % 1 < 0.5 ? q : { a: q.b, b: q.a }
   }
 
   let target = randomValue * totalWeight
@@ -90,8 +90,8 @@ function getNextQuestion(previousResults: readonly QuestionResult<Question>[], r
     target -= weights[i]
     if (target <= 0) {
       const q = pool[i]
-      // Randomly present a×b or b×a
-      return randomValue * totalWeight < totalWeight / 2 ? q : { a: q.b, b: q.a }
+      // Randomly present a×b or b×a (derived value independent of question selection)
+      return (randomValue * 7919) % 1 < 0.5 ? q : { a: q.b, b: q.a }
     }
   }
 

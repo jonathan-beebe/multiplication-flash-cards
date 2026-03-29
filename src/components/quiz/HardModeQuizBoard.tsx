@@ -37,15 +37,25 @@ export default function HardModeQuizBoard<Q>({
   useEffect(() => {
     getNextQuestionRef.current = getNextQuestion
   }, [getNextQuestion])
+  const shakeTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const correctTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   useEffect(() => {
     const id = setTimeout(() => inputRef.current?.focus(), 50)
     return () => clearTimeout(id)
   }, [])
 
+  useEffect(
+    () => () => {
+      clearTimeout(shakeTimeoutRef.current)
+      clearTimeout(correctTimeoutRef.current)
+    },
+    [],
+  )
+
   function triggerShake() {
     setIsShaking(true)
-    setTimeout(() => setIsShaking(false), 400)
+    shakeTimeoutRef.current = setTimeout(() => setIsShaking(false), 400)
   }
 
   const handleSubmit = useCallback(() => {
@@ -67,7 +77,7 @@ export default function HardModeQuizBoard<Q>({
       setShowCorrect(true)
       lockedRef.current = true
       announce(`Correct! ${generator.displayText(question)} equals ${value}.`)
-      setTimeout(() => {
+      correctTimeoutRef.current = setTimeout(() => {
         const next = getNextQuestionRef.current()
         setNextQuestion(next)
         setSlideRotation(Math.random() * 70 - 35)
