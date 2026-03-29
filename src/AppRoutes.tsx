@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { UpdateBanner } from '@/components/UpdateBanner'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Home from '@/pages/Home.tsx'
-import About from '@/pages/About.tsx'
+import ForParents from '@/pages/ForParents.tsx'
 import AdditionMenu from '@/pages/AdditionMenu.tsx'
 import SubtractionMenu from '@/pages/SubtractionMenu.tsx'
 import MultiplicationMenu from '@/pages/MultiplicationMenu.tsx'
@@ -60,7 +60,7 @@ export function AppRoutes() {
       <ErrorBoundary>
       <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
+      <Route path="/for-parents" element={<ForParents />} />
 
       {/* Addition */}
       <Route path="/addition" element={<Navigate to="/addition/ones" replace />} />

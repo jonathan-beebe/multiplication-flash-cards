@@ -28,10 +28,10 @@ function Home() {
 
         <div className="mt-12">
           <Link
-            to="/about"
+            to="/for-parents"
             className="text-sm text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
           >
-            About
+            For Parents
           </Link>
         </div>
       </div>

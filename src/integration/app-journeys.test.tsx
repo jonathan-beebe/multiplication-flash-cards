@@ -69,7 +69,7 @@ describe("App user journeys", () => {
       expect(screen.getByRole("link", { name: /subtraction/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /multiplication/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /division/i })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /about/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /for parents/i })).toBeInTheDocument();
     });
   });
 
@@ -302,20 +302,20 @@ describe("App user journeys", () => {
     });
   });
 
-  // ─── 8. About flow ────────────────────────────────────────────────
-  describe("About flow", () => {
-    it("Home → About → Home", () => {
+  // ─── 8. For Parents flow ───────────────────────────────────────────
+  describe("For Parents flow", () => {
+    it("Home → For Parents → Home", () => {
       render(
         <MemoryRouter initialEntries={["/"]}>
           <AppRoutes />
         </MemoryRouter>,
       );
 
-      // Navigate to About
-      fireEvent.click(screen.getByRole("link", { name: /about/i }));
+      // Navigate to For Parents
+      fireEvent.click(screen.getByRole("link", { name: /for parents/i }));
 
-      // About page content
-      expect(screen.getByRole("heading", { name: /about/i })).toBeInTheDocument();
+      // For Parents page content
+      expect(screen.getByRole("heading", { name: /for parents/i })).toBeInTheDocument();
       expect(screen.getByText(/flash card app/i)).toBeInTheDocument();
 
       // Navigate home via NavBar

@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
 
-function About() {
+function ForParents() {
   useEffect(() => {
-    document.title = "About — Math Flash Cards";
+    document.title = "For Parents — Math Flash Cards";
   }, []);
 
   return (
     <main className="flex min-h-screen justify-center overflow-auto bg-background px-4 pb-8 pt-16">
       <NavBar />
       <div className="flex w-full max-w-md flex-col gap-6 text-left">
-        <h1 className="text-4xl font-bold text-text">About</h1>
+        <h1 className="text-4xl font-bold text-text">For Parents</h1>
         <p className="text-lg text-slate-700 dark:text-slate-300">
           A math flash card app to help 1st–5th graders practice
           addition, subtraction, multiplication, and division.
@@ -21,6 +21,17 @@ function About() {
           school and classmates, it has grown into a comprehensive resource for
           elementary students to strengthen their math skills at every level.
         </p>
+        <p className="text-lg text-slate-700 dark:text-slate-300">
+          This is a labor of love — built and maintained in my spare time to
+          help kids build confidence in math. If you find it useful and would
+          like to show your support, I&apos;d really appreciate it!
+        </p>
+        <a
+          href="https://buymeacoffee.com/jonathan.beebe"
+          className="inline-flex items-center gap-2 self-start rounded-lg bg-amber-400 px-4 py-2 text-base font-semibold text-amber-950 hover:bg-amber-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+        >
+          Buy Me a Coffee
+        </a>
         <p className="text-lg text-slate-700 dark:text-slate-300">
           If you have any comments, bug reports, or feature requests, please
           email me at{" "}
@@ -90,4 +101,4 @@ function About() {
   );
 }
 
-export default About;
+export default ForParents;

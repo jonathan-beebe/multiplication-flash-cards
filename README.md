@@ -38,4 +38,12 @@ Once installed, the app will appear on your home screen or in your apps list, an
 
 ---
 
+## Support
+
+This app is a labor of love — built and maintained in my spare time to help kids build confidence in math. If you find it useful and want to show your support, I'd really appreciate it!
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-☕-yellow?style=for-the-badge)](https://buymeacoffee.com/jonathan.beebe)
+
+---
+
 If you have any comments, bug reports, or feature requests, please email me at jonathan-beebe@outlook.com.
