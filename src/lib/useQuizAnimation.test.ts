@@ -118,4 +118,26 @@ describe('useQuizAnimation', () => {
     expect(result.current.backCardProps.className).toBe('card-zoom-in')
     expect(result.current.backCardProps.style?.transform).toBeUndefined()
   })
+
+  it('clears pending timeout on unmount so it does not fire after teardown', () => {
+    const getNextQuestion = vi.fn(() => 'q2')
+    const { result, unmount } = renderHook(() =>
+      useQuizAnimation({ getNextQuestion, onSettled: vi.fn(), delayMs: 300 }),
+    )
+
+    act(() => {
+      result.current.triggerCorrect()
+    })
+
+    // Unmount before the timeout fires
+    unmount()
+
+    // Advance past the delay — the timeout should have been cleared
+    // so getNextQuestion is never called by the timeout callback
+    const callsBefore = getNextQuestion.mock.calls.length
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+    expect(getNextQuestion.mock.calls.length).toBe(callsBefore)
+  })
 })
