@@ -87,13 +87,8 @@ export default function StandardAlgorithmProblem({ level }: Props) {
   const handleSubmit = useCallback(() => {
     if (!currentStep) return
 
-    if (!/^\d+$/.test(inputValue.trim())) {
-      triggerShake()
-      setInputError(inputValue.trim() === '' ? 'Enter a digit' : 'Enter a whole number')
-      inputRef.current?.focus()
-      return
-    }
     const value = parseInt(inputValue, 10)
+    if (inputValue.trim() === '' || isNaN(value)) return
 
     const result = validateQuotientDigit(value, currentStep)
     if (!result.valid) {

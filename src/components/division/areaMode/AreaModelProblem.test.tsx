@@ -117,9 +117,9 @@ describe('AreaModelProblem — building phase', () => {
     expect(screen.queryByRole('textbox', { name: /sum of partial quotients/i })).not.toBeInTheDocument()
   })
 
-  it('shows an error for empty input', () => {
+  it('ignores submit when input is empty', () => {
     fireEvent.click(screen.getByRole('button', { name: /place/i }))
-    expect(screen.getByRole('alert')).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).toBeNull()
     expect(screen.getByRole('textbox', { name: /partial quotient/i })).toBeInTheDocument()
   })
 
@@ -185,9 +185,9 @@ describe('AreaModelProblem — summing phase', () => {
     expect(screen.getByRole('textbox', { name: /sum of partial quotients/i })).toBeInTheDocument()
   })
 
-  it('shows an error for empty input', () => {
+  it('ignores submit when input is empty', () => {
     fireEvent.click(screen.getByRole('button', { name: /check/i }))
-    expect(screen.getByRole('alert')).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).toBeNull()
   })
 
   it('pressing Enter submits the same as clicking Check', () => {

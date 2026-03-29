@@ -47,13 +47,8 @@ export default function PartialQuotientsProblem({ level }: Props) {
   }
 
   const handleSubmit = useCallback(() => {
-    if (!/^\d+$/.test(inputValue.trim())) {
-      triggerShake()
-      setInputError('Enter a whole number')
-      inputRef.current?.focus()
-      return
-    }
     const value = parseInt(inputValue, 10)
+    if (inputValue.trim() === '' || isNaN(value)) return
 
     if (phase === 'building') {
       const result = validatePartialQuotient(value, problem.divisor, remaining)
