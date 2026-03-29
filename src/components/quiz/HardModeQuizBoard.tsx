@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import NumberInput from '@/components/atoms/NumberInput'
-import { parseInputValue } from '@/components/atoms/parseInputValue'
+import NumberInput, { parseInputValue } from '@/components/atoms/NumberInput'
 import type { QuestionGenerator } from '@/lib/engine/gameEngine'
 import type { CardAnimationProps } from '@/components/quiz/QuizBoard'
 import { useAnnouncement } from '@/lib/useAnnouncement'
