@@ -13,6 +13,7 @@ import SuccessText from '@/components/atoms/SuccessText'
 import ProblemHeading from '@/components/atoms/ProblemHeading'
 import Subheading from '@/components/atoms/Subheading'
 import AreaModelRect from '@/components/division/areaMode/AreaModelRect'
+import { buildAreaModelSummary } from '@/lib/division/displaySummary'
 
 interface AreaModelProblemProps {
   level: Level
@@ -107,6 +108,7 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
 
       {/* Area model rectangle */}
       <AreaModelRect divisor={problem.divisor} dividend={problem.dividend} sections={sections} remaining={remaining} />
+      <p className="sr-only">{buildAreaModelSummary(sections, remaining, problem.dividend)}</p>
 
       {/* Building phase */}
       {phase === 'building' && (
