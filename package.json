@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "ci": "npm run lint && npx tsc --noEmit 2>&1 && npm run test -- --run && npm run build"
+    "test:ci": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "ci": "sh scripts/ci.sh",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
