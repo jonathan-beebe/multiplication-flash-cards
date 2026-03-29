@@ -12,7 +12,7 @@ function StandardAlgorithmPlaceholder() {
       <NavBar backTo="/division" />
       <div className="flex flex-col items-center gap-4 mt-12 text-center">
         <PageHeading>Standard Algorithm</PageHeading>
-        <p className="text-slate-500 dark:text-slate-400">Coming soon</p>
+        <p className="text-slate-600 dark:text-slate-400">Coming soon</p>
       </div>
     </main>
   )
