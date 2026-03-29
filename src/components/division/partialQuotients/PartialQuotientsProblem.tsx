@@ -13,6 +13,7 @@ import SuccessText from '@/components/atoms/SuccessText'
 import ProblemHeading from '@/components/atoms/ProblemHeading'
 import Subheading from '@/components/atoms/Subheading'
 import PartialQuotientsDisplay from '@/components/division/partialQuotients/PartialQuotientsDisplay'
+import { buildPartialQuotientsSummary } from '@/lib/division/displaySummary'
 
 interface Props {
   level: Level
@@ -117,6 +118,7 @@ export default function PartialQuotientsProblem({ level }: Props) {
         sections={sections}
         showTotal={phase === 'done' && sections.length > 1}
       />
+      <p className="sr-only">{buildPartialQuotientsSummary(sections, remaining, problem.dividend)}</p>
 
       {/* Building phase */}
       {phase === 'building' && (

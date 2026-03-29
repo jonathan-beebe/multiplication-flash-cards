@@ -13,6 +13,7 @@ import SuccessText from '@/components/atoms/SuccessText'
 import ProblemHeading from '@/components/atoms/ProblemHeading'
 import type { LongDivisionStep } from '@/lib/division/standardAlgorithm/longDivision'
 import LongDivisionDisplay from './LongDivisionDisplay'
+import { buildLongDivisionSummary } from '@/lib/division/displaySummary'
 
 // ── Session state ─────────────────────────────────────────────────────────────
 // Groups the problem, its steps, progress cursor, and screen-reader
@@ -139,6 +140,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
           completedCount={currentStepIndex}
         />
       </div>
+      <p className="sr-only">{buildLongDivisionSummary(steps, currentStepIndex, problem.divisor)}</p>
 
       {/* Step prompt */}
       {!isDone && currentStep && (
