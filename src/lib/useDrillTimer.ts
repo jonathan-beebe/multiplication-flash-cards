@@ -21,12 +21,17 @@ function useDrillTimer(durationMinutes: number, { onComplete }: UseDrillTimerOpt
   })
 
   useEffect(() => {
-    if (timeRemaining <= 0) return
     const timer = setInterval(() => {
-      setTimeRemaining((prev) => (prev <= 1 ? 0 : prev - 1))
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
     }, 1000)
     return () => clearInterval(timer)
-  }, [timeRemaining])
+  }, [])
 
   const timerAnnouncement = useMemo(() => {
     if (timeRemaining === 60) return '1 minute remaining'
