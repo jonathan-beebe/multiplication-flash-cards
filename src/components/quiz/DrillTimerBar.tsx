@@ -1,5 +1,5 @@
 interface DrillTimerBarProps {
-  durationSeconds: number;
+  durationSeconds: number
 }
 
 function DrillTimerBar({ durationSeconds }: DrillTimerBarProps) {
@@ -11,7 +11,7 @@ function DrillTimerBar({ durationSeconds }: DrillTimerBarProps) {
         animation: `drill-timer ${durationSeconds}s linear forwards`,
       }}
     />
-  );
+  )
 }
 
-export default DrillTimerBar;
+export default DrillTimerBar

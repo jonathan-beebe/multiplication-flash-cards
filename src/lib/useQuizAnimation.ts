@@ -1,19 +1,19 @@
-import { useState, useCallback, useRef, useEffect } from "react";
-import type { CardAnimationProps } from "@/components/quiz/QuizBoard";
+import { useState, useCallback, useRef, useEffect } from 'react'
+import type { CardAnimationProps } from '@/components/quiz/QuizBoard'
 
 interface UseQuizAnimationOptions<Q> {
-  getNextQuestion: () => Q;
-  onSettled: (nextQuestion: Q) => void;
-  delayMs?: number;
+  getNextQuestion: () => Q
+  onSettled: (nextQuestion: Q) => void
+  delayMs?: number
 }
 
 interface UseQuizAnimationResult<Q> {
-  nextQuestion: Q | null;
-  showCorrect: boolean;
-  isAnimating: boolean;
-  frontCardProps: CardAnimationProps;
-  backCardProps: CardAnimationProps;
-  triggerCorrect: () => void;
+  nextQuestion: Q | null
+  showCorrect: boolean
+  isAnimating: boolean
+  frontCardProps: CardAnimationProps
+  backCardProps: CardAnimationProps
+  triggerCorrect: () => void
 }
 
 export function useQuizAnimation<Q>({
@@ -21,37 +21,39 @@ export function useQuizAnimation<Q>({
   onSettled,
   delayMs = 300,
 }: UseQuizAnimationOptions<Q>): UseQuizAnimationResult<Q> {
-  const [nextQuestion, setNextQuestion] = useState<Q | null>(null);
-  const [showCorrect, setShowCorrect] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [slideRotation, setSlideRotation] = useState(0);
+  const [nextQuestion, setNextQuestion] = useState<Q | null>(null)
+  const [showCorrect, setShowCorrect] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [slideRotation, setSlideRotation] = useState(0)
 
-  const onSettledRef = useRef(onSettled);
-  useEffect(() => { onSettledRef.current = onSettled; }, [onSettled]);
+  const onSettledRef = useRef(onSettled)
+  useEffect(() => {
+    onSettledRef.current = onSettled
+  }, [onSettled])
 
   const triggerCorrect = useCallback(() => {
-    setShowCorrect(true);
+    setShowCorrect(true)
     setTimeout(() => {
-      setNextQuestion(getNextQuestion());
-      setSlideRotation(Math.random() * 70 - 35);
-      setIsAnimating(true);
-      setShowCorrect(false);
-    }, delayMs);
-  }, [getNextQuestion, delayMs]);
+      setNextQuestion(getNextQuestion())
+      setSlideRotation(Math.random() * 70 - 35)
+      setIsAnimating(true)
+      setShowCorrect(false)
+    }, delayMs)
+  }, [getNextQuestion, delayMs])
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
-      if (e.propertyName !== "transform") return;
-      const settled = nextQuestion!;
-      setNextQuestion(null);
-      setIsAnimating(false);
-      onSettledRef.current(settled);
+      if (e.propertyName !== 'transform') return
+      const settled = nextQuestion!
+      setNextQuestion(null)
+      setIsAnimating(false)
+      onSettledRef.current(settled)
     },
     [nextQuestion],
-  );
+  )
 
   const frontCardProps: CardAnimationProps = {
-    className: isAnimating ? "card-slide-out" : undefined,
+    className: isAnimating ? 'card-slide-out' : undefined,
     style: {
       zIndex: 2,
       ...(isAnimating && {
@@ -59,13 +61,13 @@ export function useQuizAnimation<Q>({
       }),
     },
     onTransitionEnd: isAnimating ? handleTransitionEnd : undefined,
-  };
+  }
 
   const backCardProps: CardAnimationProps = {
-    "aria-hidden": true,
-    className: isAnimating ? "card-zoom-in" : undefined,
-    style: { zIndex: 1, transform: isAnimating ? undefined : "scale(0.8)" },
-  };
+    'aria-hidden': true,
+    className: isAnimating ? 'card-zoom-in' : undefined,
+    style: { zIndex: 1, transform: isAnimating ? undefined : 'scale(0.8)' },
+  }
 
-  return { nextQuestion, showCorrect, isAnimating, frontCardProps, backCardProps, triggerCorrect };
+  return { nextQuestion, showCorrect, isAnimating, frontCardProps, backCardProps, triggerCorrect }
 }

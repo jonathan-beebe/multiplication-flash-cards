@@ -1,133 +1,125 @@
-import { useReducer, useState, useRef, useEffect, useCallback } from "react";
-import { generateProblem, getHelpfulFacts } from "@/lib/division/areaMode/divisionProblem";
-import type { Level, Problem } from "@/lib/division/areaMode/divisionProblem";
+import { useReducer, useState, useRef, useEffect, useCallback } from 'react'
+import { generateProblem, getHelpfulFacts } from '@/lib/division/areaMode/divisionProblem'
+import type { Level, Problem } from '@/lib/division/areaMode/divisionProblem'
 import {
   buildAnnouncement,
   computeLongDivisionSteps,
   validateQuotientDigit,
-} from "@/lib/division/standardAlgorithm/longDivision";
-import ErrorText from "@/components/atoms/ErrorText";
-import PrimaryButton from "@/components/atoms/PrimaryButton";
-import NumberInput from "@/components/atoms/NumberInput";
-import SuccessText from "@/components/atoms/SuccessText";
-import ProblemHeading from "@/components/atoms/ProblemHeading";
-import type { LongDivisionStep } from "@/lib/division/standardAlgorithm/longDivision";
-import LongDivisionDisplay from "./LongDivisionDisplay";
+} from '@/lib/division/standardAlgorithm/longDivision'
+import ErrorText from '@/components/atoms/ErrorText'
+import PrimaryButton from '@/components/atoms/PrimaryButton'
+import NumberInput from '@/components/atoms/NumberInput'
+import SuccessText from '@/components/atoms/SuccessText'
+import ProblemHeading from '@/components/atoms/ProblemHeading'
+import type { LongDivisionStep } from '@/lib/division/standardAlgorithm/longDivision'
+import LongDivisionDisplay from './LongDivisionDisplay'
 
 // ── Session state ─────────────────────────────────────────────────────────────
 // Groups the problem, its steps, progress cursor, and screen-reader
 // announcement so they always reset atomically when moving to the next problem.
 
 interface SessionState {
-  problem: Problem;
-  steps: LongDivisionStep[];
-  currentStepIndex: number;
-  announcement: string;
+  problem: Problem
+  steps: LongDivisionStep[]
+  currentStepIndex: number
+  announcement: string
 }
 
-type SessionAction =
-  | { type: "ADVANCE"; value: number }
-  | { type: "NEXT"; level: Level };
+type SessionAction = { type: 'ADVANCE'; value: number } | { type: 'NEXT'; level: Level }
 
 function createSession(level: Level): SessionState {
-  const problem = generateProblem(level);
-  const steps = computeLongDivisionSteps(problem.dividend, problem.divisor);
-  return { problem, steps, currentStepIndex: 0, announcement: "" };
+  const problem = generateProblem(level)
+  const steps = computeLongDivisionSteps(problem.dividend, problem.divisor)
+  return { problem, steps, currentStepIndex: 0, announcement: '' }
 }
 
 function sessionReducer(state: SessionState, action: SessionAction): SessionState {
   switch (action.type) {
-    case "ADVANCE": {
-      const currentStep = state.steps[state.currentStepIndex];
-      const nextStepIndex = state.currentStepIndex + 1;
+    case 'ADVANCE': {
+      const currentStep = state.steps[state.currentStepIndex]
+      const nextStepIndex = state.currentStepIndex + 1
       return {
         ...state,
         currentStepIndex: nextStepIndex,
-        announcement: buildAnnouncement(
-          action.value,
-          currentStep,
-          state.problem,
-          nextStepIndex,
-          state.steps.length
-        ),
-      };
+        announcement: buildAnnouncement(action.value, currentStep, state.problem, nextStepIndex, state.steps.length),
+      }
     }
-    case "NEXT":
-      return createSession(action.level);
+    case 'NEXT':
+      return createSession(action.level)
   }
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 interface Props {
-  level: Level;
+  level: Level
 }
 
 export default function StandardAlgorithmProblem({ level }: Props) {
-  const [session, dispatch] = useReducer(sessionReducer, level, createSession);
-  const [inputValue, setInputValue] = useState("");
-  const [inputError, setInputError] = useState<string | null>(null);
-  const [isShaking, setIsShaking] = useState(false);
-  const [hintsOpen, setHintsOpen] = useState(false);
+  const [session, dispatch] = useReducer(sessionReducer, level, createSession)
+  const [inputValue, setInputValue] = useState('')
+  const [inputError, setInputError] = useState<string | null>(null)
+  const [isShaking, setIsShaking] = useState(false)
+  const [hintsOpen, setHintsOpen] = useState(false)
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const nextButtonRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
+  const nextButtonRef = useRef<HTMLButtonElement>(null)
 
-  const { problem, steps, currentStepIndex, announcement } = session;
-  const isDone = currentStepIndex === steps.length;
-  const currentStep = isDone ? null : steps[currentStepIndex];
+  const { problem, steps, currentStepIndex, announcement } = session
+  const isDone = currentStepIndex === steps.length
+  const currentStep = isDone ? null : steps[currentStepIndex]
 
   useEffect(() => {
     if (isDone) {
-      const id = setTimeout(() => nextButtonRef.current?.focus(), 50);
-      return () => clearTimeout(id);
+      const id = setTimeout(() => nextButtonRef.current?.focus(), 50)
+      return () => clearTimeout(id)
     } else {
-      const id = setTimeout(() => inputRef.current?.focus(), 50);
-      return () => clearTimeout(id);
+      const id = setTimeout(() => inputRef.current?.focus(), 50)
+      return () => clearTimeout(id)
     }
-  }, [isDone, currentStepIndex]);
+  }, [isDone, currentStepIndex])
 
   function triggerShake() {
-    setIsShaking(true);
-    setTimeout(() => setIsShaking(false), 400);
+    setIsShaking(true)
+    setTimeout(() => setIsShaking(false), 400)
   }
 
   const handleSubmit = useCallback(() => {
-    if (!currentStep) return;
+    if (!currentStep) return
 
-    const value = parseInt(inputValue, 10);
+    const value = parseInt(inputValue, 10)
     if (isNaN(value)) {
-      triggerShake();
-      setInputError("Enter a digit");
-      inputRef.current?.focus();
-      return;
+      triggerShake()
+      setInputError('Enter a digit')
+      inputRef.current?.focus()
+      return
     }
 
-    const result = validateQuotientDigit(value, currentStep);
+    const result = validateQuotientDigit(value, currentStep)
     if (!result.valid) {
-      triggerShake();
-      setInputError(result.error);
-      inputRef.current?.focus();
-      return;
+      triggerShake()
+      setInputError(result.error)
+      inputRef.current?.focus()
+      return
     }
 
-    setInputValue("");
-    setInputError(null);
-    dispatch({ type: "ADVANCE", value });
-  }, [inputValue, currentStep]);
+    setInputValue('')
+    setInputError(null)
+    dispatch({ type: 'ADVANCE', value })
+  }, [inputValue, currentStep])
 
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter") handleSubmit();
+    if (e.key === 'Enter') handleSubmit()
   }
 
   function handleNext() {
-    setInputValue("");
-    setInputError(null);
-    setHintsOpen(false);
-    dispatch({ type: "NEXT", level });
+    setInputValue('')
+    setInputError(null)
+    setHintsOpen(false)
+    dispatch({ type: 'NEXT', level })
   }
 
-  const helpfulFacts = getHelpfulFacts(problem.divisor, problem.dividend);
+  const helpfulFacts = getHelpfulFacts(problem.divisor, problem.dividend)
 
   return (
     <div className="w-full max-w-xl flex flex-col gap-6">
@@ -145,38 +137,33 @@ export default function StandardAlgorithmProblem({ level }: Props) {
 
       {/* Long division display */}
       <div className="flex justify-center">
-      <LongDivisionDisplay
-        dividend={problem.dividend}
-        divisor={problem.divisor}
-        steps={steps}
-        completedCount={currentStepIndex}
-      />
+        <LongDivisionDisplay
+          dividend={problem.dividend}
+          divisor={problem.divisor}
+          steps={steps}
+          completedCount={currentStepIndex}
+        />
       </div>
 
       {/* Step prompt */}
       {!isDone && currentStep && (
         <div className="flex flex-col gap-3">
           <p className="text-center text-base text-slate-600 dark:text-slate-400">
-            How many times does{" "}
-            <span className="font-bold text-text">{problem.divisor}</span> go
-            into{" "}
-            <span className="font-bold tabular-nums text-text">
-              {currentStep.workingNumber}
-            </span>
-            ?
+            How many times does <span className="font-bold text-text">{problem.divisor}</span> go into{' '}
+            <span className="font-bold tabular-nums text-text">{currentStep.workingNumber}</span>?
           </p>
 
-          <div className={`flex gap-3 justify-center ${isShaking ? "shake" : ""}`}>
+          <div className={`flex gap-3 justify-center ${isShaking ? 'shake' : ''}`}>
             <NumberInput
               ref={inputRef}
               value={inputValue}
               onChange={(e) => {
-                setInputValue(e.target.value);
-                setInputError(null);
+                setInputValue(e.target.value)
+                setInputError(null)
               }}
               onKeyDown={handleKeyDown}
               aria-label={`How many times does ${problem.divisor} go into ${currentStep.workingNumber}`}
-              aria-describedby={inputError ? "input-error" : undefined}
+              aria-describedby={inputError ? 'input-error' : undefined}
               error={!!inputError}
               className="w-24"
             />
@@ -190,10 +177,10 @@ export default function StandardAlgorithmProblem({ level }: Props) {
       {/* Done */}
       {isDone && (
         <div className="flex flex-col items-center gap-4">
-          <SuccessText aria-label={`${problem.dividend} divided by ${problem.divisor} equals ${problem.quotient}, correct`}>
+          <SuccessText
+            aria-label={`${problem.dividend} divided by ${problem.divisor} equals ${problem.quotient}, correct`}>
             <span aria-hidden="true">
-              {problem.dividend.toLocaleString()} ÷ {problem.divisor} ={" "}
-              {problem.quotient.toLocaleString()} ✓
+              {problem.dividend.toLocaleString()} ÷ {problem.divisor} = {problem.quotient.toLocaleString()} ✓
             </span>
           </SuccessText>
           <PrimaryButton ref={nextButtonRef} onClick={handleNext} aria-label="Next problem" size="lg">
@@ -209,23 +196,16 @@ export default function StandardAlgorithmProblem({ level }: Props) {
             onClick={() => setHintsOpen((o) => !o)}
             aria-expanded={hintsOpen}
             aria-controls="hints-panel"
-            className="w-full flex justify-between items-center px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-          >
+            className="w-full flex justify-between items-center px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
             <span>Helpful facts for {problem.divisor}</span>
             <span className="text-xs" aria-hidden="true">
-              {hintsOpen ? "▲ hide" : "▼ show"}
+              {hintsOpen ? '▲ hide' : '▼ show'}
             </span>
           </button>
           {hintsOpen && (
-            <div
-              id="hints-panel"
-              className="grid grid-cols-3 gap-x-2 gap-y-1 p-3 bg-slate-50 dark:bg-slate-800/50"
-            >
+            <div id="hints-panel" className="grid grid-cols-3 gap-x-2 gap-y-1 p-3 bg-slate-50 dark:bg-slate-800/50">
               {helpfulFacts.map(({ multiplier, product }) => (
-                <div
-                  key={multiplier}
-                  className="text-center text-sm tabular-nums text-slate-600 dark:text-slate-400"
-                >
+                <div key={multiplier} className="text-center text-sm tabular-nums text-slate-600 dark:text-slate-400">
                   {problem.divisor} × {multiplier} = {product.toLocaleString()}
                 </div>
               ))}
@@ -234,5 +214,5 @@ export default function StandardAlgorithmProblem({ level }: Props) {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,12 +1,12 @@
-import type { Section } from "@/lib/division/areaMode/divisionProblem";
+import type { Section } from '@/lib/division/areaMode/divisionProblem'
 
 export interface PartialQuotientsDisplayProps {
-  dividend: number;
-  divisor: number;
+  dividend: number
+  divisor: number
   /** Used only to size the partial-quotient column; never rendered directly. */
-  quotient: number;
-  sections: Section[];
-  showTotal: boolean;
+  quotient: number
+  sections: Section[]
+  showTotal: boolean
 }
 
 /**
@@ -30,53 +30,49 @@ export default function PartialQuotientsDisplay({
 }: PartialQuotientsDisplayProps) {
   // Column widths in ch units — use raw digit count, not toLocaleString,
   // so widths stay accurate in the monospace grid.
-  const numW = String(dividend).length;
-  const pqW = Math.max(String(quotient).length, 2);
+  const numW = String(dividend).length
+  const pqW = Math.max(String(quotient).length, 2)
 
   // Pre-compute running remainders after each section.
-  const remainders: number[] = [];
-  let running = dividend;
+  const remainders: number[] = []
+  let running = dividend
   for (const s of sections) {
-    running -= s.area;
-    remainders.push(running);
+    running -= s.area
+    remainders.push(running)
   }
 
-  const total = sections.reduce((acc, s) => acc + s.partialQuotient, 0);
+  const total = sections.reduce((acc, s) => acc + s.partialQuotient, 0)
 
   // Shared slot styles
   const signSlot: React.CSSProperties = {
-    display: "inline-block",
-    width: "1ch",
+    display: 'inline-block',
+    width: '1ch',
     flexShrink: 0,
-    textAlign: "center",
-  };
+    textAlign: 'center',
+  }
   const numSlot: React.CSSProperties = {
-    display: "inline-block",
+    display: 'inline-block',
     width: `${numW}ch`,
-    textAlign: "right",
+    textAlign: 'right',
     flexShrink: 0,
-  };
+  }
   const pqSlot: React.CSSProperties = {
-    display: "inline-block",
+    display: 'inline-block',
     width: `calc(${pqW}ch + 1.5ch)`,
-    textAlign: "right",
+    textAlign: 'right',
     flexShrink: 0,
-    paddingLeft: "1.5ch",
-  };
+    paddingLeft: '1.5ch',
+  }
 
   return (
     <div
       className="font-mono tabular-nums select-none text-lg leading-snug mx-auto"
-      style={{ width: "fit-content" }}
-      aria-hidden="true"
-    >
+      style={{ width: 'fit-content' }}
+      aria-hidden="true">
       {/* Outer row: divisor label + bracketed content area */}
       <div className="flex items-stretch">
         {/* Divisor label — sits outside the bracket */}
-        <span
-          className="font-bold text-text self-end pb-0.5 pr-0.5"
-          style={{ flexShrink: 0 }}
-        >
+        <span className="font-bold text-text self-end pb-0.5 pr-0.5" style={{ flexShrink: 0 }}>
           {divisor}
         </span>
 
@@ -85,8 +81,7 @@ export default function PartialQuotientsDisplay({
           {/* ── Header row: dividend ─────────────────────────────── */}
           <div
             className="flex items-center border-t-2 border-slate-500 dark:border-slate-400"
-            style={{ paddingLeft: "0.25rem" }}
-          >
+            style={{ paddingLeft: '0.25rem' }}>
             <span style={signSlot} />
             <span className="font-bold text-text" style={numSlot}>
               {dividend}
@@ -95,21 +90,14 @@ export default function PartialQuotientsDisplay({
 
           {/* ── Subtraction steps ─────────────────────────────────── */}
           {sections.map((section, i) => {
-            const rem = remainders[i];
+            const rem = remainders[i]
             return (
-              <div
-                key={i}
-                className="flex flex-col"
-                style={{ paddingLeft: "0.25rem" }}
-              >
+              <div key={i} className="flex flex-col" style={{ paddingLeft: '0.25rem' }}>
                 {/* Subtract row */}
                 <div className="flex items-center text-slate-600 dark:text-slate-400 font-semibold">
                   <span style={signSlot}>−</span>
                   <span style={numSlot}>{section.area}</span>
-                  <span
-                    className="font-bold text-teal-600 dark:text-teal-400"
-                    style={pqSlot}
-                  >
+                  <span className="font-bold text-teal-600 dark:text-teal-400" style={pqSlot}>
                     {section.partialQuotient}
                   </span>
                 </div>
@@ -123,21 +111,18 @@ export default function PartialQuotientsDisplay({
                 {/* Remainder */}
                 <div
                   className={`flex items-center font-bold ${
-                    rem === 0
-                      ? "text-teal-600 dark:text-teal-400"
-                      : "text-text"
-                  }`}
-                >
+                    rem === 0 ? 'text-teal-600 dark:text-teal-400' : 'text-text'
+                  }`}>
                   <span style={signSlot} />
                   <span style={numSlot}>{rem}</span>
                 </div>
               </div>
-            );
+            )
           })}
 
           {/* ── Total row (when done, multiple sections) ──────────── */}
           {showTotal && (
-            <div style={{ paddingLeft: "0.25rem" }}>
+            <div style={{ paddingLeft: '0.25rem' }}>
               {/* Double rule across sign + number + pq */}
               <div
                 className="border-t-2 border-slate-500 dark:border-slate-400"
@@ -146,23 +131,16 @@ export default function PartialQuotientsDisplay({
               <div className="flex items-center">
                 <span
                   style={{
-                    display: "inline-block",
+                    display: 'inline-block',
                     width: `calc(1ch + ${numW}ch)`,
-                    textAlign: "right",
+                    textAlign: 'right',
                     flexShrink: 0,
-                  }}
-                >
-                  <span
-                    className="text-slate-500 dark:text-slate-400"
-                    style={{ fontSize: "0.75em" }}
-                  >
+                  }}>
+                  <span className="text-slate-500 dark:text-slate-400" style={{ fontSize: '0.75em' }}>
                     sum
                   </span>
                 </span>
-                <span
-                  className="font-bold text-teal-600 dark:text-teal-400"
-                  style={pqSlot}
-                >
+                <span className="font-bold text-teal-600 dark:text-teal-400" style={pqSlot}>
                   {total}
                 </span>
               </div>
@@ -171,5 +149,5 @@ export default function PartialQuotientsDisplay({
         </div>
       </div>
     </div>
-  );
+  )
 }

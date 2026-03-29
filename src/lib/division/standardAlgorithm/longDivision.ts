@@ -1,12 +1,12 @@
 export interface LongDivisionStep {
   /** The number being divided at this step (previous remainder × 10 + next digit). */
-  workingNumber: number;
+  workingNumber: number
   /** Exact digit placed in the quotient: Math.floor(workingNumber / divisor). */
-  quotientDigit: number;
+  quotientDigit: number
   /** quotientDigit × divisor */
-  product: number;
+  product: number
   /** workingNumber - product */
-  remainder: number;
+  remainder: number
 }
 
 /**
@@ -16,34 +16,31 @@ export interface LongDivisionStep {
  * Assumes dividend divides evenly (no remainder), which the problem
  * generator guarantees.
  */
-export function computeLongDivisionSteps(
-  dividend: number,
-  divisor: number
-): LongDivisionStep[] {
-  const digits = String(dividend).split("").map(Number);
-  const steps: LongDivisionStep[] = [];
-  let working = 0;
-  let stepStarted = false;
+export function computeLongDivisionSteps(dividend: number, divisor: number): LongDivisionStep[] {
+  const digits = String(dividend).split('').map(Number)
+  const steps: LongDivisionStep[] = []
+  let working = 0
+  let stepStarted = false
 
   for (let i = 0; i < digits.length; i++) {
-    working = working * 10 + digits[i];
+    working = working * 10 + digits[i]
 
     // If working < divisor and we haven't started yet, continue accumulating.
     // Once the quotient has begun, every digit produces a step (including 0).
     if (working < divisor && !stepStarted) {
-      continue;
+      continue
     }
 
-    stepStarted = true;
-    const quotientDigit = Math.floor(working / divisor);
-    const product = quotientDigit * divisor;
-    const remainder = working - product;
+    stepStarted = true
+    const quotientDigit = Math.floor(working / divisor)
+    const product = quotientDigit * divisor
+    const remainder = working - product
 
-    steps.push({ workingNumber: working, quotientDigit, product, remainder });
-    working = remainder;
+    steps.push({ workingNumber: working, quotientDigit, product, remainder })
+    working = remainder
   }
 
-  return steps;
+  return steps
 }
 
 /**
@@ -55,16 +52,16 @@ export function computeLongDivisionSteps(
  * next dividend digit column.
  */
 export function computeRightCols(steps: LongDivisionStep[]): number[] {
-  const result: number[] = [];
-  let consumed = 0;
+  const result: number[] = []
+  let consumed = 0
   for (let i = 0; i < steps.length; i++) {
-    const wLen = String(steps[i].workingNumber).length;
-    const prevRem = i === 0 ? 0 : steps[i - 1].remainder;
-    const prevRemLen = prevRem === 0 ? 0 : String(prevRem).length;
-    consumed += wLen - prevRemLen;
-    result.push(consumed - 1);
+    const wLen = String(steps[i].workingNumber).length
+    const prevRem = i === 0 ? 0 : steps[i - 1].remainder
+    const prevRemLen = prevRem === 0 ? 0 : String(prevRem).length
+    consumed += wLen - prevRemLen
+    result.push(consumed - 1)
   }
-  return result;
+  return result
 }
 
 /**
@@ -77,12 +74,12 @@ export function buildAnnouncement(
   step: LongDivisionStep,
   problem: { dividend: number; divisor: number; quotient: number },
   nextStepIndex: number,
-  stepsLength: number
+  stepsLength: number,
 ): string {
   if (nextStepIndex === stepsLength) {
-    return `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`;
+    return `Correct! ${problem.dividend.toLocaleString()} divided by ${problem.divisor} equals ${problem.quotient}.`
   }
-  return `${value} is correct. ${step.product} subtracted, ${step.remainder} remaining. Bring down the next digit.`;
+  return `${value} is correct. ${step.product} subtracted, ${step.remainder} remaining. Bring down the next digit.`
 }
 
 /**
@@ -91,16 +88,16 @@ export function buildAnnouncement(
  */
 export function validateQuotientDigit(
   value: number,
-  step: LongDivisionStep
+  step: LongDivisionStep,
 ): { valid: true } | { valid: false; error: string } {
   if (!Number.isInteger(value) || value < 0 || value > 9) {
-    return { valid: false, error: "Enter a single digit (0–9)" };
+    return { valid: false, error: 'Enter a single digit (0–9)' }
   }
   if (value !== step.quotientDigit) {
     return {
       valid: false,
       error: `Not quite — how many times does the divisor fit?`,
-    };
+    }
   }
-  return { valid: true };
+  return { valid: true }
 }

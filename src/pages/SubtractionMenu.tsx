@@ -1,24 +1,24 @@
-import { useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import clsx from "clsx";
-import NavBar from "@/components/NavBar";
-import HomeButton from "@/components/atoms/HomeButton";
-import { OPERATION_LEVELS, OPERATION_LEVEL_IDS, parseOperationLevel } from "@/lib/engine/operationLevels";
+import { useEffect } from 'react'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import clsx from 'clsx'
+import NavBar from '@/components/NavBar'
+import HomeButton from '@/components/atoms/HomeButton'
+import { OPERATION_LEVELS, OPERATION_LEVEL_IDS, parseOperationLevel } from '@/lib/engine/operationLevels'
 
 function SubtractionMenu() {
-  const { level: levelParam } = useParams<{ level: string }>();
-  const navigate = useNavigate();
-  const level = parseOperationLevel(levelParam);
+  const { level: levelParam } = useParams<{ level: string }>()
+  const navigate = useNavigate()
+  const level = parseOperationLevel(levelParam)
 
   useEffect(() => {
     if (levelParam !== undefined && levelParam !== level) {
-      navigate("/subtraction/ones", { replace: true });
+      navigate('/subtraction/ones', { replace: true })
     }
-  }, [levelParam, level, navigate]);
+  }, [levelParam, level, navigate])
 
   useEffect(() => {
-    document.title = "Subtraction — Math Flash Cards";
-  }, []);
+    document.title = 'Subtraction — Math Flash Cards'
+  }, [])
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-4 pt-16 pb-12 bg-background">
@@ -29,28 +29,28 @@ function SubtractionMenu() {
         {/* Level picker */}
         <nav
           className="flex gap-1 rounded-xl border border-slate-200 dark:border-slate-700 p-1 bg-slate-100 dark:bg-slate-800/50 mb-8"
-          aria-label="Difficulty level"
-        >
+          aria-label="Difficulty level">
           {OPERATION_LEVEL_IDS.map((l) => (
             <Link
               key={l}
               to={`/subtraction/${l}`}
-              aria-current={level === l ? "page" : undefined}
+              aria-current={level === l ? 'page' : undefined}
               title={OPERATION_LEVELS[l].description}
               className={clsx(
-                "px-4 py-2 rounded-lg text-sm font-semibold transition-all",
+                'px-4 py-2 rounded-lg text-sm font-semibold transition-all',
                 level === l
-                  ? "bg-rose-600 text-white shadow-sm"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
-              )}
-            >
+                  ? 'bg-rose-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200',
+              )}>
               {OPERATION_LEVELS[l].label}
             </Link>
           ))}
         </nav>
 
         <div className="flex w-full max-w-xs flex-col items-center gap-6">
-          <h2 id="subtraction-practice-heading" className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Practice</h2>
+          <h2 id="subtraction-practice-heading" className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
+            Practice
+          </h2>
           <div role="group" aria-labelledby="subtraction-practice-heading" className="flex w-full flex-col gap-4">
             <HomeButton to={`/subtraction/${level}/practice/multiple-choice`} color="rose">
               Multiple Choice
@@ -59,7 +59,9 @@ function SubtractionMenu() {
               Hard Mode
             </HomeButton>
           </div>
-          <h2 id="subtraction-drills-heading" className="text-2xl font-semibold text-slate-700 dark:text-slate-300">Drills</h2>
+          <h2 id="subtraction-drills-heading" className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
+            Drills
+          </h2>
           <div role="group" aria-labelledby="subtraction-drills-heading" className="flex w-full flex-col gap-4">
             <HomeButton to={`/subtraction/${level}/1-minute-drill`} color="rose" aria-label="1 minute drill">
               1 min
@@ -74,7 +76,7 @@ function SubtractionMenu() {
         </div>
       </div>
     </main>
-  );
+  )
 }
 
-export default SubtractionMenu;
+export default SubtractionMenu

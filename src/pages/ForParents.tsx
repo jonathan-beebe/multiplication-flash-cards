@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import NavBar from "@/components/NavBar";
+import { useEffect } from 'react'
+import NavBar from '@/components/NavBar'
 
 function ForParents() {
   useEffect(() => {
-    document.title = "For Parents — Math Flash Cards";
-  }, []);
+    document.title = 'For Parents — Math Flash Cards'
+  }, [])
 
   return (
     <main className="flex min-h-screen justify-center overflow-auto bg-background px-4 pb-8 pt-16">
@@ -12,43 +12,36 @@ function ForParents() {
       <div className="flex w-full max-w-md flex-col gap-6 text-left">
         <h1 className="text-4xl font-bold text-text">For Parents</h1>
         <p className="text-lg text-slate-700 dark:text-slate-300">
-          A math flash card app to help 1st–5th graders practice
-          addition, subtraction, multiplication, and division.
+          A math flash card app to help 1st–5th graders practice addition, subtraction, multiplication, and division.
         </p>
         <p className="text-lg text-slate-700 dark:text-slate-300">
-          It began as a simple tool to help my fourth-grade son practice his
-          multiplication facts (times tables). After gaining popularity with his
-          school and classmates, it has grown into a comprehensive resource for
-          elementary students to strengthen their math skills at every level.
+          It began as a simple tool to help my fourth-grade son practice his multiplication facts (times tables). After
+          gaining popularity with his school and classmates, it has grown into a comprehensive resource for elementary
+          students to strengthen their math skills at every level.
         </p>
         <p className="text-lg text-slate-700 dark:text-slate-300">
-          This is a labor of love — built and maintained in my spare time to
-          help kids build confidence in math. If you find it useful and would
-          like to show your support, I&apos;d really appreciate it!
+          This is a labor of love — built and maintained in my spare time to help kids build confidence in math. If you
+          find it useful and would like to show your support, I&apos;d really appreciate it!
         </p>
         <a
           href="https://buymeacoffee.com/jonathan.beebe"
-          className="inline-flex items-center gap-2 self-start rounded-lg bg-amber-400 px-4 py-2 text-base font-semibold text-amber-950 hover:bg-amber-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
-        >
+          className="inline-flex items-center gap-2 self-start rounded-lg bg-amber-400 px-4 py-2 text-base font-semibold text-amber-950 hover:bg-amber-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500">
           Buy Me a Coffee
         </a>
         <p className="text-lg text-slate-700 dark:text-slate-300">
-          If you have any comments, bug reports, or feature requests, please
-          email me at{" "}
+          If you have any comments, bug reports, or feature requests, please email me at{' '}
           <a
             href="mailto:jonathan-beebe@outlook.com"
-            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
-          >
+            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
             jonathan-beebe@outlook.com
           </a>
           .
         </p>
         <p className="text-lg text-slate-700 dark:text-slate-300">
-          This app is open source. You can see how it was built on{" "}
+          This app is open source. You can see how it was built on{' '}
           <a
             href="https://github.com/jonathan-beebe/multiplication-flash-cards"
-            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
-          >
+            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
             GitHub
           </a>
           .
@@ -56,8 +49,7 @@ function ForParents() {
 
         <h2 className="mt-4 text-2xl font-bold text-text">Install as an App</h2>
         <p className="text-lg text-slate-700 dark:text-slate-300">
-          You can install this as an app on your device for easy access — no app
-          store needed.
+          You can install this as an app on your device for easy access — no app store needed.
         </p>
 
         <h3 className="text-xl font-semibold text-text">iPhone or iPad</h3>
@@ -76,29 +68,23 @@ function ForParents() {
           <li>Tap Add</li>
         </ol>
 
-        <h3 className="text-xl font-semibold text-text">
-          Desktop (Chrome, Edge)
-        </h3>
+        <h3 className="text-xl font-semibold text-text">Desktop (Chrome, Edge)</h3>
         <ol className="list-inside list-decimal text-lg text-slate-700 dark:text-slate-300">
           <li>
-            Look for the install icon in the address bar (a computer with a down
-            arrow), or click the three-dot menu and choose Install Math Flash
-            Cards
+            Look for the install icon in the address bar (a computer with a down arrow), or click the three-dot menu and
+            choose Install Math Flash Cards
           </li>
           <li>Click Install</li>
         </ol>
 
         <p className="text-lg text-slate-700 dark:text-slate-300">
-          Once installed, the app will appear on your home screen or in your
-          apps list, and works offline.
+          Once installed, the app will appear on your home screen or in your apps list, and works offline.
         </p>
 
-        <p className="text-xs tabular-nums text-slate-600 dark:text-slate-400 mt-4">
-          version {__COMMIT_HASH__}
-        </p>
+        <p className="text-xs tabular-nums text-slate-600 dark:text-slate-400 mt-4">version {__COMMIT_HASH__}</p>
       </div>
     </main>
-  );
+  )
 }
 
-export default ForParents;
+export default ForParents

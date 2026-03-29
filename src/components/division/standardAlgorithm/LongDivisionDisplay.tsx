@@ -4,29 +4,37 @@ import {
   buildSubtractSlots,
   buildValueSlots,
   computeRightCols,
-} from "./longDivisionDisplay.utils";
+} from './longDivisionDisplay.utils'
 
 // Shared slot style: fixed 1ch-wide inline-block.
 function slot(width = 1): React.CSSProperties {
-  return { display: "inline-block", width: `${width}ch`, textAlign: "center", flexShrink: 0 };
+  return { display: 'inline-block', width: `${width}ch`, textAlign: 'center', flexShrink: 0 }
 }
 
 // The 2px compensation spacer aligns step rows with the border-l-2 on the dividend row.
 const borderCompensation: React.CSSProperties = {
-  display: "inline-block",
-  width: "2px",
+  display: 'inline-block',
+  width: '2px',
   flexShrink: 0,
-};
+}
 
 // ── Row sub-components ────────────────────────────────────────────────────────
 // Each represents one horizontal row in the long division grid.
 
-function SubtractRow({ divW, divisor, signChar, slots }: {
-  divW: number; divisor: number; signChar: string; slots: string[];
+function SubtractRow({
+  divW,
+  divisor,
+  signChar,
+  slots,
+}: {
+  divW: number
+  divisor: number
+  signChar: string
+  slots: string[]
 }) {
   return (
     <div className="flex items-baseline">
-      <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
+      <span style={{ ...slot(divW), visibility: 'hidden' }}>{divisor}</span>
       <span style={borderCompensation} />
       <span style={slot(1)} className="font-semibold text-slate-500 dark:text-slate-400">
         {signChar}
@@ -37,57 +45,66 @@ function SubtractRow({ divW, divisor, signChar, slots }: {
         </span>
       ))}
     </div>
-  );
+  )
 }
 
-function WorkingNumberRow({ divW, divisor, slots }: {
-  divW: number; divisor: number; slots: string[];
-}) {
+function WorkingNumberRow({ divW, divisor, slots }: { divW: number; divisor: number; slots: string[] }) {
   return (
     <div className="flex items-baseline">
-      <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
+      <span style={{ ...slot(divW), visibility: 'hidden' }}>{divisor}</span>
       <span style={borderCompensation} />
       <span style={slot(1)} />
       {slots.map((c, j) => (
-        <span key={j} style={slot()} className="text-text">{c}</span>
+        <span key={j} style={slot()} className="text-text">
+          {c}
+        </span>
       ))}
     </div>
-  );
+  )
 }
 
-function FinalRemainderRow({ divW, divisor, slots }: {
-  divW: number; divisor: number; slots: string[];
-}) {
+function FinalRemainderRow({ divW, divisor, slots }: { divW: number; divisor: number; slots: string[] }) {
   return (
     <div className="flex items-baseline">
-      <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
+      <span style={{ ...slot(divW), visibility: 'hidden' }}>{divisor}</span>
       <span style={borderCompensation} />
       <span style={slot(1)} />
       {slots.map((c, j) => (
-        <span key={j} style={slot()} className="font-bold text-teal-600 dark:text-teal-400">{c}</span>
+        <span key={j} style={slot()} className="font-bold text-teal-600 dark:text-teal-400">
+          {c}
+        </span>
       ))}
     </div>
-  );
+  )
 }
 
-function StepRow({ step, stepIndex, steps, rightCols, completedCount, divW, divisor, N }: {
-  step: LongDivisionStep;
-  stepIndex: number;
-  steps: LongDivisionStep[];
-  rightCols: number[];
-  completedCount: number;
-  divW: number;
-  divisor: number;
-  N: number;
+function StepRow({
+  step,
+  stepIndex,
+  steps,
+  rightCols,
+  completedCount,
+  divW,
+  divisor,
+  N,
+}: {
+  step: LongDivisionStep
+  stepIndex: number
+  steps: LongDivisionStep[]
+  rightCols: number[]
+  completedCount: number
+  divW: number
+  divisor: number
+  N: number
 }) {
-  const rightCol = rightCols[stepIndex];
-  const wLen = String(step.workingNumber).length;
-  const ruleLeft = rightCol - wLen + 1;
-  const { signChar, slots } = buildSubtractSlots(step.product, rightCol, N);
-  const isFinalDone = completedCount === steps.length && stepIndex === steps.length - 1;
-  const nextStep = stepIndex < steps.length - 1 ? steps[stepIndex + 1] : null;
-  const nextSlots = nextStep ? buildValueSlots(nextStep.workingNumber, rightCols[stepIndex + 1], N) : null;
-  const finalSlots = isFinalDone ? buildValueSlots(0, rightCol, N) : null;
+  const rightCol = rightCols[stepIndex]
+  const wLen = String(step.workingNumber).length
+  const ruleLeft = rightCol - wLen + 1
+  const { signChar, slots } = buildSubtractSlots(step.product, rightCol, N)
+  const isFinalDone = completedCount === steps.length && stepIndex === steps.length - 1
+  const nextStep = stepIndex < steps.length - 1 ? steps[stepIndex + 1] : null
+  const nextSlots = nextStep ? buildValueSlots(nextStep.workingNumber, rightCols[stepIndex + 1], N) : null
+  const finalSlots = isFinalDone ? buildValueSlots(0, rightCol, N) : null
 
   return (
     <div>
@@ -99,16 +116,16 @@ function StepRow({ step, stepIndex, steps, rightCols, completedCount, divW, divi
       {nextSlots && <WorkingNumberRow divW={divW} divisor={divisor} slots={nextSlots} />}
       {finalSlots && <FinalRemainderRow divW={divW} divisor={divisor} slots={finalSlots} />}
     </div>
-  );
+  )
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
 
 export interface LongDivisionDisplayProps {
-  dividend: number;
-  divisor: number;
-  steps: LongDivisionStep[];
-  completedCount: number;
+  dividend: number
+  divisor: number
+  steps: LongDivisionStep[]
+  completedCount: number
 }
 
 /**
@@ -126,41 +143,30 @@ export interface LongDivisionDisplayProps {
  * within the N-slot grid. Raw (unformatted) numbers are used so ch widths
  * stay accurate.
  */
-export default function LongDivisionDisplay({
-  dividend,
-  divisor,
-  steps,
-  completedCount,
-}: LongDivisionDisplayProps) {
-  const dividendStr = String(dividend);
-  const N = dividendStr.length;
-  const divW = String(divisor).length;
+export default function LongDivisionDisplay({ dividend, divisor, steps, completedCount }: LongDivisionDisplayProps) {
+  const dividendStr = String(dividend)
+  const N = dividendStr.length
+  const divW = String(divisor).length
 
   // 0-based index of the rightmost dividend column consumed by each step.
-  const rightCols = computeRightCols(steps);
-  const quotientSlots = buildQuotientSlots(steps, rightCols, N, completedCount);
+  const rightCols = computeRightCols(steps)
+  const quotientSlots = buildQuotientSlots(steps, rightCols, N, completedCount)
 
   return (
     <div
       className="font-mono tabular-nums select-none text-xl leading-snug"
-      style={{ display: "inline-block" }}
-      aria-hidden="true"
-    >
+      style={{ display: 'inline-block' }}
+      aria-hidden="true">
       {/* ── Quotient row (above bracket) ─────────────────────────── */}
       <div className="flex items-baseline">
-        <span style={{ ...slot(divW), visibility: "hidden" }}>{divisor}</span>
+        <span style={{ ...slot(divW), visibility: 'hidden' }}>{divisor}</span>
         <span style={borderCompensation} />
         <span style={slot(1)} />
         {quotientSlots.map((q, i) => (
           <span
             key={i}
-            style={{ ...slot(), fontWeight: "bold" }}
-            className={
-              q.completed
-                ? "text-teal-600 dark:text-teal-400"
-                : "text-slate-300 dark:text-slate-600"
-            }
-          >
+            style={{ ...slot(), fontWeight: 'bold' }}
+            className={q.completed ? 'text-teal-600 dark:text-teal-400' : 'text-slate-300 dark:text-slate-600'}>
             {q.char}
           </span>
         ))}
@@ -173,8 +179,8 @@ export default function LongDivisionDisplay({
         </span>
         <div className="flex border-t-2 border-l-2 border-slate-500 dark:border-slate-400">
           <span style={slot(1)} />
-          {dividendStr.split("").map((d, i) => (
-            <span key={i} style={{ ...slot(), fontWeight: "bold" }} className="text-text">
+          {dividendStr.split('').map((d, i) => (
+            <span key={i} style={{ ...slot(), fontWeight: 'bold' }} className="text-text">
               {d}
             </span>
           ))}
@@ -196,5 +202,5 @@ export default function LongDivisionDisplay({
         />
       ))}
     </div>
-  );
+  )
 }

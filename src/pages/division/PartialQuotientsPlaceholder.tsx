@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import NavBar from "@/components/NavBar";
-import PageHeading from "@/components/atoms/PageHeading";
+import { useEffect } from 'react'
+import NavBar from '@/components/NavBar'
+import PageHeading from '@/components/atoms/PageHeading'
 
 function PartialQuotientsPlaceholder() {
   useEffect(() => {
-    document.title = "Partial Quotients — Math Flash Cards";
-  }, []);
+    document.title = 'Partial Quotients — Math Flash Cards'
+  }, [])
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-background px-4 pt-20 pb-12">
@@ -15,7 +15,7 @@ function PartialQuotientsPlaceholder() {
         <p className="text-slate-500 dark:text-slate-400">Coming soon</p>
       </div>
     </main>
-  );
+  )
 }
 
-export default PartialQuotientsPlaceholder;
+export default PartialQuotientsPlaceholder

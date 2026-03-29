@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import NavBar from "@/components/NavBar";
-import HomeButton from "@/components/atoms/HomeButton";
+import { useEffect } from 'react'
+import NavBar from '@/components/NavBar'
+import HomeButton from '@/components/atoms/HomeButton'
 
 function DivisionMenu() {
   useEffect(() => {
-    document.title = "Division — Math Flash Cards";
-  }, []);
+    document.title = 'Division — Math Flash Cards'
+  }, [])
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-4 pt-16 pb-12 bg-background">
@@ -25,7 +25,7 @@ function DivisionMenu() {
         </div>
       </div>
     </main>
-  );
+  )
 }
 
-export default DivisionMenu;
+export default DivisionMenu

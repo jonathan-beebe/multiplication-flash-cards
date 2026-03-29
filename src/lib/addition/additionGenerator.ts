@@ -1,12 +1,12 @@
-import type { QuestionGenerator, QuestionResult } from "../engine/gameEngine";
+import type { QuestionGenerator, QuestionResult } from '../engine/gameEngine'
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 export interface AdditionQuestion {
-  a: number;
-  b: number;
+  a: number
+  b: number
 }
 
 // ---------------------------------------------------------------------------
@@ -15,9 +15,9 @@ export interface AdditionQuestion {
 
 /** Canonical key normalising order so 3+7 and 7+3 share history. */
 function questionKey(q: AdditionQuestion): string {
-  const lo = Math.min(q.a, q.b);
-  const hi = Math.max(q.a, q.b);
-  return `${lo}+${hi}`;
+  const lo = Math.min(q.a, q.b)
+  const hi = Math.max(q.a, q.b)
+  return `${lo}+${hi}`
 }
 
 /**
@@ -31,36 +31,33 @@ function getNextQuestionInRange(
   bMin: number,
   bMax: number,
 ): AdditionQuestion {
-  const lastResult =
-    previousResults.length > 0
-      ? previousResults[previousResults.length - 1]
-      : null;
-  const lastKey = lastResult ? questionKey(lastResult.question) : null;
+  const lastResult = previousResults.length > 0 ? previousResults[previousResults.length - 1] : null
+  const lastKey = lastResult ? questionKey(lastResult.question) : null
 
-  const aRange = aMax - aMin + 1;
-  const bRange = bMax - bMin + 1;
+  const aRange = aMax - aMin + 1
+  const bRange = bMax - bMin + 1
 
   for (let attempt = 0; attempt < 10; attempt++) {
-    const seed = (randomValue + attempt * 0.1) % 1;
-    const a = aMin + Math.floor(seed * aRange);
-    const b = bMin + Math.floor(((seed * 9973) % 1) * bRange);
-    const q: AdditionQuestion = { a, b };
-    if (questionKey(q) !== lastKey) return q;
+    const seed = (randomValue + attempt * 0.1) % 1
+    const a = aMin + Math.floor(seed * aRange)
+    const b = bMin + Math.floor(((seed * 9973) % 1) * bRange)
+    const q: AdditionQuestion = { a, b }
+    if (questionKey(q) !== lastKey) return q
   }
 
   // Fallback: guaranteed different from last
-  return { a: aMin + Math.floor(randomValue * aRange), b: bMin };
+  return { a: aMin + Math.floor(randomValue * aRange), b: bMin }
 }
 
 function getNextQuestion(
   previousResults: readonly QuestionResult<AdditionQuestion>[],
   randomValue: number,
 ): AdditionQuestion {
-  return getNextQuestionInRange(previousResults, randomValue, 0, 9999, 0, 9999);
+  return getNextQuestionInRange(previousResults, randomValue, 0, 9999, 0, 9999)
 }
 
 function evaluate(question: AdditionQuestion, answer: number): boolean {
-  return answer === question.a + question.b;
+  return answer === question.a + question.b
 }
 
 /**
@@ -69,46 +66,51 @@ function evaluate(question: AdditionQuestion, answer: number): boolean {
  * students must compute carefully rather than guess wildly.
  */
 function generateChoices(question: AdditionQuestion): number[] {
-  const correct = question.a + question.b;
-  const choices = new Set<number>([correct]);
+  const correct = question.a + question.b
+  const choices = new Set<number>([correct])
 
   // Offsets that produce plausible but distinct wrong answers
-  const offsets = [1, -1, 2, -2, 10, -10, 5, -5];
+  const offsets = [1, -1, 2, -2, 10, -10, 5, -5]
   for (const offset of offsets) {
-    if (choices.size >= 3) break;
-    const candidate = correct + offset;
+    if (choices.size >= 3) break
+    const candidate = correct + offset
     if (candidate >= 0 && !choices.has(candidate)) {
-      choices.add(candidate);
+      choices.add(candidate)
     }
   }
 
   // Fill any remaining slots (shouldn't happen with the offsets above)
   while (choices.size < 3) {
-    const candidate = correct + choices.size * 3;
-    if (!choices.has(candidate)) choices.add(candidate);
+    const candidate = correct + choices.size * 3
+    if (!choices.has(candidate)) choices.add(candidate)
   }
 
   // Fisher-Yates shuffle
-  const result = Array.from(choices);
+  const result = Array.from(choices)
   for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[result[i], result[j]] = [result[j], result[i]]
   }
-  return result;
+  return result
 }
 
 function displayText(question: AdditionQuestion): string {
-  return `${question.a} plus ${question.b}`;
+  return `${question.a} plus ${question.b}`
 }
 
-export function createAdditionGenerator(aMin: number, aMax: number, bMin: number, bMax: number): QuestionGenerator<AdditionQuestion> {
+export function createAdditionGenerator(
+  aMin: number,
+  aMax: number,
+  bMin: number,
+  bMax: number,
+): QuestionGenerator<AdditionQuestion> {
   return {
     questionKey,
     getNextQuestion: (results, random) => getNextQuestionInRange(results, random, aMin, aMax, bMin, bMax),
     evaluate,
     generateChoices,
     displayText,
-  };
+  }
 }
 
 export const additionGenerator: QuestionGenerator<AdditionQuestion> = {
@@ -117,4 +119,4 @@ export const additionGenerator: QuestionGenerator<AdditionQuestion> = {
   evaluate,
   generateChoices,
   displayText,
-};
+}

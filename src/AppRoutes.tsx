@@ -33,20 +33,20 @@ import PartialQuotientsPractice from '@/pages/division/PartialQuotientsPractice.
  * screen reader users land at the top of new page content (WCAG 2.4.3).
  */
 function RouteFocusManager() {
-  const location = useLocation();
-  const isFirstRender = useRef(true);
+  const location = useLocation()
+  const isFirstRender = useRef(true)
   useEffect(() => {
-    const main = document.querySelector<HTMLElement>('main');
-    if (!main) return;
-    main.id = 'main-content';
-    main.setAttribute('tabindex', '-1');
+    const main = document.querySelector<HTMLElement>('main')
+    if (!main) return
+    main.id = 'main-content'
+    main.setAttribute('tabindex', '-1')
     if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
+      isFirstRender.current = false
+      return
     }
-    main.focus({ preventScroll: false });
-  }, [location.pathname]);
-  return null;
+    main.focus({ preventScroll: false })
+  }, [location.pathname])
+  return null
 }
 
 export function AppRoutes() {
@@ -58,56 +58,55 @@ export function AppRoutes() {
       </a>
       <RouteFocusManager />
       <ErrorBoundary>
-      <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/for-parents" element={<ForParents />} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/for-parents" element={<ForParents />} />
 
-      {/* Addition */}
-      <Route path="/addition" element={<Navigate to="/addition/ones" replace />} />
-      <Route path="/addition/:level" element={<AdditionMenu />} />
-      <Route path="/addition/:level/practice/multiple-choice" element={<AdditionPractice />} />
-      <Route path="/addition/:level/practice/hard-mode" element={<AdditionHardMode />} />
-      <Route path="/addition/:level/1-minute-drill" element={<AdditionDrill durationMinutes={1} />} />
-      <Route path="/addition/:level/1-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/addition/:level/3-minute-drill" element={<AdditionDrill durationMinutes={3} />} />
-      <Route path="/addition/:level/3-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/addition/:level/5-minute-drill" element={<AdditionDrill durationMinutes={5} />} />
-      <Route path="/addition/:level/5-minute-drill/success" element={<DrillComplete />} />
+          {/* Addition */}
+          <Route path="/addition" element={<Navigate to="/addition/ones" replace />} />
+          <Route path="/addition/:level" element={<AdditionMenu />} />
+          <Route path="/addition/:level/practice/multiple-choice" element={<AdditionPractice />} />
+          <Route path="/addition/:level/practice/hard-mode" element={<AdditionHardMode />} />
+          <Route path="/addition/:level/1-minute-drill" element={<AdditionDrill durationMinutes={1} />} />
+          <Route path="/addition/:level/1-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/addition/:level/3-minute-drill" element={<AdditionDrill durationMinutes={3} />} />
+          <Route path="/addition/:level/3-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/addition/:level/5-minute-drill" element={<AdditionDrill durationMinutes={5} />} />
+          <Route path="/addition/:level/5-minute-drill/success" element={<DrillComplete />} />
 
-      {/* Subtraction */}
-      <Route path="/subtraction" element={<Navigate to="/subtraction/ones" replace />} />
-      <Route path="/subtraction/:level" element={<SubtractionMenu />} />
-      <Route path="/subtraction/:level/practice/multiple-choice" element={<SubtractionPractice />} />
-      <Route path="/subtraction/:level/practice/hard-mode" element={<SubtractionHardMode />} />
-      <Route path="/subtraction/:level/1-minute-drill" element={<SubtractionDrill durationMinutes={1} />} />
-      <Route path="/subtraction/:level/1-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/subtraction/:level/3-minute-drill" element={<SubtractionDrill durationMinutes={3} />} />
-      <Route path="/subtraction/:level/3-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/subtraction/:level/5-minute-drill" element={<SubtractionDrill durationMinutes={5} />} />
-      <Route path="/subtraction/:level/5-minute-drill/success" element={<DrillComplete />} />
+          {/* Subtraction */}
+          <Route path="/subtraction" element={<Navigate to="/subtraction/ones" replace />} />
+          <Route path="/subtraction/:level" element={<SubtractionMenu />} />
+          <Route path="/subtraction/:level/practice/multiple-choice" element={<SubtractionPractice />} />
+          <Route path="/subtraction/:level/practice/hard-mode" element={<SubtractionHardMode />} />
+          <Route path="/subtraction/:level/1-minute-drill" element={<SubtractionDrill durationMinutes={1} />} />
+          <Route path="/subtraction/:level/1-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/subtraction/:level/3-minute-drill" element={<SubtractionDrill durationMinutes={3} />} />
+          <Route path="/subtraction/:level/3-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/subtraction/:level/5-minute-drill" element={<SubtractionDrill durationMinutes={5} />} />
+          <Route path="/subtraction/:level/5-minute-drill/success" element={<DrillComplete />} />
 
-      {/* Multiplication */}
-      <Route path="/multiplication" element={<MultiplicationMenu />} />
-      <Route path="/multiplication/practice/multiple-choice" element={<MultiplicationPractice />} />
-      <Route path="/multiplication/practice/hard-mode" element={<MultiplicationHardMode />} />
-      <Route path="/multiplication/1-minute-drill" element={<MultiplicationDrill durationMinutes={1} />} />
-      <Route path="/multiplication/1-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/multiplication/3-minute-drill" element={<MultiplicationDrill durationMinutes={3} />} />
-      <Route path="/multiplication/3-minute-drill/success" element={<DrillComplete />} />
-      <Route path="/multiplication/5-minute-drill" element={<MultiplicationDrill durationMinutes={5} />} />
-      <Route path="/multiplication/5-minute-drill/success" element={<DrillComplete />} />
+          {/* Multiplication */}
+          <Route path="/multiplication" element={<MultiplicationMenu />} />
+          <Route path="/multiplication/practice/multiple-choice" element={<MultiplicationPractice />} />
+          <Route path="/multiplication/practice/hard-mode" element={<MultiplicationHardMode />} />
+          <Route path="/multiplication/1-minute-drill" element={<MultiplicationDrill durationMinutes={1} />} />
+          <Route path="/multiplication/1-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/multiplication/3-minute-drill" element={<MultiplicationDrill durationMinutes={3} />} />
+          <Route path="/multiplication/3-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/multiplication/5-minute-drill" element={<MultiplicationDrill durationMinutes={5} />} />
+          <Route path="/multiplication/5-minute-drill/success" element={<DrillComplete />} />
 
-      {/* Division */}
-      <Route path="/division" element={<DivisionMenu />} />
-      <Route path="/division/standard-algorithm" element={<StandardAlgorithmPractice />} />
-      <Route path="/division/partial-quotients" element={<PartialQuotientsPractice />} />
-      <Route path="/division-practice" element={<Navigate to="/division-practice/level-1" replace />} />
-      <Route path="/division-practice/:level" element={<DivisionPractice />} />
+          {/* Division */}
+          <Route path="/division" element={<DivisionMenu />} />
+          <Route path="/division/standard-algorithm" element={<StandardAlgorithmPractice />} />
+          <Route path="/division/partial-quotients" element={<PartialQuotientsPractice />} />
+          <Route path="/division-practice" element={<Navigate to="/division-practice/level-1" replace />} />
+          <Route path="/division-practice/:level" element={<DivisionPractice />} />
 
-      {/* Design system / component playground */}
-      <Route path="/design-system" element={<DesignSystem />} />
-
-    </Routes>
+          {/* Design system / component playground */}
+          <Route path="/design-system" element={<DesignSystem />} />
+        </Routes>
       </ErrorBoundary>
     </>
   )
