@@ -31,23 +31,21 @@ export function useQuizAnimation<Q>({
     onSettledRef.current = onSettled
   }, [onSettled])
 
-  const getNextQuestionRef = useRef(getNextQuestion)
-  useEffect(() => {
-    getNextQuestionRef.current = getNextQuestion
-  }, [getNextQuestion])
-
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   useEffect(() => () => clearTimeout(timeoutRef.current), [])
 
   const triggerCorrect = useCallback(() => {
     setShowCorrect(true)
+    // Intentionally captures getNextQuestion at call time, not at timeout time.
+    // This ensures the next question is selected without the just-recorded answer,
+    // so the same question isn't immediately resurfaced after a wrong answer.
     timeoutRef.current = setTimeout(() => {
-      setNextQuestion(getNextQuestionRef.current())
+      setNextQuestion(getNextQuestion())
       setSlideRotation(Math.random() * 70 - 35)
       setIsAnimating(true)
       setShowCorrect(false)
     }, delayMs)
-  }, [delayMs])
+  }, [getNextQuestion, delayMs])
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {

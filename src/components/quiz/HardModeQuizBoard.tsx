@@ -33,10 +33,6 @@ export default function HardModeQuizBoard<Q>({
   const inputRef = useRef<HTMLInputElement>(null)
   const lockedRef = useRef(false)
   const mountedRef = useRef(false)
-  const getNextQuestionRef = useRef(getNextQuestion)
-  useEffect(() => {
-    getNextQuestionRef.current = getNextQuestion
-  }, [getNextQuestion])
   const shakeTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const correctTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
@@ -77,8 +73,11 @@ export default function HardModeQuizBoard<Q>({
       setShowCorrect(true)
       lockedRef.current = true
       announce(`Correct! ${generator.displayText(question)} equals ${value}.`)
+      // Intentionally captures getNextQuestion at call time, not at timeout time.
+      // This ensures the next question is selected without the just-recorded answer,
+      // so the same question isn't immediately resurfaced after a wrong answer.
       correctTimeoutRef.current = setTimeout(() => {
-        const next = getNextQuestionRef.current()
+        const next = getNextQuestion()
         setNextQuestion(next)
         setSlideRotation(Math.random() * 70 - 35)
         setIsAnimating(true)
@@ -91,7 +90,7 @@ export default function HardModeQuizBoard<Q>({
       announce(`${value} is incorrect. Try again.`)
       inputRef.current?.focus()
     }
-  }, [inputValue, isAnimating, showCorrect, question, announce, onAnswer, generator, now])
+  }, [inputValue, isAnimating, showCorrect, question, announce, onAnswer, generator, now, getNextQuestion])
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {

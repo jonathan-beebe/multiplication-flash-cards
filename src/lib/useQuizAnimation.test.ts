@@ -119,31 +119,6 @@ describe('useQuizAnimation', () => {
     expect(result.current.backCardProps.style?.transform).toBeUndefined()
   })
 
-  it('uses the latest getNextQuestion when the timeout fires, not a stale closure', () => {
-    const staleGetter = () => 'stale'
-    const freshGetter = () => 'fresh'
-
-    const { result, rerender } = renderHook(
-      ({ getter }) => useQuizAnimation({ getNextQuestion: getter, onSettled: vi.fn(), delayMs: 300 }),
-      { initialProps: { getter: staleGetter } },
-    )
-
-    // Trigger the correct animation (captures staleGetter in the closure)
-    act(() => {
-      result.current.triggerCorrect()
-    })
-
-    // Simulate state update: parent re-renders with a new getNextQuestion
-    rerender({ getter: freshGetter })
-
-    // Fire the timeout — should use freshGetter, not the stale one
-    act(() => {
-      vi.advanceTimersByTime(300)
-    })
-
-    expect(result.current.nextQuestion).toBe('fresh')
-  })
-
   it('clears pending timeout on unmount so it does not fire after teardown', () => {
     const getNextQuestion = vi.fn(() => 'q2')
     const { result, unmount } = renderHook(() =>
