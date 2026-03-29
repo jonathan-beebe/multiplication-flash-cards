@@ -16,6 +16,7 @@ export default function NumberInput({
   error = false,
   className,
   ref,
+  onChange,
   ...props
 }: NumberInputProps) {
   const borderClass = error
@@ -27,6 +28,10 @@ export default function NumberInput({
       type="text"
       inputMode="numeric"
       pattern="[0-9]*"
+      onChange={(e) => {
+        e.target.value = e.target.value.replace(/\D/g, '')
+        onChange?.(e)
+      }}
       className={`w-32 text-center text-2xl font-bold rounded-xl border-2 ${borderClass} bg-white dark:bg-slate-800 text-text px-3 py-2 focus-visible:outline-none tabular-nums${className ? ` ${className}` : ''}`}
       {...props}
     />

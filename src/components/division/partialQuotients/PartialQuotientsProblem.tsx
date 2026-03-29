@@ -8,7 +8,7 @@ import type { Level } from '@/lib/division/areaMode/divisionProblem'
 import { computeRemaining, createSession, sessionReducer } from '@/lib/division/partialQuotients/problemState'
 import ErrorText from '@/components/atoms/ErrorText'
 import PrimaryButton from '@/components/atoms/PrimaryButton'
-import NumberInput from '@/components/atoms/NumberInput'
+import NumberInput, { parseInputValue } from '@/components/atoms/NumberInput'
 import SuccessText from '@/components/atoms/SuccessText'
 import ProblemHeading from '@/components/atoms/ProblemHeading'
 import Subheading from '@/components/atoms/Subheading'
@@ -47,7 +47,8 @@ export default function PartialQuotientsProblem({ level }: Props) {
   }
 
   const handleSubmit = useCallback(() => {
-    const value = parseInt(inputValue, 10)
+    const value = parseInputValue(inputValue)
+    if (value === null) return
 
     if (phase === 'building') {
       const result = validatePartialQuotient(value, problem.divisor, remaining)

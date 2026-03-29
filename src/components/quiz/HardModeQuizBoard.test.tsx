@@ -153,7 +153,7 @@ describe('HardModeQuizBoard', () => {
     expect(screen.getByRole('alert')).toHaveTextContent(/try again/i)
   })
 
-  it("shows 'Enter a number' error when submitting empty input", () => {
+  it('ignores submit when input is empty', () => {
     render(
       <HardModeQuizBoard
         generator={mockGenerator}
@@ -164,7 +164,7 @@ describe('HardModeQuizBoard', () => {
 
     clickCheck()
 
-    expect(screen.getByRole('alert')).toHaveTextContent(/enter a number/i)
+    expect(screen.queryByRole('alert')).toBeNull()
   })
 
   it('clears error when user types after a wrong answer', () => {
@@ -272,6 +272,24 @@ describe('HardModeQuizBoard', () => {
 
     const status = screen.getByRole('status')
     expect(status).toHaveTextContent(/correct!/i)
+  })
+
+  it('strips non-digit characters from input', () => {
+    render(
+      <HardModeQuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+      />,
+    )
+
+    const input = screen.getByLabelText(/enter your answer/i)
+
+    fireEvent.change(input, { target: { value: '3.5' } })
+    expect(input).toHaveValue('35')
+
+    fireEvent.change(input, { target: { value: '5a' } })
+    expect(input).toHaveValue('5')
   })
 
   it('announces wrong answer to screen readers', () => {

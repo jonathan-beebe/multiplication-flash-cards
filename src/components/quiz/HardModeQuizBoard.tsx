@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import NumberInput from '@/components/atoms/NumberInput'
+import NumberInput, { parseInputValue } from '@/components/atoms/NumberInput'
 import type { QuestionGenerator } from '@/lib/engine/gameEngine'
 import type { CardAnimationProps } from '@/components/quiz/QuizBoard'
 import { useAnnouncement } from '@/lib/useAnnouncement'
@@ -57,14 +57,8 @@ export default function HardModeQuizBoard<Q>({
   const handleSubmit = useCallback(() => {
     if (isAnimating || showCorrect) return
 
-    const value = parseInt(inputValue, 10)
-
-    if (isNaN(value)) {
-      triggerShake()
-      setInputError('Enter a number')
-      inputRef.current?.focus()
-      return
-    }
+    const value = parseInputValue(inputValue)
+    if (value === null) return
 
     if (generator.evaluate(question, value)) {
       const durationMs = now() - questionStartRef.current
