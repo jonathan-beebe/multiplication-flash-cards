@@ -35,7 +35,7 @@ function Category({ title, children }: { title: string; children: React.ReactNod
 function Subsection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">{title}</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">{title}</h3>
       <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
         {children}
       </div>
@@ -93,7 +93,7 @@ function TypographyAtoms() {
         <BodyText>How many times does 3 go into 27?</BodyText>
       </Group>
       <Group>
-        <Title>Secondary — text-sm text-slate-500</Title>
+        <Title>Secondary — text-sm text-slate-600</Title>
         <SecondaryText>2-digit answer, small divisor</SecondaryText>
       </Group>
       <Group>
@@ -338,7 +338,7 @@ export default function DesignSystem() {
       <div className="mx-auto w-full max-w-2xl flex flex-col gap-12">
         <div>
           <h1 className="text-3xl font-bold text-text mb-1">Design System</h1>
-          <p className="text-slate-500 dark:text-slate-400">Component playground for visual testing.</p>
+          <p className="text-slate-600 dark:text-slate-400">Component playground for visual testing.</p>
         </div>
 
         {/* ── Atoms ──────────────────────────────────────────────── */}

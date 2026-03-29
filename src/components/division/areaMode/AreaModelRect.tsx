@@ -35,7 +35,7 @@ export default function AreaModelRect({ divisor, dividend, sections, remaining }
         ))}
         {remaining > 0 && (
           <div
-            className="flex items-end justify-center pb-1 text-sm font-bold text-slate-500 dark:text-slate-400 overflow-hidden"
+            className="flex items-end justify-center pb-1 text-sm font-bold text-slate-600 dark:text-slate-400 overflow-hidden"
             style={{ flex: remaining, minWidth: '2rem' }}>
             ?
           </div>
@@ -69,7 +69,7 @@ export default function AreaModelRect({ divisor, dividend, sections, remaining }
 
           {remaining > 0 && (
             <div
-              className="flex items-center justify-center text-sm text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 border-l-2 border-dashed border-slate-300 dark:border-slate-600 overflow-hidden"
+              className="flex items-center justify-center text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 border-l-2 border-dashed border-slate-300 dark:border-slate-600 overflow-hidden"
               style={{ flex: remaining, minWidth: '2rem' }}>
               {remaining.toLocaleString()}
             </div>
@@ -79,7 +79,7 @@ export default function AreaModelRect({ divisor, dividend, sections, remaining }
 
       {/* Dividend label below */}
       <div className="flex justify-end mt-1" style={{ marginLeft: DIVISOR_COL }}>
-        <span className="text-xs text-slate-500 dark:text-slate-400 tabular-nums">
+        <span className="text-xs text-slate-600 dark:text-slate-400 tabular-nums">
           Total: {dividend.toLocaleString()}
         </span>
       </div>

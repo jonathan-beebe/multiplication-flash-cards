@@ -136,7 +136,7 @@ export default function PartialQuotientsDisplay({
                     textAlign: 'right',
                     flexShrink: 0,
                   }}>
-                  <span className="text-slate-500 dark:text-slate-400" style={{ fontSize: '0.75em' }}>
+                  <span className="text-slate-600 dark:text-slate-400" style={{ fontSize: '0.75em' }}>
                     sum
                   </span>
                 </span>

@@ -36,7 +36,7 @@ function SubtractRow({
     <div className="flex items-baseline">
       <span style={{ ...slot(divW), visibility: 'hidden' }}>{divisor}</span>
       <span style={borderCompensation} />
-      <span style={slot(1)} className="font-semibold text-slate-500 dark:text-slate-400">
+      <span style={slot(1)} className="font-semibold text-slate-600 dark:text-slate-400">
         {signChar}
       </span>
       {slots.map((c, j) => (
