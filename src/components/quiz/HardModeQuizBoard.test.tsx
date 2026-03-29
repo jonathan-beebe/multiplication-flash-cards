@@ -274,6 +274,40 @@ describe('HardModeQuizBoard', () => {
     expect(status).toHaveTextContent(/correct!/i)
   })
 
+  it('rejects decimal input like "3.5" instead of silently truncating to 3', () => {
+    render(
+      <HardModeQuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+      />,
+    )
+
+    const input = screen.getByLabelText(/enter your answer/i)
+
+    fireEvent.change(input, { target: { value: '3.5' } })
+    clickCheck()
+
+    expect(screen.getByRole('alert')).toHaveTextContent(/whole number/i)
+  })
+
+  it('rejects trailing non-digit characters like "5a"', () => {
+    render(
+      <HardModeQuizBoard
+        generator={mockGenerator}
+        getNextQuestion={mockGetNextQuestion}
+        renderQuestion={renderQuestion}
+      />,
+    )
+
+    const input = screen.getByLabelText(/enter your answer/i)
+
+    fireEvent.change(input, { target: { value: '5a' } })
+    clickCheck()
+
+    expect(screen.getByRole('alert')).toHaveTextContent(/whole number/i)
+  })
+
   it('announces wrong answer to screen readers', () => {
     render(
       <HardModeQuizBoard

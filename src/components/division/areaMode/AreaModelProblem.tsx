@@ -49,6 +49,12 @@ export default function AreaModelProblem({ level }: AreaModelProblemProps) {
   }
 
   const handleSubmit = useCallback(() => {
+    if (!/^\d+$/.test(inputValue.trim())) {
+      triggerShake()
+      setInputError('Enter a whole number')
+      inputRef.current?.focus()
+      return
+    }
     const value = parseInt(inputValue, 10)
 
     if (phase === 'building') {

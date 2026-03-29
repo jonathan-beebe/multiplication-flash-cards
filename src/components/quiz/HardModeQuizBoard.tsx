@@ -47,14 +47,13 @@ export default function HardModeQuizBoard<Q>({
   const handleSubmit = useCallback(() => {
     if (isAnimating || showCorrect) return
 
-    const value = parseInt(inputValue, 10)
-
-    if (isNaN(value)) {
+    if (!/^\d+$/.test(inputValue.trim())) {
       triggerShake()
-      setInputError('Enter a number')
+      setInputError(inputValue.trim() === '' ? 'Enter a number' : 'Enter a whole number')
       inputRef.current?.focus()
       return
     }
+    const value = parseInt(inputValue, 10)
 
     if (generator.evaluate(question, value)) {
       const durationMs = now() - questionStartRef.current
