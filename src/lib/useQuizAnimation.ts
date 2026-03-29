@@ -31,15 +31,20 @@ export function useQuizAnimation<Q>({
     onSettledRef.current = onSettled
   }, [onSettled])
 
+  const getNextQuestionRef = useRef(getNextQuestion)
+  useEffect(() => {
+    getNextQuestionRef.current = getNextQuestion
+  }, [getNextQuestion])
+
   const triggerCorrect = useCallback(() => {
     setShowCorrect(true)
     setTimeout(() => {
-      setNextQuestion(getNextQuestion())
+      setNextQuestion(getNextQuestionRef.current())
       setSlideRotation(Math.random() * 70 - 35)
       setIsAnimating(true)
       setShowCorrect(false)
     }, delayMs)
-  }, [getNextQuestion, delayMs])
+  }, [delayMs])
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {

@@ -33,6 +33,10 @@ export default function HardModeQuizBoard<Q>({
   const inputRef = useRef<HTMLInputElement>(null)
   const lockedRef = useRef(false)
   const mountedRef = useRef(false)
+  const getNextQuestionRef = useRef(getNextQuestion)
+  useEffect(() => {
+    getNextQuestionRef.current = getNextQuestion
+  }, [getNextQuestion])
 
   useEffect(() => {
     const id = setTimeout(() => inputRef.current?.focus(), 50)
@@ -64,7 +68,7 @@ export default function HardModeQuizBoard<Q>({
       lockedRef.current = true
       announce(`Correct! ${generator.displayText(question)} equals ${value}.`)
       setTimeout(() => {
-        const next = getNextQuestion()
+        const next = getNextQuestionRef.current()
         setNextQuestion(next)
         setSlideRotation(Math.random() * 70 - 35)
         setIsAnimating(true)
@@ -77,7 +81,7 @@ export default function HardModeQuizBoard<Q>({
       announce(`${value} is incorrect. Try again.`)
       inputRef.current?.focus()
     }
-  }, [inputValue, isAnimating, showCorrect, question, announce, onAnswer, getNextQuestion, generator, now])
+  }, [inputValue, isAnimating, showCorrect, question, announce, onAnswer, generator, now])
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
