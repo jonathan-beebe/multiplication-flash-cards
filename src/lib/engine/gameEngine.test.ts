@@ -106,10 +106,9 @@ describe('recordResult', () => {
   })
 
   it('is immutable', () => {
-    let state = startSession(createGameState<NumQuestion>(), 's1', 1000)
-    const before = state
-    state = recordResult(state, { value: 3 }, true)
-    expect(before.sessions[0].results).toHaveLength(0)
+    const state = startSession(createGameState<NumQuestion>(), 's1', 1000)
+    recordResult(state, { value: 3 }, true)
+    expect(state.sessions[0].results).toHaveLength(0)
   })
 
   it('includes durationMs when provided', () => {
