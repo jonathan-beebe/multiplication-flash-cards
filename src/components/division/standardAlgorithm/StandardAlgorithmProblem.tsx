@@ -65,6 +65,7 @@ export default function StandardAlgorithmProblem({ level }: Props) {
 
   const inputRef = useRef<HTMLInputElement>(null)
   const nextButtonRef = useRef<HTMLButtonElement>(null)
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { problem, steps, currentStepIndex, announcement } = session
   const isDone = currentStepIndex === steps.length
@@ -80,9 +81,16 @@ export default function StandardAlgorithmProblem({ level }: Props) {
     }
   }, [isDone, currentStepIndex])
 
+  useEffect(() => {
+    return () => {
+      if (shakeTimerRef.current !== null) clearTimeout(shakeTimerRef.current)
+    }
+  }, [])
+
   function triggerShake() {
     setIsShaking(true)
-    setTimeout(() => setIsShaking(false), 400)
+    if (shakeTimerRef.current !== null) clearTimeout(shakeTimerRef.current)
+    shakeTimerRef.current = setTimeout(() => setIsShaking(false), 400)
   }
 
   const handleSubmit = useCallback(() => {
