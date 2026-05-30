@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-30:18:23:35 — IMPRV-001 — discarded: key= on JSX div does not reset parent useState; structural change rejected, manual resets in handleNext kept as-is
+- 2026-05-30:17:44:47 — IMPRV-001 — started
 - 2026-05-30:17:44:47 — RFCTR-002 — drafted (0-refine): shared useShake hook to retire recurring uncleaned-setTimeout antipattern (5 sites)
 - 2026-05-30:17:44:47 — BUG-009 — done: ref-backed shake timer with cleanup + clear-before-set; surfaced 2 unfixed sibling sites (83cb058)
 - 2026-05-30:17:36:18 — BUG-009 — started
