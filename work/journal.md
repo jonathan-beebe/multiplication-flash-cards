@@ -6,14 +6,22 @@
 - DSGN: 1
 - ARCH: 1
 - FEAT: 1
-- IMPRV: 1
+- IMPRV: 2
 - MAINT: 2
 - A11Y: 3
-- RFCTR: 1
-- BUG: 9
+- RFCTR: 3
+- BUG: 10
 
 ## Log
 
+- 2026-05-30:17:44:47 — RFCTR-002 — drafted (0-refine): shared useShake hook to retire recurring uncleaned-setTimeout antipattern (5 sites)
+- 2026-05-30:17:44:47 — BUG-009 — done: ref-backed shake timer with cleanup + clear-before-set; surfaced 2 unfixed sibling sites (83cb058)
+- 2026-05-30:17:36:18 — BUG-009 — started
+- 2026-05-30:17:36:18 — RFCTR-001 — done: extract buildStepRows pure fn, reduce StepRow from 8 props to 3 (da60fb3, 59c72e7)
+- 2026-05-30:17:29:03 — RFCTR-001 — started
+- 2026-05-30:17:24:11 — BUG-009 — defined: uncleaned setTimeout in StandardAlgorithmProblem.triggerShake can fire after unmount
+- 2026-05-30:17:24:11 — IMPRV-001 — defined: auto-reset local input state on problem change
+- 2026-05-30:17:24:11 — RFCTR-001 — defined: simplify LongDivisionDisplay StepRow — separation of concerns
 - 2026-05-30:17:11:41 — MAINT-001 — done: 8 commits, latest across all deps incl. ts 6 / vite 8 / eslint 10 (fd3c06c)
 - 2026-05-30:17:05:02 — MAINT-001 — started
 - 2026-05-30:17:04:44 — BUG-008 — done: replace operation-symbol descriptions with generic digit-count labels (175cf75)
