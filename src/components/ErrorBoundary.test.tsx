@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 function Boom(): never {
@@ -30,5 +31,29 @@ describe('ErrorBoundary', () => {
     expect((tagged?.[1] as Error).message).toBe('boom')
     expect(typeof tagged?.[2]).toBe('string')
     expect(tagged?.[2] as string).toContain('Boom')
+  })
+
+  it('navigates Go home to the configured BASE_URL, not the site root', async () => {
+    vi.stubEnv('BASE_URL', '/multiplication-flash-cards/')
+    const assign = vi.fn()
+    const originalLocation = window.location
+    Object.defineProperty(window, 'location', {
+      value: { ...originalLocation, assign },
+      configurable: true,
+      writable: true,
+    })
+
+    const { ErrorFallback } = await import('@/components/ErrorBoundary')
+    render(<ErrorFallback />)
+    await userEvent.click(screen.getByRole('button', { name: 'Go home' }))
+
+    expect(assign).toHaveBeenCalledWith('/multiplication-flash-cards/')
+
+    Object.defineProperty(window, 'location', {
+      value: originalLocation,
+      configurable: true,
+      writable: true,
+    })
+    vi.unstubAllEnvs()
   })
 })

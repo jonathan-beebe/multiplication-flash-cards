@@ -23,7 +23,7 @@ export function ErrorFallback() {
         Skill issue on our end, ngl. Let’s get you back home to try again.
       </p>
       <button
-        onClick={() => window.location.assign('/')}
+        onClick={() => window.location.assign(import.meta.env.BASE_URL)}
         className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white shadow hover:bg-teal-700">
         Go home
       </button>
