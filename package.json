@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b --noEmit",
     "ci": "./scripts/ci.sh",
     "prepare": "git config core.hooksPath .githooks",
     "container": "./scripts/container.sh"
