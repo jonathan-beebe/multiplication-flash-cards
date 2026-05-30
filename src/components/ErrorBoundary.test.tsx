@@ -25,7 +25,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     )
 
-    const tagged = errorSpy.mock.calls.find((args) => args[0] === '[ErrorBoundary]')
+    const tagged = errorSpy.mock.calls.find((args: unknown[]) => args[0] === '[ErrorBoundary]')
     expect(tagged, 'expected console.error to be called with "[ErrorBoundary]" tag').toBeDefined()
     expect(tagged?.[1]).toBeInstanceOf(Error)
     expect((tagged?.[1] as Error).message).toBe('boom')
