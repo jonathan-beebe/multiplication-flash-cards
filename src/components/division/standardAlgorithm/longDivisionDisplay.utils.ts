@@ -1,7 +1,4 @@
-import { type LongDivisionStep, computeRightCols } from '@/lib/division/standardAlgorithm/longDivision'
-
-export type { LongDivisionStep }
-export { computeRightCols }
+import type { LongDivisionStep } from '@/lib/division/standardAlgorithm/longDivision'
 
 /**
  * Builds the N quotient slots shown above the bracket. Each step's digit

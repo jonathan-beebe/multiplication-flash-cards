@@ -1,10 +1,5 @@
-import {
-  type LongDivisionStep,
-  buildQuotientSlots,
-  buildSubtractSlots,
-  buildValueSlots,
-  computeRightCols,
-} from './longDivisionDisplay.utils'
+import { buildQuotientSlots, buildSubtractSlots, buildValueSlots } from './longDivisionDisplay.utils'
+import { type LongDivisionStep, computeRightCols } from '@/lib/division/standardAlgorithm/longDivision'
 
 // Shared slot style: fixed 1ch-wide inline-block.
 function slot(width = 1): React.CSSProperties {
