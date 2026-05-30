@@ -5,16 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:host": "vite --host",
+    "dev:container": "./scripts/container.sh npm run dev:host",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:ci": "vitest run",
-    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "ci": "sh scripts/ci.sh",
-    "prepare": "git config core.hooksPath .githooks"
+    "typecheck": "tsc --noEmit",
+    "ci": "./scripts/ci.sh",
+    "prepare": "git config core.hooksPath .githooks",
+    "container": "./scripts/container.sh"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

@@ -15,6 +15,7 @@ dist-ssr
 # Local files
 __local__
 .claude
+.devcontainer/.env
 
 # Editor directories and files
 .vscode/*
