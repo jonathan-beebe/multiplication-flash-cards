@@ -1,10 +1,10 @@
 export type OperationLevel = 'ones' | 'tens' | 'hundreds' | 'thousands'
 
 export const OPERATION_LEVELS: Record<OperationLevel, { label: string; description: string }> = {
-  ones: { label: 'Easy', description: '0–99 + 0–9' },
-  tens: { label: 'Med', description: '0–999 + 0–99' },
-  hundreds: { label: 'Hard', description: '0–9999 + 0–999' },
-  thousands: { label: 'Master', description: '0–9999 + 0–9999' },
+  ones: { label: 'Easy', description: 'Single digits' },
+  tens: { label: 'Med', description: 'Up to two digits' },
+  hundreds: { label: 'Hard', description: 'Up to three digits' },
+  thousands: { label: 'Master', description: 'Up to four digits' },
 }
 
 export const ADDITION_LEVEL_RANGES: Record<OperationLevel, { aMin: number; aMax: number; bMin: number; bMax: number }> =
