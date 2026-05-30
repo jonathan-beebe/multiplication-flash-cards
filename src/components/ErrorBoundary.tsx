@@ -1,5 +1,5 @@
 import { Component, useState } from 'react'
-import type { ReactNode } from 'react'
+import type { ErrorInfo, ReactNode } from 'react'
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '')
 
@@ -44,6 +44,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
   static getDerivedStateFromError(): State {
     return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('[ErrorBoundary]', error, errorInfo.componentStack)
   }
 
   render() {
