@@ -1,4 +1,4 @@
-import { buildQuotientSlots, buildSubtractSlots, buildValueSlots } from './longDivisionDisplay.utils'
+import { buildQuotientSlots, buildStepRows, type StepRowData } from './longDivisionDisplay.utils'
 import { type LongDivisionStep, computeRightCols } from '@/lib/division/standardAlgorithm/longDivision'
 
 // Shared slot style: fixed 1ch-wide inline-block.
@@ -73,43 +73,16 @@ function FinalRemainderRow({ divW, divisor, slots }: { divW: number; divisor: nu
   )
 }
 
-function StepRow({
-  step,
-  stepIndex,
-  steps,
-  rightCols,
-  completedCount,
-  divW,
-  divisor,
-  N,
-}: {
-  step: LongDivisionStep
-  stepIndex: number
-  steps: LongDivisionStep[]
-  rightCols: number[]
-  completedCount: number
-  divW: number
-  divisor: number
-  N: number
-}) {
-  const rightCol = rightCols[stepIndex]
-  const wLen = String(step.workingNumber).length
-  const ruleLeft = rightCol - wLen + 1
-  const { signChar, slots } = buildSubtractSlots(step.product, rightCol, N)
-  const isFinalDone = completedCount === steps.length && stepIndex === steps.length - 1
-  const nextStep = stepIndex < steps.length - 1 ? steps[stepIndex + 1] : null
-  const nextSlots = nextStep ? buildValueSlots(nextStep.workingNumber, rightCols[stepIndex + 1], N) : null
-  const finalSlots = isFinalDone ? buildValueSlots(0, rightCol, N) : null
-
+function StepRow({ data, divW, divisor }: { data: StepRowData; divW: number; divisor: number }) {
   return (
     <div>
-      <SubtractRow divW={divW} divisor={divisor} signChar={signChar} slots={slots} />
+      <SubtractRow divW={divW} divisor={divisor} signChar={data.signChar} slots={data.subtractSlots} />
       <div
         className="border-t border-slate-400 dark:border-slate-500"
-        style={{ marginLeft: `calc(${divW + 1 + ruleLeft}ch + 2px)`, width: `${wLen}ch` }}
+        style={{ marginLeft: `calc(${divW + 1 + data.ruleLeft}ch + 2px)`, width: `${data.ruleWidth}ch` }}
       />
-      {nextSlots && <WorkingNumberRow divW={divW} divisor={divisor} slots={nextSlots} />}
-      {finalSlots && <FinalRemainderRow divW={divW} divisor={divisor} slots={finalSlots} />}
+      {data.nextSlots && <WorkingNumberRow divW={divW} divisor={divisor} slots={data.nextSlots} />}
+      {data.finalSlots && <FinalRemainderRow divW={divW} divisor={divisor} slots={data.finalSlots} />}
     </div>
   )
 }
@@ -134,9 +107,9 @@ export interface LongDivisionDisplayProps {
  *   [1ch: sign slot (− or space)]
  *   [N × 1ch: digit slots, right-aligned to the step's rightCol]
  *
- * `buildSubtractSlots` and `buildValueSlots` place digits right-aligned
- * within the N-slot grid. Raw (unformatted) numbers are used so ch widths
- * stay accurate.
+ * `buildQuotientSlots` and `buildStepRows` produce slot arrays that place
+ * digits right-aligned within the N-slot grid. Raw (unformatted) numbers are
+ * used so ch widths stay accurate.
  */
 export default function LongDivisionDisplay({ dividend, divisor, steps, completedCount }: LongDivisionDisplayProps) {
   const dividendStr = String(dividend)
@@ -183,18 +156,8 @@ export default function LongDivisionDisplay({ dividend, divisor, steps, complete
       </div>
 
       {/* ── Completed step rows ───────────────────────────────────── */}
-      {steps.slice(0, completedCount).map((step, i) => (
-        <StepRow
-          key={i}
-          step={step}
-          stepIndex={i}
-          steps={steps}
-          rightCols={rightCols}
-          completedCount={completedCount}
-          divW={divW}
-          divisor={divisor}
-          N={N}
-        />
+      {buildStepRows(steps, rightCols, N, completedCount).map((data, i) => (
+        <StepRow key={i} data={data} divW={divW} divisor={divisor} />
       ))}
     </div>
   )

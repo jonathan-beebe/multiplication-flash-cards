@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildQuotientSlots, buildValueSlots, buildSubtractSlots } from './longDivisionDisplay.utils'
+import { buildQuotientSlots, buildValueSlots, buildSubtractSlots, buildStepRows } from './longDivisionDisplay.utils'
 import { computeLongDivisionSteps, computeRightCols } from '@/lib/division/standardAlgorithm/longDivision'
 
 const NBSP = '\u00A0'
@@ -88,5 +88,49 @@ describe('buildSubtractSlots', () => {
     const { slots, signChar } = buildSubtractSlots(27, 1, 2)
     expect(signChar).toBe('−')
     expect(slots).toEqual(['2', '7'])
+  })
+})
+
+// ─── buildStepRows ────────────────────────────────────────────────────────────
+
+describe('buildStepRows', () => {
+  it('returns a single row with finalSlots set for a single-step problem (9 ÷ 3)', () => {
+    const steps = computeLongDivisionSteps(9, 3) // quotient 3, one step
+    const rightCols = computeRightCols(steps)
+    const rows = buildStepRows(steps, rightCols, 1, 1)
+    expect(rows).toHaveLength(1)
+    expect(rows[0].nextSlots).toBeNull()
+    expect(rows[0].finalSlots).toEqual(['0'])
+    expect(rows[0].ruleLeft).toBe(0)
+    expect(rows[0].ruleWidth).toBe(1)
+  })
+
+  it('includes nextSlots and omits finalSlots mid-progress (657 ÷ 3, completedCount=1)', () => {
+    const steps = computeLongDivisionSteps(657, 3) // quotient 219
+    const rightCols = computeRightCols(steps)
+    const rows = buildStepRows(steps, rightCols, 3, 1)
+    expect(rows).toHaveLength(1)
+    expect(rows[0].nextSlots).toEqual([NBSP, '5', NBSP])
+    expect(rows[0].finalSlots).toBeNull()
+  })
+
+  it('sets finalSlots only on the last row when fully completed (657 ÷ 3, completedCount=3)', () => {
+    const steps = computeLongDivisionSteps(657, 3)
+    const rightCols = computeRightCols(steps)
+    const rows = buildStepRows(steps, rightCols, 3, 3)
+    expect(rows).toHaveLength(3)
+    expect(rows[0].finalSlots).toBeNull()
+    expect(rows[1].finalSlots).toBeNull()
+    expect(rows[2].finalSlots).toEqual([NBSP, NBSP, '0'])
+    expect(rows[2].nextSlots).toBeNull()
+  })
+
+  it('uses signChar="−" when the minus sign spills outside the grid (27 ÷ 9)', () => {
+    // product=27, rightCol=1, N=2 → signCol = -1
+    const steps = computeLongDivisionSteps(27, 9)
+    const rightCols = computeRightCols(steps)
+    const rows = buildStepRows(steps, rightCols, 2, 1)
+    expect(rows[0].signChar).toBe('−')
+    expect(rows[0].subtractSlots).toEqual(['2', '7'])
   })
 })
