@@ -14,7 +14,9 @@ dist-ssr
 
 # Local files
 __local__
-.claude
+.claude/*
+!.claude/settings.json
+!.claude/skills
 .devcontainer/.env
 
 # Editor directories and files
