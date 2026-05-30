@@ -29,8 +29,7 @@ multiplication, and division.
 # Worflow details
 
 - **Collaboration.** We work together in three steps: planning our work, then
-  implementing, then reviewing and committing. DO NOT MAKE COMMITS UNTIL I
-  REVIEW THE CHANGES.
+  implementing, then reviewing and committing.
 - **git commit messages.** We follow the git conventions for
   [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
 - **Plan before executing.** Always present a plan and get approval before
