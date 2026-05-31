@@ -13,6 +13,7 @@ import BodyText from '@/components/atoms/BodyText'
 import SecondaryText from '@/components/atoms/SecondaryText'
 import MonoText from '@/components/atoms/MonoText'
 import LongDivisionDisplay from '@/components/division/standardAlgorithm/LongDivisionDisplay'
+import LongDivisionDisplayInline from '@/components/division/standardAlgorithmInline/LongDivisionDisplayInline'
 import { computeLongDivisionSteps } from '@/lib/division/standardAlgorithm/longDivision'
 import PartialQuotientsDisplay from '@/components/division/partialQuotients/PartialQuotientsDisplay'
 
@@ -268,6 +269,23 @@ function LongDivisionDisplayFixtures() {
   )
 }
 
+// ─── Inline long division (RSRCH-001) ─────────────────────────────────────────
+
+function LongDivisionDisplayInlineFixtures({ dividend, divisor }: { dividend: number; divisor: number }) {
+  const steps = useMemo(() => computeLongDivisionSteps(dividend, divisor), [dividend, divisor])
+  const stages = Array.from({ length: steps.length + 1 }, (_, i) => i)
+  return (
+    <div className="flex flex-wrap gap-4">
+      {stages.map((completedCount) => (
+        <div key={completedCount} className="flex flex-col items-center gap-2">
+          <LongDivisionDisplayInline dividend={dividend} divisor={divisor} completedCount={completedCount} />
+          <Label>Stage {completedCount}</Label>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ─── Partial quotients fixtures ───────────────────────────────────────────────
 
 // 1263 ÷ 3 = 421 — partial quotients span 3, 2, and 1 digits to test alignment.
@@ -373,6 +391,9 @@ export default function DesignSystem() {
           </Subsection>
           <Subsection title="LongDivisionDisplay — 657 ÷ 3 = 219">
             <LongDivisionDisplayFixtures />
+          </Subsection>
+          <Subsection title="LongDivisionDisplayInline — 3192 ÷ 7 = 456 (RSRCH-001)">
+            <LongDivisionDisplayInlineFixtures dividend={3192} divisor={7} />
           </Subsection>
           <Subsection title="PartialQuotientsDisplay — 1263 ÷ 3 = 421">
             <PartialQuotientsDisplayFixtures />
