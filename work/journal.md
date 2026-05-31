@@ -2,7 +2,7 @@
 
 ## Next ticket numbers
 
-- RSRCH: 1
+- RSRCH: 2
 - DSGN: 1
 - ARCH: 1
 - FEAT: 1
@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-05-31:12:35:58 — RSRCH-001 — done: inline long-division display variant with superscript-prefix carry + active-fade, 4-stage design-system fixture for 3192÷7 (b595533)
+- 2026-05-31:12:06:12 — RSRCH-001 — started
+- 2026-05-31:12:03:56 — RSRCH-001 — defined: explore inline long-division display
 - 2026-05-30:18:23:35 — IMPRV-001 — discarded: key= on JSX div does not reset parent useState; structural change rejected, manual resets in handleNext kept as-is
 - 2026-05-30:17:44:47 — IMPRV-001 — started
 - 2026-05-30:17:44:47 — RFCTR-002 — drafted (0-refine): shared useShake hook to retire recurring uncleaned-setTimeout antipattern (5 sites)
