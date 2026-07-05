@@ -4,10 +4,8 @@ import { UpdateBanner } from '@/components/UpdateBanner'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Home from '@/pages/Home.tsx'
 import ForParents from '@/pages/ForParents.tsx'
-import AdditionMenu from '@/pages/AdditionMenu.tsx'
-import SubtractionMenu from '@/pages/SubtractionMenu.tsx'
-import MultiplicationMenu from '@/pages/MultiplicationMenu.tsx'
 
+import OperationMenu from '@/components/operations/OperationMenu.tsx'
 import OperationPractice from '@/components/operations/OperationPractice.tsx'
 import OperationHardModePractice from '@/components/operations/OperationHardModePractice.tsx'
 import OperationDrill from '@/components/operations/OperationDrill.tsx'
@@ -59,7 +57,7 @@ export function AppRoutes() {
 
           {/* Addition */}
           <Route path="/addition" element={<Navigate to="/addition/ones" replace />} />
-          <Route path="/addition/:level" element={<AdditionMenu />} />
+          <Route path="/addition/:level" element={<OperationMenu config={additionConfig} />} />
           <Route
             path="/addition/:level/practice/multiple-choice"
             element={<OperationPractice config={additionConfig} />}
@@ -86,7 +84,7 @@ export function AppRoutes() {
 
           {/* Subtraction */}
           <Route path="/subtraction" element={<Navigate to="/subtraction/ones" replace />} />
-          <Route path="/subtraction/:level" element={<SubtractionMenu />} />
+          <Route path="/subtraction/:level" element={<OperationMenu config={subtractionConfig} />} />
           <Route
             path="/subtraction/:level/practice/multiple-choice"
             element={<OperationPractice config={subtractionConfig} />}
@@ -112,30 +110,48 @@ export function AppRoutes() {
           <Route path="/subtraction/:level/5-minute-drill/success" element={<DrillComplete />} />
 
           {/* Multiplication */}
-          <Route path="/multiplication" element={<MultiplicationMenu />} />
+          <Route path="/multiplication" element={<Navigate to="/multiplication/ones" replace />} />
+          <Route path="/multiplication/:level" element={<OperationMenu config={multiplicationConfig} />} />
           <Route
-            path="/multiplication/practice/multiple-choice"
+            path="/multiplication/:level/practice/multiple-choice"
             element={<OperationPractice config={multiplicationConfig} />}
           />
           <Route
-            path="/multiplication/practice/hard-mode"
+            path="/multiplication/:level/practice/hard-mode"
             element={<OperationHardModePractice config={multiplicationConfig} />}
           />
           <Route
-            path="/multiplication/1-minute-drill"
+            path="/multiplication/:level/1-minute-drill"
             element={<OperationDrill config={multiplicationConfig} durationMinutes={1} />}
           />
-          <Route path="/multiplication/1-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/multiplication/:level/1-minute-drill/success" element={<DrillComplete />} />
           <Route
-            path="/multiplication/3-minute-drill"
+            path="/multiplication/:level/3-minute-drill"
             element={<OperationDrill config={multiplicationConfig} durationMinutes={3} />}
           />
-          <Route path="/multiplication/3-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/multiplication/:level/3-minute-drill/success" element={<DrillComplete />} />
           <Route
-            path="/multiplication/5-minute-drill"
+            path="/multiplication/:level/5-minute-drill"
             element={<OperationDrill config={multiplicationConfig} durationMinutes={5} />}
           />
-          <Route path="/multiplication/5-minute-drill/success" element={<DrillComplete />} />
+          <Route path="/multiplication/:level/5-minute-drill/success" element={<DrillComplete />} />
+
+          {/* Legacy pre-level multiplication URLs (published PWA bookmarks) */}
+          <Route
+            path="/multiplication/practice/multiple-choice"
+            element={<Navigate to="/multiplication/ones/practice/multiple-choice" replace />}
+          />
+          <Route
+            path="/multiplication/practice/hard-mode"
+            element={<Navigate to="/multiplication/ones/practice/hard-mode" replace />}
+          />
+          {['1', '3', '5'].map((m) => (
+            <Route
+              key={m}
+              path={`/multiplication/${m}-minute-drill`}
+              element={<Navigate to={`/multiplication/ones/${m}-minute-drill`} replace />}
+            />
+          ))}
 
           {/* Division */}
           <Route path="/division" element={<DivisionMenu />} />

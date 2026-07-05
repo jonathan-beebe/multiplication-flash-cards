@@ -1,8 +1,14 @@
 import { describe, it, expect } from 'vitest'
-import { multiplicationGenerator, type Question } from './multiplicationGenerator'
+import { createMultiplicationGenerator, type Question } from './multiplicationGenerator'
 import type { QuestionResult } from '../engine/gameEngine'
 
-const { questionKey, getNextQuestion, evaluate, generateChoices, displayText } = multiplicationGenerator
+// The classic times-tables range the app historically used.
+const { questionKey, getNextQuestion, evaluate, generateChoices, displayText } = createMultiplicationGenerator(
+  3,
+  12,
+  3,
+  12,
+)
 
 // ---------------------------------------------------------------------------
 // questionKey
@@ -77,6 +83,19 @@ describe('getNextQuestion', () => {
     const a = getNextQuestion([], 0.42)
     const b = getNextQuestion([], 0.42)
     expect(a).toEqual(b)
+  })
+
+  it('respects asymmetric level ranges in either factor order', () => {
+    const gen = createMultiplicationGenerator(10, 99, 3, 9)
+    for (let i = 0; i < 50; i++) {
+      const q = gen.getNextQuestion([], i / 50)
+      const lo = Math.min(q.a, q.b)
+      const hi = Math.max(q.a, q.b)
+      expect(lo).toBeGreaterThanOrEqual(3)
+      expect(lo).toBeLessThanOrEqual(9)
+      expect(hi).toBeGreaterThanOrEqual(10)
+      expect(hi).toBeLessThanOrEqual(99)
+    }
   })
 
   it('weights toward struggling questions', () => {

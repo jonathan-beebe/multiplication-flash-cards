@@ -14,7 +14,7 @@ afterEach(() => {
 describe('Drill → Success routing', () => {
   it('navigates to success screen when timer expires', () => {
     render(
-      <MemoryRouter initialEntries={['/multiplication/1-minute-drill']}>
+      <MemoryRouter initialEntries={['/multiplication/ones/1-minute-drill']}>
         <AppRoutes />
       </MemoryRouter>,
     )
@@ -35,7 +35,7 @@ describe('Drill → Success routing', () => {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: '/multiplication/1-minute-drill/success',
+            pathname: '/multiplication/ones/1-minute-drill/success',
             state: { correctCount: 15, wrongCount: 3 },
           },
         ]}>
@@ -53,7 +53,7 @@ describe('Drill → Success routing', () => {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: '/multiplication/1-minute-drill/success',
+            pathname: '/multiplication/ones/1-minute-drill/success',
             state: { correctCount: 10, wrongCount: 2 },
           },
         ]}>
@@ -75,7 +75,7 @@ describe('Drill → Success routing', () => {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: '/multiplication/1-minute-drill/success',
+            pathname: '/multiplication/ones/1-minute-drill/success',
             state: { correctCount: 5, wrongCount: 1 },
           },
         ]}>

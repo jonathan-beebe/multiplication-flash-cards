@@ -102,7 +102,9 @@ describe('App user journeys', () => {
       const q2 = readQuestion()
       expect(q2.a).toBeGreaterThanOrEqual(3)
 
-      // Navigate home via NavBar
+      // Navigate back to the multiplication menu, then home via NavBar
+      fireEvent.click(screen.getByRole('link', { name: /back to multiplication/i }))
+      expect(screen.getByRole('heading', { name: /multiplication/i })).toBeInTheDocument()
       fireEvent.click(screen.getByRole('link', { name: /home/i }))
       expect(screen.getByRole('heading', { name: /math flash\s*cards/i })).toBeInTheDocument()
     })
@@ -150,7 +152,8 @@ describe('App user journeys', () => {
       expect(screen.getAllByText(/\d+\s*×\s*\d+/).length).toBeGreaterThan(0)
       expect(screen.queryByText(/drill complete/i)).not.toBeInTheDocument()
 
-      // Navigate home via NavBar
+      // Navigate back to the multiplication menu, then home via NavBar
+      fireEvent.click(screen.getByRole('link', { name: /back to multiplication/i }))
       fireEvent.click(screen.getByRole('link', { name: /home/i }))
       expect(screen.getByRole('heading', { name: /math flash\s*cards/i })).toBeInTheDocument()
     })
@@ -171,6 +174,7 @@ describe('App user journeys', () => {
       expect(screen.getAllByText(/\d+\s*×\s*\d+/).length).toBeGreaterThan(0)
 
       // Leave early via NavBar
+      fireEvent.click(screen.getByRole('link', { name: /back to multiplication/i }))
       fireEvent.click(screen.getByRole('link', { name: /home/i }))
 
       // Should be on Home, not DrillComplete

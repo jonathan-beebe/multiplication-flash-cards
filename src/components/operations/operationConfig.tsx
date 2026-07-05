@@ -6,27 +6,23 @@ import type { OperationLevel } from '@/lib/engine/operationLevels'
 
 /**
  * Everything operation-specific that the generic operation screens
- * (OperationPractice, OperationHardModePractice, OperationDrill) need.
- * Adding a quiz-style operation means providing one of these, a question
- * generator, and routes in the composition root.
+ * (OperationMenu, OperationPractice, OperationHardModePractice,
+ * OperationDrill) need. Adding a quiz-style operation means providing one of
+ * these, a question generator, and routes in the composition root.
  */
 export interface OperationConfig<Q> {
   /** Display name used in document titles and back labels, e.g. 'Addition'. */
   name: string
-  /** Route base for back navigation, e.g. '/addition'. */
+  /** Route base for menu and back navigation, e.g. '/addition'. */
   routeBase: string
-  /** Whether this operation's routes carry a :level segment. */
-  hasLevels: boolean
+  /** Accent color for this operation's menu buttons and level picker. */
+  color: 'green' | 'rose' | 'amber'
   makeGenerator: (level: OperationLevel) => QuestionGenerator<Q>
   renderQuestion: (question: Q, animProps: CardAnimationProps) => ReactNode
 }
 
-/**
- * NavBar props for an operation screen: level-scoped operations navigate back
- * to their level menu; the rest fall through to NavBar's Home default.
- */
+/** NavBar props leading back to the operation's level menu. */
 export function backNavProps<Q>(config: OperationConfig<Q>, level: OperationLevel) {
-  if (!config.hasLevels) return {}
   return { backTo: `${config.routeBase}/${level}`, backLabel: `Back to ${config.name}` }
 }
 

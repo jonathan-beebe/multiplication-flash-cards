@@ -42,11 +42,11 @@ const operations = [
   },
   {
     name: 'Multiplication',
-    practicePath: '/multiplication/practice/multiple-choice',
-    hardModePath: '/multiplication/practice/hard-mode',
-    drillPath: '/multiplication/1-minute-drill',
+    practicePath: '/multiplication/ones/practice/multiple-choice',
+    hardModePath: '/multiplication/ones/practice/hard-mode',
+    drillPath: '/multiplication/ones/1-minute-drill',
     srQuestion: /\d+ times \d+/,
-    backLink: /home/i,
+    backLink: /back to multiplication/i,
   },
 ]
 
