@@ -35,7 +35,7 @@ validated using unit tests and objective measures.
 
 A scope is not a solution.
 
-A scope can include recommendations and suggestions.
+A scope can include advisory suggestions, but never a hard solution.
 
 The dialogue is done when you can produce, with the human's agreement, this
 packet:
@@ -46,8 +46,7 @@ GOAL: <what does success look like? What is this work aiming at?>
 OUTCOME: <observable, verifiable end state — the user or system reaches X>
 WHY IT MATTERS: <user impact, constraint violated, downstream effect>
 RELATED WORK: <list of TICKET-### and/or commit SHAs, or "none">
-DISCOVERY NOTES (optional): <advisory diagnostic notes from the reporter>
-RECOMMENDATION (optional): <suggestions that may help address the problem — anything from a one-line direction to sample pseudo-code>
+DISCOVERY NOTES (optional): <advisory notes from the reporter — diagnostics, constraints, and suggestions that may help address the problem>
 ONE-LINE SUMMARY: <short phrase — used for filename slug and journal entry>
 ```
 
@@ -60,24 +59,27 @@ ONE-LINE SUMMARY: <short phrase — used for filename slug and journal entry>
 - `OUTCOME` is phrased as an observable state ("the user can dismiss the dialog
   with Escape", "the table has an accessible name"), **not** as a code change
   ("add an `aria-label`", "wrap in `<dialog>`"). The mechanism — even when
-  obvious — belongs in `RECOMMENDATION` (when the type allows it) or in
-  `/work-start`, not in `OUTCOME`.
-- `RECOMMENDATION` the recommendation can be anything from a one-line direction
-  ("just make it a link") to sample code — whatever level of detail the human
-  and the dialogue land on. For types where it's forbidden, push back on any
-  solutioning attempt: the maker decides shape, not the reporter. If the human
-  is mid-recommendation when the type forbids it, route the observable part to
-  `OUTCOME` and the causal part to `DISCOVERY NOTES`.
-- If the human has done diagnostic work worth preserving (a likely root cause, a
-  reproduction recipe, a constraint they uncovered), put it under
-  `DISCOVERY NOTES` and mark it advisory — not a directive. `/work-start` may
-  use it or discard it. `DISCOVERY NOTES` and `RECOMMENDATION` are distinct:
-  notes describe what _is_ (causal), recommendation describes what to _do_
-  (directional). When in doubt, prefer `DISCOVERY NOTES`.
+  obvious — belongs in `DISCOVERY NOTES` (as advisory) or in `/work-start`, not
+  in `OUTCOME`.
+- `DISCOVERY NOTES` holds everything advisory: diagnostic work worth preserving
+  (a likely root cause, a reproduction recipe, a constraint uncovered) and
+  suggestions that may help — anything from a one-line direction ("just make it
+  a link") to a sketch or pseudo-code fragment. All of it is advisory, not a
+  directive; `/work-start` may use it or discard it.
+- The line the packet may not cross is solving. A **hard solution** — content
+  the maker could merely transcribe (full diffs, drop-in code, a file-by-file
+  edit list, an exhaustive step sequence covering the whole change) — is
+  rejected by `/work-write` wherever it appears. This discipline binds **you,
+  the scoper** — do not design the fix yourself; study the problem, assemble
+  context, and suggest. When the human offers solution-level detail, don't push
+  back — route it: the observable part to `OUTCOME`, and the causal and
+  directional parts, distilled into advisory notes the maker can evaluate and
+  discard, to `DISCOVERY NOTES`.
 
-### Recommendation policy by type
+### Suggestion guidance by type
 
-Some types lend themselves to recommendations more than others.
+Some types lend themselves to suggestions more than others. These land in
+`DISCOVERY NOTES`.
 
 - `bug` should include references to affected source code and suggestions for
   where to start inquiry.
@@ -85,8 +87,8 @@ Some types lend themselves to recommendations more than others.
   measurements the fix is passing. If an issue might point to a deeper
   architectural problem, suggest to the agent this problem be routed to the
   research or architecture type for deeper work.
-- `maintenance` should include recommendations for how to align the code and
-  what success looks like.
+- `maintenance` should include suggestions for how to align the code and what
+  success looks like.
 - `improvement` should include guidance of how to improve the situation.
 - `feature` should clearly document the problem and user/business goals of the
   feature, but leaves implementation up to the maker.
@@ -95,9 +97,9 @@ Some types lend themselves to recommendations more than others.
   at a deeper architectural issue; if this is the case suggest the agent route
   this to the research agent to capture options for eventual architecture
   changes.
-- `design` recommendations focus on design principles and remain the design
-  layer, leaving technical underpinings up to the maker.
-- `architecture` recommendations should be in the form of mermaind diagrams that
+- `design` suggestions focus on design principles and remain the design layer,
+  leaving technical underpinings up to the maker.
+- `architecture` suggestions should be in the form of mermaind diagrams that
   capture data flow, module relationships, etc. Use ERDs, sequencie diagrams,
   and flow charts as needed. architecture can always be pictured. sometimes what
   appears to be an architecture problem is actually a refactoring problem; if
@@ -150,7 +152,10 @@ Some types lend themselves to recommendations more than others.
    - "What does success look like that someone could observe and verify?"
    - "Why does this matter — who feels the pain, what constraint is being
      violated?"
-   - Push back when the human starts solutioning; redirect to outcome.
+   - Don't solution yourself — your job is studying the problem and assembling
+     context and suggestions; the maker solves. When the human offers solution
+     detail, route it into the packet (outcome / discovery notes) rather than
+     pushing back.
    - Skip questions whose answer is already unambiguous from the description.
 6. **Draft the packet.** Draft the packet and print it for the user to view. You
    don't need to wait for approval (you already got it through the dialogue).

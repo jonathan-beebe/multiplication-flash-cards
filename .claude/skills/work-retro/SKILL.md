@@ -25,7 +25,9 @@ Zero or one argument:
 
 The window end is always "now" (the current local time when the skill runs).
 
-## Inputs the skill reads
+## Inputs
+
+Read the following for the initial context.
 
 - `work/retro.md` — top of file, the `Last Retro: <YYYY-MM-DD:HH:MM:SS>` line.
   This is the authoritative source for the window start.
@@ -33,34 +35,35 @@ The window end is always "now" (the current local time when the skill runs).
   the window.
 - `work/3-done/*.md` — every ticket whose `resolved:` frontmatter date falls
   within the window (or `created:` if `resolved:` is absent). Pay particular
-  attention to the `## Working` section of each ticket — that's where real-time
-  notes live, and they're the richest signal for retro analysis.
+  attention to the `## Working` section of each ticket — that's where working
+  notes live, they're the richest signal for retro analysis.
 
 ## Categories to surface
 
-Sweep the window and prepare observations under each of these. Don't invent
+Sweep the work items completed within the work window. Mine the `## Working`
+sections looking for hard observations about what happened. Don't invent
 findings to fill a category — say "nothing notable" if there isn't a signal.
 
-1. **Patterns we tightened / improvements we made** — concrete things we made
-   better in code, workflow, or testing. For each: _what_ specifically, and
-   _how_ we did it (cite ticket ids + file paths).
-2. **Where we struggled** — bugs that took multiple passes, reverts, pattern
-   sprawl, accumulated tech debt, places the workflow itself slowed us down.
-   Mine the `## Working` sections for hesitation, dead ends, things tried and
-   abandoned. Each one is an opportunity — name the opportunity, not just the
-   pain.
-3. **Themes of focus** — what did we spend our time on this window? A11y sweep?
-   Test-perf push? One subsystem? Note the shape of attention, and whether it
-   matched intent.
-4. **More of / less of** — based on what worked and what didn't, what behaviors
-   should we amplify or dampen?
-5. **Start / stop** — concrete new practices to try, or current practices to
-   abandon. Distinct from "more/less" in that these are binary, not dial
-   adjustments.
-6. **Anything else worth surfacing** — be opportunistic. Examples: a recurring
-   class of bug worth a research ticket; a ticket type the workflow
-   under-serves; a measurement we should start tracking; a documentation gap; a
-   tool that paid off; a tool that didn't.
+### Questions to ask
+
+- What went well?
+- What didn't go well?
+- What surprised us?
+- What patterns did we see?
+- What should we do more of?
+- What should we do less of?
+- Where did the system fail us, and how can we harden the system to prevent
+  similar failures in the future?
+- Where did the system serve us well, and how can we lean into that?
+- What tools can we build or harden to facilitate our work?
+- What improvements did we make that can be turned into a tool or script to
+  encode the lesson for future reuse?
+- Where did we struggle? Bugs that took multiple passes, reverts, pattern
+  sprawl, accumulated tech debt, places the workflow itself slowed us down?
+- Where did we spend most of our time? This reveals what is truly valuable to
+  us, and if our focus truly aligns with our intent?
+- Where can we tighten our workflow feedback loops?
+- Where can we improve our monitoring of system performance and bottlenecks?
 
 ## Workflow
 
@@ -83,19 +86,33 @@ findings to fill a category — say "nothing notable" if there isn't a signal.
    - If the window contains nothing in either source, stop and tell the human;
      don't write an empty retro.
 
-3. **Sweep & categorize.** Build observations under each of the six categories
-   above. Observations must be grounded but written at the **thematic / outcome
+3. **Sweep & categorize.** Build observations for each of the questions above.
+   We are looking for hard observations about what happened and concrete actions
+   we can take to improve our workflow and systems. Goals include:
+   - Eliminating wasted effort
+   - Reducing code churn
+   - Increasing the focus and impact of our work
+   - Improve the guarantee of quality at each step of the workflow
+
+   Observations must be grounded but written at the **thematic / outcome
    altitude** — not the code-snippet altitude. See "Altitude" below.
 
-4. **Walk through with the human, one category at a time.** For each of the six
-   categories in order:
-   - Present the observations you found for that category, with citations.
-   - Ask the human: what resonates? what's missing? what's wrong? what's a
-     decision (vs. just an observation)?
-   - Capture the human's edits and decisions before moving on. Do **not**
-     present all six at once — the walk-through is the point of the
-     collaboration; surfacing everything in one wall of text defeats it.
-   - If the human asks to skip a category, skip it.
+4. **Collaborate with your human operator.** For each of the quesetions above:
+   - Present the observations you found, with citations.
+   - Collaborate with your operator to dig deep and mine for the hard lessons
+     learned and how to encode those into systems and workflow improvements. You
+     are looking for:
+     - Concrete actions, such as building a tool or hardening a skill.
+     - Creating a hypothesis and constructing a workflow experiment that can be
+       evaluated during the next retro.
+   - For each opportunity, work towards a concrete lesson learned and actionable
+     result before moving on.
+     - If a concrete action is found, document any decisions, hypothesis, and
+       desired outcomes and goals in the action-items section of the retro doc.
+     - If there is no concrete action, but there is a lesson learned, document
+       it as an observation in the retro entry so we can keep watching for it in
+       future retros.
+     - Otherwise it is ok to skip it.
 
 5. **Draft the entry.** Assemble the final retro entry from the agreed-upon
    observations and decisions. Present it once for final approval before
@@ -131,29 +148,13 @@ Newest entries first. Each entry is one retro session.
 **Window:** <start> → <end>
 **Scope:** <N journal entries, M done tickets>
 
-### Patterns we tightened
-- <observation> (cites: TICKET-###, path/to/file, commit-sha)
+### Themes
+(A brief list of themes that emerged from the retro conversation.
+  Only note concrete observations, skip any that were deemed irrelevant
+  or not actionable.)
 
-### Where we struggled
-- <observation> (cites: …)
-
-### Themes of focus
-- <observation>
-
-### More of
-- <decision or observation>
-
-### Less of
-- <decision or observation>
-
-### Start
-- <decision>
-
-### Stop
-- <decision>
-
-### Other
-- <observation>
+### Observations
+(a brief list of observations that came from the retro questions above)
 
 ### Action items
 1. [ ] <very brief description>
@@ -165,51 +166,40 @@ Newest entries first. Each entry is one retro session.
 …
 ```
 
-Sections with no agreed-upon content are omitted from the entry rather than
-written as "nothing notable" — the omission itself signals the silence.
-
 ## Altitude
 
-Retro observations live at the project level — themes, scope, outcomes, and
-effectiveness. Code-level specifics live in the tickets and the journal already;
-surfacing them again in the retro is noise.
+Retro observations live at the system, workflow, and project level — themes,
+focus, quality, scope, outcomes, and effectiveness. This is not about the code,
+but about the workflows that generated the code and predictable quality.
 
 **What good looks like:**
 
-> "A11y was the dominant body of work — 35 of 73 tickets (~48%). The sweep
-> covered contrast, focus, landmarks, live regions, and APG patterns. The design
-> system absorbed most of the recurring concerns, so future a11y tickets should
-> be markedly cheaper."
+- Noting workflow gaps that resulted in bugs.
+- Noting opportunities to refine our workflow to eliminate waste, reduce churn,
+  reduce or eliminate categories of bugs.
+- Noting areas where previous workflow changes and experiments are working and
+  paying off.
+- Noting areas where previous workflow changes and experiments are not working
+  and need to be adjusted or abandoned.
 
 **What bad looks like:**
 
-> "A single recipe —
-> `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400` —
-> landed across `Heading`, `Textarea`, `Button`, ... (A11Y-007, A11Y-017,
-> A11Y-021)."
-
-The first answers "what did we accomplish and how effective were we?" The second
-is a code-review summary in retro clothing.
+(reserved for future notes)
 
 **How to apply:**
 
 - Lead with shape: counts, ratios, the slice of time it covered.
 - Describe what was delivered as user / product / workflow impact.
-- Assess effectiveness — did it land? did it stick? did it dissolve other work?
-  did it leak into follow-ups?
-- Cite individual tickets sparingly, only when one ticket _is_ the story (an
-  architectural pivot, a revert, a multi-round bug). Avoid enumerating every
-  contributing ticket.
-- Skip token names, file paths, code recipes, and configuration knob names
-  entirely. If a reader wants the mechanism, the ticket has it.
+- Assess effectiveness of workflows and skills.
+- Mine for opportunities to improve the workflow and increase its effectiveness
+  at predictable quality output.
 
 ## What this skill does NOT do
 
 - Does not edit code, run tests, or open tickets. If the retro surfaces work
-  that should become a ticket, surface it as a recommendation in the entry and
-  let the human run `/work-scope` later.
-- Does not summarize ticket bodies for their own sake. The retro is about the
-  meta-signal: patterns across tickets, not a per-ticket recap. The journal
-  already serves that role.
+  that should become a ticket, surface it as a recommendation in the
+  action-items section of the entry and let the human run `/work-scope` later.
+- Does not summarize tickets. The retro is about the meta-signal at the system
+  and workflow level: patterns across tickets.
 - Does not run autonomously. The walk-through with the human is the point — skip
   it and you've just generated a wordy log.

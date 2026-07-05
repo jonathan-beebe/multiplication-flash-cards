@@ -46,36 +46,32 @@ The packet `/work-scope` produces (and that this skill accepts as input):
 
 ```
 PROBLEM: <factual statement — what is broken / missing / unclear, and where>
+GOAL: <one-line statement of what the finish line looks like — what this work is aiming at>
 OUTCOME: <observable, verifiable end state — the user or system reaches X>
 WHY IT MATTERS: <user impact, constraint violated, downstream effect>
 RELATED WORK: <list of TICKET-### and/or commit SHAs, or "none">
-DISCOVERY NOTES (optional): <advisory diagnostic notes from the reporter>
-RECOMMENDATION (optional, type-gated): <how to address the problem — anything from a one-line direction to sample code; only permitted when the type's policy allows it (see Recommendation policy)>
+DISCOVERY NOTES (optional): <advisory notes from the reporter — diagnostics, constraints, and suggestions that may help address the problem>
 ONE-LINE SUMMARY: <short phrase — used for filename slug and journal entry>
 ```
 
-`PROBLEM`, `OUTCOME`, `WHY IT MATTERS`, `RELATED WORK`, and `ONE-LINE SUMMARY`
-are required. `DISCOVERY NOTES` is optional for every type. `RECOMMENDATION` is
-optional for types where the policy allows it, and forbidden otherwise.
+`PROBLEM`, `GOAL`, `OUTCOME`, `WHY IT MATTERS`, `RELATED WORK`, and
+`ONE-LINE SUMMARY` are required. `DISCOVERY NOTES` is optional for every type.
 
-## Recommendation policy by type
+## Hard solutions are rejected
 
-| type         | RECOMMENDATION allowed? |
-| ------------ | ----------------------- |
-| bug          | yes                     |
-| a11y         | yes                     |
-| maintenance  | yes                     |
-| improvement  | yes                     |
-| feature      | no                      |
-| refactor     | no                      |
-| design       | no                      |
-| architecture | no                      |
-| research     | no                      |
+Suggestions are welcome on every type; solutions are not. The gate is content:
 
-For types in the "no" column, a packet that includes `RECOMMENDATION` is
-rejected — the maker decides shape, and pre-committing forecloses on options.
-Rationale and dialogue guidance live in `/work-scope`'s "Recommendation policy
-by type" section.
+- A **suggestion** is advisory input the maker can evaluate and discard — a
+  direction, an option, a starting point, an ideal end state, a sketch or
+  pseudo-code fragment illustrating an idea. It lives in `DISCOVERY NOTES`.
+- A **hard solution** is a worked-out implementation the maker would merely
+  transcribe — full diffs or drop-in code, file-by-file edit lists, an
+  exhaustive step sequence covering the whole change.
+
+A packet containing a hard solution — in any field — is rejected: the scoper and
+writer study the problem and assemble context and suggestions; the maker does
+the solving. Per-type guidance on what good suggestions look like lives in
+`/work-scope`'s "Suggestion guidance by type" section.
 
 ## Validation contract — what this skill enforces on the packet
 
@@ -84,27 +80,27 @@ and a pointer back to `/work-scope`:
 
 - `PROBLEM` is factual and grounded (file paths / line numbers when applicable).
   Not vague ("fix the menu thing").
+- `GOAL` is a single, clear, one-line statement of what the finish line looks
+  like — the why behind the work, not a restatement of `OUTCOME` and not a
+  mechanism.
 - `OUTCOME` is phrased as an observable state ("the user can dismiss the dialog
   with Escape", "the table has an accessible name"), not as a code change ("add
   an `aria-label`", "wrap in `<dialog>`"). Mechanism — even when obvious —
-  belongs in `RECOMMENDATION` (when the type allows) or in `/work-start`, not in
+  belongs in `DISCOVERY NOTES` (as advisory) or in `/work-start`, not in
   `OUTCOME`.
-- `RECOMMENDATION` is present **only if** the type allows it (see policy above).
-  If present for a forbidden type, reject. If present for an allowed type,
-  accept any shape — prose, mechanism choice, code snippet, references.
-- The only places implementation detail (suggested fix, code snippets, library
-  or API choices, sequenced steps) may appear are `RECOMMENDATION` (for allowed
-  types) and `DISCOVERY NOTES` (advisory, all types). They may not bleed into
-  `PROBLEM`, `OUTCOME`, or `WHY IT MATTERS`.
-- If diagnostic work appears, it is under `DISCOVERY NOTES` and reads as
-  advisory (not a directive). `DISCOVERY NOTES` is causal ("here's what I
-  learned"); `RECOMMENDATION` is directional ("here's what to do").
+- No field contains a hard solution — a worked-out implementation the maker
+  would merely transcribe (full diffs, drop-in code, file-by-file edit lists,
+  exhaustive step sequences). Reject (see Hard solutions are rejected).
+- The only place implementation detail (suggested fix, code sketches, library or
+  API choices) may appear is `DISCOVERY NOTES`, and it reads as advisory —
+  suggestions the maker may follow or discard, not directives. It may not bleed
+  into `PROBLEM`, `GOAL`, `OUTCOME`, or `WHY IT MATTERS`.
 
 These rules exist because solutioning at definition time freezes assumptions
 that may be stale by the time work begins, and crowds out the problem statement
-so the implementer skims past it. The type-gated `RECOMMENDATION` field is the
-controlled exception: it preserves directional signal where the work type's
-remediation shape is well-precedented.
+so the implementer skims past it. `DISCOVERY NOTES` is the controlled exception:
+it preserves diagnostic and directional signal while leaving the solving to the
+maker.
 
 ## Workflow
 
@@ -136,6 +132,9 @@ remediation shape is well-precedented.
    ## Problem
    <PROBLEM>
 
+   ## Goal
+   <GOAL>
+
    ## Outcome
    <OUTCOME>
 
@@ -145,10 +144,6 @@ remediation shape is well-precedented.
    ## Discovery notes
    <DISCOVERY NOTES — advisory; /work-start may use or discard>
    (omit this section entirely if the packet had no DISCOVERY NOTES)
-
-   ## Recommendation
-   <RECOMMENDATION — directional; the maker may follow it or pick a better path>
-   (omit this section entirely if the packet had no RECOMMENDATION, or if the type's policy forbids it — in the latter case the packet should have been rejected at validation)
 
    ## Related work
    <RELATED WORK — bullet list of links>
