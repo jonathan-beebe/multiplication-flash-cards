@@ -3,17 +3,25 @@
 ## Next ticket numbers
 
 - RSRCH: 2
-- DSGN: 1
-- ARCH: 1
-- FEAT: 1
+- DSGN: 2
+- ARCH: 3
+- FEAT: 2
 - IMPRV: 2
-- MAINT: 2
+- MAINT: 4
 - A11Y: 3
-- RFCTR: 3
+- RFCTR: 4
 - BUG: 10
 
 ## Log
 
+- 2026-07-05:13:52:55 — MAINT-002 — started
+- 2026-07-05:13:48:21 — DSGN-001 — drafted (0-refine): decide fate of inline long-division display (closes RSRCH-001 loop; needs human visual judgment)
+- 2026-07-05:13:48:21 — ARCH-002 — defined: document system architecture with diagrams
+- 2026-07-05:13:48:21 — MAINT-003 — defined: integration coverage for standard-algorithm and partial-quotients journeys
+- 2026-07-05:13:48:21 — MAINT-002 — defined: delete dead division placeholder pages
+- 2026-07-05:13:48:21 — RFCTR-003 — defined: align division routes, wiring, and shared model
+- 2026-07-05:13:48:21 — FEAT-001 — defined: multiplication difficulty levels
+- 2026-07-05:13:46:05 — ARCH-001 — defined: unify per-operation quiz feature behind one operation config
 - 2026-05-31:12:35:58 — RSRCH-001 — done: inline long-division display variant with superscript-prefix carry + active-fade, 4-stage design-system fixture for 3192÷7 (b595533)
 - 2026-05-31:12:06:12 — RSRCH-001 — started
 - 2026-05-31:12:03:56 — RSRCH-001 — defined: explore inline long-division display
