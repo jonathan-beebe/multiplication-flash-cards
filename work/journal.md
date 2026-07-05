@@ -14,6 +14,7 @@
 
 ## Log
 
+- 2026-07-05:15:09:20 — ARCH-002 — done: architecture.md at repo root — 3 verified mermaid diagrams (system shape, layers, route map) + feature patterns + placement guide, linked from README and CLAUDE.md (0ff0fe6)
 - 2026-07-05:15:06:08 — ARCH-002 — started
 - 2026-07-05:15:04:22 — MAINT-003 — done: deterministic journeys for standard-algorithm and partial-quotients (first partialQuotients coverage), 297/297 green (325723e)
 - 2026-07-05:15:01:42 — MAINT-003 — started
