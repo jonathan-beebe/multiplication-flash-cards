@@ -1,7 +1,7 @@
 ---
 id: MAINT-003
 type: maintenance
-status: open
+status: resolved
 created: 2026-07-05
 ---
 
@@ -53,3 +53,22 @@ still unfixed and untested.
 - [[RFCTR-002]] — flags the still-unfixed timer site in
   `PartialQuotientsProblem.tsx`
 - [[RFCTR-003]] — may change the routes these journeys assert
+
+## Working
+
+**2026-07-05:** Added `src/integration/division-algorithm-journeys.test.tsx`
+against the post-RFCTR-003 route family. `generateProblem` is mocked to a
+fixed 72 ÷ 3 = 24 (following the precedent in `AreaModelPractice.test.tsx`)
+so both journeys are deterministic end to end:
+
+- **Standard algorithm:** Home → Division → mode; wrong quotient digit
+  rejected with its error message; both steps solved (3 into 7 → 2, 3 into
+  12 → 4); success line `72 ÷ 3 = 24 ✓`; Next problem resets to step 1.
+- **Partial quotients:** Home → Division → mode; oversized partial quotient
+  rejected ("Too big — only 72 remaining"); builds 20 + 4, transitions to the
+  summing phase; wrong sum rejected; correct sum finishes; Next problem
+  returns to the building phase.
+
+This is the first test coverage of any kind for the partialQuotients
+components, and it exercises the exact `triggerShake` site RFCTR-002 flags as
+still unfixed. 297/297 green; lint and format clean.

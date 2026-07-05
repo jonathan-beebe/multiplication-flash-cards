@@ -14,6 +14,7 @@
 
 ## Log
 
+- 2026-07-05:15:01:42 — MAINT-003 — started
 - 2026-07-05:15:01:18 — RFCTR-003 — done: divisionProblem hoisted to lib/division, shared DivisionPracticePage with URL levels for all 3 modes, /division/area-model/:level + legacy redirects, 295/295 green (721d7c0)
 - 2026-07-05:14:55:04 — RFCTR-003 — started
 - 2026-07-05:14:22:48 — FEAT-001 — done: four multiplication levels via createMultiplicationGenerator + shared OperationMenu (3 menu pages deleted), legacy URL redirects, 289/289 green (96f0434)
