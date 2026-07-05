@@ -1,10 +1,6 @@
 import { useReducer, useState, useRef, useEffect, useCallback } from 'react'
-import {
-  getHelpfulFacts,
-  validatePartialQuotient,
-  validateSummingAnswer,
-} from '@/lib/division/areaMode/divisionProblem'
-import type { Level } from '@/lib/division/areaMode/divisionProblem'
+import { getHelpfulFacts, validatePartialQuotient, validateSummingAnswer } from '@/lib/division/divisionProblem'
+import type { Level } from '@/lib/division/divisionProblem'
 import { computeRemaining, createSession, sessionReducer } from '@/lib/division/partialQuotients/problemState'
 import ErrorText from '@/components/atoms/ErrorText'
 import PrimaryButton from '@/components/atoms/PrimaryButton'

@@ -1,4 +1,4 @@
-import type { Section } from '@/lib/division/areaMode/divisionProblem'
+import type { Section } from '@/lib/division/divisionProblem'
 import type { LongDivisionStep } from '@/lib/division/standardAlgorithm/longDivision'
 
 /**

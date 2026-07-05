@@ -14,6 +14,7 @@
 
 ## Log
 
+- 2026-07-05:14:55:04 — RFCTR-003 — started
 - 2026-07-05:14:22:48 — FEAT-001 — done: four multiplication levels via createMultiplicationGenerator + shared OperationMenu (3 menu pages deleted), legacy URL redirects, 289/289 green (96f0434)
 - 2026-07-05:14:07:23 — FEAT-001 — started
 - 2026-07-05:14:06:44 — ARCH-001 — done: generic operation screens + per-op configs in components/operations/, 12 cloned files deleted, choice logic extracted to engine core, 282/282 green (99af4f0)

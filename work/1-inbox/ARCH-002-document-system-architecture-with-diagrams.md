@@ -10,7 +10,8 @@ created: 2026-07-05
 ## Problem
 
 No document records how this system is organized. `docs/` holds only
-screenshots; neither `README.md` nor anything else states the layer rules the
+screenshots, and is not code docs but instead meant for display in the 
+readme; neither `README.md` nor anything else states the layer rules the
 code actually follows (pure core in `src/lib`, view components in
 `src/components`, pages, composition root in `src/main.tsx`/`AppRoutes.tsx`),
 the route map, or where a new module belongs. The drift found in the 2026-07-05

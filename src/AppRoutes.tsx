@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
 import { UpdateBanner } from '@/components/UpdateBanner'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
@@ -16,7 +16,7 @@ import { multiplicationConfig } from '@/components/operations/multiplicationConf
 
 import DesignSystem from '@/pages/DesignSystem.tsx'
 import DivisionMenu from '@/pages/DivisionMenu.tsx'
-import DivisionPractice from '@/components/division/areaMode/DivisionPractice.tsx'
+import AreaModelPractice from '@/pages/division/AreaModelPractice.tsx'
 import StandardAlgorithmPractice from '@/pages/division/StandardAlgorithmPractice.tsx'
 import PartialQuotientsPractice from '@/pages/division/PartialQuotientsPractice.tsx'
 
@@ -25,6 +25,12 @@ import PartialQuotientsPractice from '@/pages/division/PartialQuotientsPractice.
  * resolves, and moves keyboard focus to <main> on every navigation so
  * screen reader users land at the top of new page content (WCAG 2.4.3).
  */
+/** Redirects legacy /division-practice/:level URLs to the area-model route, keeping the level. */
+function LegacyDivisionPracticeRedirect() {
+  const { level } = useParams<{ level: string }>()
+  return <Navigate to={`/division/area-model/${level}`} replace />
+}
+
 function RouteFocusManager() {
   const location = useLocation()
   const isFirstRender = useRef(true)
@@ -155,10 +161,22 @@ export function AppRoutes() {
 
           {/* Division */}
           <Route path="/division" element={<DivisionMenu />} />
-          <Route path="/division/standard-algorithm" element={<StandardAlgorithmPractice />} />
-          <Route path="/division/partial-quotients" element={<PartialQuotientsPractice />} />
-          <Route path="/division-practice" element={<Navigate to="/division-practice/level-1" replace />} />
-          <Route path="/division-practice/:level" element={<DivisionPractice />} />
+          <Route path="/division/area-model" element={<Navigate to="/division/area-model/level-1" replace />} />
+          <Route path="/division/area-model/:level" element={<AreaModelPractice />} />
+          <Route
+            path="/division/standard-algorithm"
+            element={<Navigate to="/division/standard-algorithm/level-1" replace />}
+          />
+          <Route path="/division/standard-algorithm/:level" element={<StandardAlgorithmPractice />} />
+          <Route
+            path="/division/partial-quotients"
+            element={<Navigate to="/division/partial-quotients/level-1" replace />}
+          />
+          <Route path="/division/partial-quotients/:level" element={<PartialQuotientsPractice />} />
+
+          {/* Legacy pre-alignment division URLs (published PWA bookmarks) */}
+          <Route path="/division-practice" element={<Navigate to="/division/area-model/level-1" replace />} />
+          <Route path="/division-practice/:level" element={<LegacyDivisionPracticeRedirect />} />
 
           {/* Design system / component playground */}
           <Route path="/design-system" element={<DesignSystem />} />

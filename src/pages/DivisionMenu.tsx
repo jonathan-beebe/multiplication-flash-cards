@@ -19,7 +19,7 @@ function DivisionMenu() {
           <HomeButton to="/division/partial-quotients" color="teal">
             Partial Quotients
           </HomeButton>
-          <HomeButton to="/division-practice/level-1" color="teal">
+          <HomeButton to="/division/area-model" color="teal">
             Area Model
           </HomeButton>
         </div>

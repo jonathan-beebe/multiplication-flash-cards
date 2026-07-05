@@ -1,5 +1,5 @@
-import { generateProblem } from '@/lib/division/areaMode/divisionProblem'
-import type { Level, Problem, Section } from '@/lib/division/areaMode/divisionProblem'
+import { generateProblem } from '@/lib/division/divisionProblem'
+import type { Level, Problem, Section } from '@/lib/division/divisionProblem'
 
 export type Phase = 'building' | 'summing' | 'done'
 

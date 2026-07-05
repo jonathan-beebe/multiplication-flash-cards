@@ -1,6 +1,6 @@
 import { useReducer, useState, useRef, useEffect, useCallback } from 'react'
-import { generateProblem, getHelpfulFacts } from '@/lib/division/areaMode/divisionProblem'
-import type { Level, Problem } from '@/lib/division/areaMode/divisionProblem'
+import { generateProblem, getHelpfulFacts } from '@/lib/division/divisionProblem'
+import type { Level, Problem } from '@/lib/division/divisionProblem'
 import {
   buildAnnouncement,
   computeLongDivisionSteps,

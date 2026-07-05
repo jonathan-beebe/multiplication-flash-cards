@@ -1,7 +1,7 @@
 ---
 id: RFCTR-003
 type: refactor
-status: open
+status: resolved
 created: 2026-07-05
 ---
 
@@ -65,3 +65,39 @@ Advisory suggestions only:
 - [[RFCTR-001]], [[RSRCH-001]] — recent division display work in the same area
 - [[A11Y-002]] — division displays' text-alternative pattern (touches the same
   components)
+
+## Working
+
+**2026-07-05:** All three inconsistencies resolved.
+
+Tests first: added `src/integration/division-modes.test.tsx` (canonical
+`/division/<mode>/:level` routes for all three modes, link-based level
+selection, bare-mode redirects, legacy `/division-practice` and
+`/division-practice/:level` redirects with level preserved) — red before, green
+after.
+
+1. **Model hoisted.** `divisionProblem.ts` (+ test) moved from
+   `lib/division/areaMode/` up to `lib/division/`, beside `displaySummary.ts`;
+   all 14 import sites updated. Grep confirms zero cross-mode imports remain —
+   each mode's folder is deletable without breaking its siblings.
+2. **One wiring pattern.** The three near-identical practice pages collapsed
+   into a shared `components/division/DivisionPracticePage.tsx` (heading,
+   URL-driven level picker, `renderProblem(level)` slot) with three thin
+   wrappers in `pages/division/` — the same config-driven shape ARCH-001
+   established for operations. The old `areaMode/DivisionPractice.tsx` page
+   died; its test was ported to `pages/division/AreaModelPractice.test.tsx`.
+   Standard-algorithm and partial-quotients level pickers changed from
+   `useState` radiogroups to links — the level now lives in the URL for all
+   three modes (bookmarkable, survives reload, one owner).
+3. **One route family.** `/division/area-model/:level` joins its siblings;
+   `/division/<mode>` redirects to `level-1`; legacy `/division-practice[/:level]`
+   redirects to the area-model equivalent preserving the level (small
+   `LegacyDivisionPracticeRedirect` in the composition root). DivisionMenu now
+   links to `/division/area-model`.
+
+Deliberate small changes: mode page titles unified to
+`<Method> — Math Flash Cards` (area model previously said
+"Division Practice — Multiplication Flash Cards"). The pre-existing
+app-journeys division block passed **unchanged** via the legacy redirects,
+doubling as legacy-URL regression coverage. 295/295 green; typecheck, lint,
+format clean.

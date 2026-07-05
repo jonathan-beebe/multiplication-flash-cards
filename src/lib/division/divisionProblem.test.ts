@@ -5,8 +5,8 @@ import {
   validatePartialQuotient,
   validateSummingAnswer,
   LEVELS,
-} from '@/lib/division/areaMode/divisionProblem'
-import type { Level } from '@/lib/division/areaMode/divisionProblem'
+} from '@/lib/division/divisionProblem'
+import type { Level } from '@/lib/division/divisionProblem'
 
 const LEVELS_LIST: Level[] = [1, 2, 3, 4]
 

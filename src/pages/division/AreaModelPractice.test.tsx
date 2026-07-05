@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
-import DivisionPractice from '@/components/division/areaMode/DivisionPractice'
+import AreaModelPractice from '@/pages/division/AreaModelPractice'
 
-vi.mock('@/lib/division/areaMode/divisionProblem', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/lib/division/areaMode/divisionProblem')>()
+vi.mock('@/lib/division/divisionProblem', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/division/divisionProblem')>()
   return {
     ...actual,
     generateProblem: vi.fn().mockReturnValue({ dividend: 72, divisor: 3, quotient: 24 }),
@@ -21,15 +21,15 @@ afterEach(() => {
 
 function renderPage(initialLevel = 1) {
   render(
-    <MemoryRouter initialEntries={[`/division-practice/level-${initialLevel}`]}>
+    <MemoryRouter initialEntries={[`/division/area-model/level-${initialLevel}`]}>
       <Routes>
-        <Route path="/division-practice/:level" element={<DivisionPractice />} />
+        <Route path="/division/area-model/:level" element={<AreaModelPractice />} />
       </Routes>
     </MemoryRouter>,
   )
 }
 
-describe('DivisionPractice', () => {
+describe('AreaModelPractice', () => {
   it('renders the page heading', () => {
     renderPage()
     expect(screen.getByRole('heading', { name: /division practice/i })).toBeInTheDocument()
@@ -91,9 +91,9 @@ describe('DivisionPractice', () => {
     expect(screen.getByRole('textbox', { name: /partial quotient/i })).toBeInTheDocument()
   })
 
-  it("sets the document title to include 'Division'", () => {
+  it("sets the document title to the mode's name", () => {
     renderPage()
-    expect(document.title).toMatch(/division/i)
+    expect(document.title).toBe('Area Model — Math Flash Cards')
   })
 
   it('renders the correct level when navigated to directly', () => {
