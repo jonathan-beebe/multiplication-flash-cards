@@ -15,6 +15,12 @@ multiplication, and division.
 - **Tabular Numbers.** All numbers are represented using tabular numbers so they
   align well.
 
+# Architecture
+
+- The system's canon — layers, dependency rules, feature patterns, and the route
+  map — lives in [architecture.md](architecture.md). Check structural changes
+  against it and update it in the same change that alters any shape it draws.
+
 # Principles
 
 - **Simplicity first.** Avoid over-engineering. The right amount of complexity

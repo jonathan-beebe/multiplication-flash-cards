@@ -58,3 +58,10 @@ I'd really appreciate it!
 
 If you have any comments, bug reports, or feature requests, please email me at
 jonathan-beebe@outlook.com.
+
+---
+
+## Development
+
+The system's shape — layers, dependency rules, and the route map — is documented
+in [architecture.md](architecture.md).

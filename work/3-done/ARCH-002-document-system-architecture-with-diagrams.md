@@ -1,7 +1,7 @@
 ---
 id: ARCH-002
 type: architecture
-status: open
+status: resolved
 created: 2026-07-05
 ---
 
@@ -56,3 +56,25 @@ truth.
 - 2026-07-05 architecture audit (this ticket's source)
 - [[ARCH-001]], [[RFCTR-003]], [[FEAT-001]] — the drift this canon would have
   caught
+
+## Working
+
+**2026-07-05:** Landed `architecture.md` at the repo root (per the diagramming
+skill, a system-level doc lives at the top of the tree it captures; `docs/` is
+README imagery per the refined problem statement). Written against the
+post-ARCH-001/RFCTR-003/FEAT-001 structure, so it documents the target shape
+with no "known exceptions" markers needed.
+
+Contents: three Mermaid diagrams, each answering one question — system shape
+(one static deployable: GitHub Pages → SPA + service worker), layer diagram
+(composition root → pages → components → coordination hooks → pure core,
+inward-only), and the route map (operation and division route families plus
+legacy redirects, marked "never link to them"). Between diagrams: the four
+binding layer rules, the two config-driven feature patterns with their
+deletability test, and a "where new code belongs" decision list. The
+update-in-the-same-change trigger is stated in the doc's own intro.
+
+All three diagrams verified with the mermaid parser (3/3 parse OK). Linked
+from README.md (new Development section) and CLAUDE.md (new Architecture
+section instructing structural changes be checked against the canon). No
+runtime surface — CI (format/typecheck/lint/tests) green.
