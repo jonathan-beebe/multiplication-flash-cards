@@ -2,42 +2,22 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import NavBar from '@/components/NavBar'
 import QuizBoard from '@/components/quiz/QuizBoard'
-import Card from '@/components/Card'
-import type { CardAnimationProps } from '@/components/quiz/QuizBoard'
 import DrillTimerBar from '@/components/quiz/DrillTimerBar'
-import type { SubtractionQuestion } from '@/lib/subtraction/subtractionGenerator'
-import { createSubtractionGenerator } from '@/lib/subtraction/subtractionGenerator'
 import { useOperationGameEngine } from '@/lib/engine/useOperationGameEngine'
-import { parseOperationLevel, SUBTRACTION_LEVEL_RANGES } from '@/lib/engine/operationLevels'
+import { parseOperationLevel } from '@/lib/engine/operationLevels'
 import { useDrillTimer } from '@/lib/useDrillTimer'
+import { backNavProps, type OperationConfig } from './operationConfig'
 
-interface DrillProps {
+interface OperationDrillProps<Q> {
+  config: OperationConfig<Q>
   durationMinutes: number
 }
 
-function renderQuestion(q: SubtractionQuestion, animProps: CardAnimationProps) {
-  return (
-    <Card
-      display={
-        <>
-          {q.a}
-          <br />
-          −&nbsp;{q.b}
-        </>
-      }
-      srText={`${q.a} minus ${q.b}`}
-      contentClassName="text-right"
-      {...animProps}
-    />
-  )
-}
-
-function Drill({ durationMinutes }: DrillProps) {
+function OperationDrill<Q>({ config, durationMinutes }: OperationDrillProps<Q>) {
   const navigate = useNavigate()
   const { level: levelParam } = useParams<{ level: string }>()
   const level = parseOperationLevel(levelParam)
-  const { aMin, aMax, bMin, bMax } = SUBTRACTION_LEVEL_RANGES[level]
-  const generator = useMemo(() => createSubtractionGenerator(aMin, aMax, bMin, bMax), [aMin, aMax, bMin, bMax])
+  const generator = useMemo(() => config.makeGenerator(level), [config, level])
   const engine = useOperationGameEngine(generator)
   const { timeRemaining, timerAnnouncement, recordCorrect, recordWrong } = useDrillTimer(durationMinutes, {
     onComplete: (correctCount, wrongCount) =>
@@ -45,13 +25,13 @@ function Drill({ durationMinutes }: DrillProps) {
   })
 
   useEffect(() => {
-    document.title = `${durationMinutes} Minute Drill — Subtraction Flash Cards`
+    document.title = `${durationMinutes} Minute Drill — ${config.name} Flash Cards`
     engine.start()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [durationMinutes, engine.start])
+  }, [durationMinutes, config.name, engine.start])
 
   const handleAnswer = useCallback(
-    (question: SubtractionQuestion, correct: boolean, durationMs: number) => {
+    (question: Q, correct: boolean, durationMs: number) => {
       engine.recordResult(question, correct, durationMs)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,17 +48,17 @@ function Drill({ durationMinutes }: DrillProps) {
         <span className="sr-only">Time remaining: </span>
         {Math.floor(timeRemaining / 60)}:{String(timeRemaining % 60).padStart(2, '0')}
       </div>
-      <NavBar backTo={`/subtraction/${level}`} backLabel="Back to Subtraction" />
+      <NavBar {...backNavProps(config, level)} />
       <QuizBoard
         generator={generator}
         onCorrect={recordCorrect}
         onWrong={recordWrong}
         getNextQuestion={engine.getNextQuestion}
-        renderQuestion={renderQuestion}
+        renderQuestion={config.renderQuestion}
         onAnswer={handleAnswer}
       />
     </main>
   )
 }
 
-export default Drill
+export default OperationDrill

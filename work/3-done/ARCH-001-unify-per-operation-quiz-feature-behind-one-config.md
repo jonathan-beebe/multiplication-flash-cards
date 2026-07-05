@@ -1,7 +1,7 @@
 ---
 id: ARCH-001
 type: architecture
-status: open
+status: resolved
 created: 2026-07-05
 ---
 
@@ -86,3 +86,43 @@ the unified shape can host it.
 - `src/lib/engine/` (`gameEngine.ts`, `useOperationGameEngine.ts`,
   `operationLevels.ts`) — the core extraction is done; this ticket finishes the
   job at the component layer
+
+## Working
+
+**2026-07-05:** Landed the unified module at `src/components/operations/`.
+
+Tests first: wrote `src/integration/operation-screens.test.tsx` (9
+characterization tests) pinning, for every operation × screen, the document
+title, spoken question text (`plus`/`minus`/`times` sr text), and back
+navigation — green against the old clones before any refactor.
+
+Shape landed (matches the target diagram):
+
+- `operationConfig.tsx` — the `OperationConfig<Q>` contract (`name`,
+  `routeBase`, `hasLevels`, `makeGenerator`, `renderQuestion`), a
+  `backNavProps` helper, and `makeStackedCardRenderer` for the two-row card
+  layout shared by addition/subtraction.
+- `OperationPractice.tsx`, `OperationHardModePractice.tsx`,
+  `OperationDrill.tsx` — the three generic screens, generic over question
+  type `Q`, level-aware via `parseOperationLevel` (levelless operations fall
+  through to the default level and ignore it).
+- `additionConfig.tsx`, `subtractionConfig.tsx`, `multiplicationConfig.tsx` —
+  each operation reduced to one ~15-line config. Multiplication keeps its
+  singleton adaptive generator (`hasLevels: false`, noted for FEAT-001).
+- `DrillComplete.tsx` moved here from `components/multiplication/` with its
+  test; drill-routing test moved as `OperationDrill.test.tsx`.
+
+Deleted the nine cloned screen components (`components/{addition,subtraction,
+multiplication}/{Practice,HardModePractice,Drill}.tsx`) and the three 6-line
+hook wrappers (`use{Addition,Subtraction,Multiplication}GameEngine.ts`); the
+generic screens call `useOperationGameEngine` directly. Also took the advisory
+generator cleanup: duplicated choice-offset + Fisher-Yates logic extracted to
+`src/lib/engine/offsetChoices.ts` (with unit tests); both generators now
+delegate. Multiplication's `generateChoices` differs by design (adjacent-fact
+distractors) and was left alone.
+
+Outcome check: `components/addition/` and `components/subtraction/` are gone
+entirely — an operation is now its config + its `lib/<op>/` generator + route
+lines in `AppRoutes`. Suite grew 271 → 282 (9 characterization + 2 unit), all
+green; the pre-existing integration suite passed without modification.
+Typecheck, lint, format clean.

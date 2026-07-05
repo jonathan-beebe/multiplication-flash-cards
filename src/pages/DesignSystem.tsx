@@ -19,7 +19,7 @@ import PartialQuotientsDisplay from '@/components/division/partialQuotients/Part
 
 import AreaModelRect from '@/components/division/areaMode/AreaModelRect'
 import { ErrorFallback } from '@/components/ErrorBoundary'
-import { DrillCompleteContent } from '@/components/multiplication/DrillComplete'
+import { DrillCompleteContent } from '@/components/operations/DrillComplete'
 import { UpdateBannerContent } from '@/components/UpdateBanner'
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────

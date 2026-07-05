@@ -14,6 +14,7 @@
 
 ## Log
 
+- 2026-07-05:13:55:37 — ARCH-001 — started
 - 2026-07-05:13:54:19 — MAINT-002 — done: deleted StandardAlgorithmPlaceholder and PartialQuotientsPlaceholder, 271/271 green (ab9578a)
 - 2026-07-05:13:52:55 — MAINT-002 — started
 - 2026-07-05:13:48:21 — DSGN-001 — drafted (0-refine): decide fate of inline long-division display (closes RSRCH-001 loop; needs human visual judgment)

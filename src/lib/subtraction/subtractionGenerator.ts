@@ -1,4 +1,5 @@
 import type { QuestionGenerator, QuestionResult } from '../engine/gameEngine'
+import { generateOffsetChoices } from '../engine/offsetChoices'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -81,29 +82,7 @@ function evaluate(question: SubtractionQuestion, answer: number): boolean {
  * Generate 3 plausible multiple-choice answers.
  */
 function generateChoices(question: SubtractionQuestion): number[] {
-  const correct = question.a - question.b
-  const choices = new Set<number>([correct])
-
-  const offsets = [1, -1, 2, -2, 10, -10, 5, -5]
-  for (const offset of offsets) {
-    if (choices.size >= 3) break
-    const candidate = correct + offset
-    if (candidate >= 0 && !choices.has(candidate)) {
-      choices.add(candidate)
-    }
-  }
-
-  while (choices.size < 3) {
-    const candidate = correct + choices.size * 3
-    if (!choices.has(candidate)) choices.add(candidate)
-  }
-
-  const result = Array.from(choices)
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[result[i], result[j]] = [result[j], result[i]]
-  }
-  return result
+  return generateOffsetChoices(question.a - question.b)
 }
 
 function displayText(question: SubtractionQuestion): string {
