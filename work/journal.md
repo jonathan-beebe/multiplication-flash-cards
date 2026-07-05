@@ -14,6 +14,7 @@
 
 ## Log
 
+- 2026-07-05:14:06:44 — ARCH-001 — done: generic operation screens + per-op configs in components/operations/, 12 cloned files deleted, choice logic extracted to engine core, 282/282 green (99af4f0)
 - 2026-07-05:13:55:37 — ARCH-001 — started
 - 2026-07-05:13:54:19 — MAINT-002 — done: deleted StandardAlgorithmPlaceholder and PartialQuotientsPlaceholder, 271/271 green (ab9578a)
 - 2026-07-05:13:52:55 — MAINT-002 — started
