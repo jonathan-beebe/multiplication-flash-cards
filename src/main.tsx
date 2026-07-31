@@ -5,6 +5,14 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import { AppRoutes } from '@/AppRoutes'
+import { isSandCardsEnabled } from '@/lib/featureFlags'
+
+// The #sand experiment forces dark mode for the session, browser chrome
+// included (the light-scheme theme-color meta would otherwise stay light).
+if (isSandCardsEnabled()) {
+  document.documentElement.classList.add('dark')
+  document.querySelector('meta[name="theme-color"][media*="light"]')?.setAttribute('content', '#0f172a')
+}
 
 const updateSW = registerSW({
   immediate: true,
