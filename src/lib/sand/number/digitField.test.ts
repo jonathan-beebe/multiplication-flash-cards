@@ -163,6 +163,11 @@ describe('glyphsOf', () => {
     expect(glyphsOf('12 ÷ 4')).toEqual(['1', '2', ' ', '÷', ' ', '4'])
   })
 
+  it('accepts the answer-feedback marks', () => {
+    expect(glyphsOf('✓')).toEqual(['✓'])
+    expect(glyphsOf('✗')).toEqual(['✗'])
+  })
+
   it('rejects characters outside the display alphabet', () => {
     expect(() => glyphsOf('12:3a')).toThrow(/12:3a/)
     expect(() => glyphsOf('')).toThrow()

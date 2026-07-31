@@ -40,10 +40,14 @@ export default function QuizBoard<Q>({
 }: QuizBoardProps<Q>) {
   const [question, setQuestion] = useState<Q>(() => getNextQuestion())
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set())
+  // Monotonic across questions — the sand card flashes ✗ on each increment.
+  const [wrongCount, setWrongCount] = useState(0)
   const { announcement, announce } = useAnnouncement()
   const choicesRef = useRef<HTMLDivElement>(null)
   const questionStartRef = useRef<number>(now())
   const mountedRef = useRef(false)
+
+  const sandMode = isSandCardsEnabled() && sandDisplayText !== undefined
 
   const { nextQuestion, showCorrect, isAnimating, frontCardProps, backCardProps, triggerCorrect, settleExit } =
     useQuizAnimation({
@@ -52,6 +56,8 @@ export default function QuizBoard<Q>({
         setQuestion(nextQ)
         setWrongAnswers(new Set())
       },
+      // Sand mode holds the green ✓ through this window before morphing on.
+      delayMs: sandMode ? 800 : undefined,
     })
 
   const choices = useMemo(() => {
@@ -71,6 +77,7 @@ export default function QuizBoard<Q>({
           announce(`${answer} is incorrect. Try again.`)
         }
         setWrongAnswers((prev) => new Set(prev).add(answer))
+        setWrongCount((c) => c + 1)
       }
     },
     [generator, question, wrongAnswers, onCorrect, onWrong, onAnswer, triggerCorrect, announce, now],
@@ -95,7 +102,6 @@ export default function QuizBoard<Q>({
   }, [question, announce, generator, now])
 
   const backQuestion = nextQuestion ?? question
-  const sandMode = isSandCardsEnabled() && sandDisplayText !== undefined
 
   return (
     <div className="flex w-full flex-col items-center gap-8">
@@ -104,15 +110,18 @@ export default function QuizBoard<Q>({
       </span>
       <div className="card-stack">
         {sandMode ? (
-          // One persistent renderer instead of the two-card stack: the wind
-          // dismissal empties the display, settleExit promotes the question,
-          // and the text change swaps in a fresh sand model.
+          // One persistent renderer instead of the two-card stack. The cloud
+          // morphs question → ✓/✗ → next (or same) question; the card's
+          // advance timer calls settleExit to promote the question. During
+          // 'advancing', backQuestion is already the next one, so the text
+          // prop drives the morph.
           <Suspense fallback={<Card display={sandDisplayText(question)} srText={generator.displayText(question)} />}>
             <SandQuestionCard
-              display={sandDisplayText(question)}
-              srText={generator.displayText(question)}
-              dismissing={isAnimating}
-              onDismissComplete={settleExit ?? undefined}
+              display={sandDisplayText(backQuestion)}
+              srText={generator.displayText(backQuestion)}
+              phase={isAnimating ? 'advancing' : showCorrect ? 'correct' : 'idle'}
+              wrongSignal={wrongCount}
+              onAdvanceDone={settleExit ?? undefined}
             />
           </Suspense>
         ) : (

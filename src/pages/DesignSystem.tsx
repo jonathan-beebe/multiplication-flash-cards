@@ -362,7 +362,7 @@ const SAND_GRADIENTS: Record<string, readonly GradientStop[] | undefined> = {
   ],
 }
 
-const SAND_PRESETS = ['7 × 8', '3 + 4', '9 − 5', '12 ÷ 4', '999 × 9', '12:34']
+const SAND_PRESETS = ['7 × 8', '3 + 4', '9 − 5', '12 ÷ 4', '999 × 9', '12:34', '✓', '✗']
 
 function SandDigitsFixtures() {
   const [presetIndex, setPresetIndex] = useState(0)

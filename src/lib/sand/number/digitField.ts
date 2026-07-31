@@ -97,10 +97,10 @@ export function profileWidthPx(profile: GlyphProfile): number {
 
 /**
  * The characters the sand display can render: digits, the ':' and '.'
- * separators, the arithmetic operators '×' '+' '−' '÷', and space.
- * Local modification — upstream stops at [0-9:.].
+ * separators, the arithmetic operators '×' '+' '−' '÷', the feedback marks
+ * '✓' '✗', and space. Local modification — upstream stops at [0-9:.].
  */
-const DISPLAY_ALPHABET = /^[0-9:.×+−÷ ]+$/
+const DISPLAY_ALPHABET = /^[0-9:.×+−÷✓✗ ]+$/
 
 /**
  * Split a display string ("14:03:57.123", "7 × 8") into its glyphs, rejecting
@@ -109,7 +109,9 @@ const DISPLAY_ALPHABET = /^[0-9:.×+−÷ ]+$/
  */
 export function glyphsOf(text: string): string[] {
   if (!DISPLAY_ALPHABET.test(text)) {
-    throw new Error(`Sand display strings use only 0-9, ':', '.', '×', '+', '−', '÷' and space — got "${text}"`)
+    throw new Error(
+      `Sand display strings use only 0-9, ':', '.', '×', '+', '−', '÷', '✓', '✗' and space — got "${text}"`,
+    )
   }
   return [...text]
 }

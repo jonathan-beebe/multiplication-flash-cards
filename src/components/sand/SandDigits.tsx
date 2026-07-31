@@ -116,7 +116,7 @@ export default function SandDigits({
       if (model.getText() !== text) model.setText(text)
       return
     }
-    if (spentRef.current || lastGradientRef.current !== gradient) {
+    if (spentRef.current) {
       const next = makeModel(text, gradient, srTextRef)
       renderer.setModel(next)
       modelRef.current = next
@@ -124,6 +124,13 @@ export default function SandDigits({
       spentRef.current = false
       renderer.repaintStaticFrame()
       return
+    }
+    // Live swaps: a gradient change rides any in-flight morph, so a color
+    // change and a text change in the same commit animate together.
+    if (lastGradientRef.current !== gradient) {
+      model.setGradient(gradient)
+      lastGradientRef.current = gradient
+      renderer.repaintStaticFrame()
     }
     if (model.getText() !== text) {
       model.setText(text)

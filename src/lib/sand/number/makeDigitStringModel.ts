@@ -33,9 +33,9 @@ const COLUMN_GAP = 1.15
 
 const DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 // Non-digit glyphs each get their own narrow column: the ':' '.' separators
-// plus the arithmetic operators (local modification — upstream has only the
-// separators).
-const SYMBOLS = [':', '.', '×', '+', '−', '÷']
+// plus the arithmetic operators and feedback marks (local modification —
+// upstream has only the separators).
+const SYMBOLS = [':', '.', '×', '+', '−', '÷', '✓', '✗']
 const DOT = '.'
 // Space is layout-only: it never rasterizes and owns zero grains.
 const SPACE = ' '
@@ -49,6 +49,8 @@ export interface DigitStringModel extends SandModel {
   snap(): void
   /** Blow all the sand off downwind; `onComplete` fires once it is completely gone (FEAT-024). One-shot — reset by swapping in a fresh model. `setText` keeps landing mid-flight, so the text can keep ticking as it departs (IMPRV-016). */
   dismiss(options?: DismissOptions): void
+  /** Swap the live gradient — a color change can ride an in-flight morph. `undefined` reverts to warm sand (local modification). */
+  setGradient(gradient?: readonly GradientStop[]): void
 }
 
 /**

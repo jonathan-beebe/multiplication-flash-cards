@@ -238,3 +238,46 @@ describe('makeGlyphSlabModel dismissal', () => {
     model.dispose()
   })
 })
+
+// Local modification: live gradient swap (setGradient), so a color change can
+// ride an in-flight morph instead of forcing a model swap.
+describe('makeGlyphSlabModel setGradient', () => {
+  function channelMeans(model: ReturnType<typeof makeGlyphSlabModel>): [number, number, number] {
+    const points = model.objects[0] as unknown as {
+      geometry: { attributes: { color: { array: Float32Array } } }
+    }
+    const colors = points.geometry.attributes.color.array
+    const mean: [number, number, number] = [0, 0, 0]
+    for (let i = 0; i < SLAB_PARTICLE_COUNT; i++) {
+      mean[0] += colors[i * 3 + 0]
+      mean[1] += colors[i * 3 + 1]
+      mean[2] += colors[i * 3 + 2]
+    }
+    return [mean[0] / SLAB_PARTICLE_COUNT, mean[1] / SLAB_PARTICLE_COUNT, mean[2] / SLAB_PARTICLE_COUNT]
+  }
+
+  it('recolors a flat-default model to a gradient and back', () => {
+    const model = makeGlyphSlabModel(fakeMetrics, singleSlot())
+    model.update(0, 0.016)
+    const [r0, g0, b0] = channelMeans(model)
+    // Warm sand: red-dominant over blue.
+    expect(r0).toBeGreaterThan(b0)
+
+    model.setGradient([
+      [0.08, 0.5, 0.24],
+      [0.13, 0.77, 0.37],
+    ])
+    model.update(0.1, 0.016)
+    const [r1, g1] = channelMeans(model)
+    // Green gradient: green-dominant over red.
+    expect(g1).toBeGreaterThan(r1)
+
+    model.setGradient(undefined)
+    model.update(0.2, 0.016)
+    const [r2, g2, b2] = channelMeans(model)
+    expect(r2).toBeGreaterThan(b2)
+    expect(r2).toBeGreaterThan(g2)
+    expect(g0).toBeGreaterThan(0) // sanity: colors were ever written
+    model.dispose()
+  })
+})

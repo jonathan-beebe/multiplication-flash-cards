@@ -96,6 +96,13 @@ export interface GlyphSlabModel extends SandModel {
    * `snap()` to complete instantly.
    */
   dismiss(options?: DismissOptions): void
+  /**
+   * Swap the live gradient without a model swap, so a color change can ride
+   * an in-flight morph (local modification — upstream fixes the gradient at
+   * construction). `undefined` or empty reverts to the flat warm-sand
+   * default. Takes effect on the current frame (static frames included).
+   */
+  setGradient(gradient?: readonly GradientStop[]): void
 }
 
 /**
@@ -176,20 +183,15 @@ export function makeGlyphSlabModel(
   const glintBoost = new Float32Array(n)
   // Gradient texture is two stable per-grain draws: the shared brightness
   // jitter (kept out of baseColors, which a gradient rewrites every frame)
-  // and a small offset on the sample position.
-  const active = gradient !== undefined && gradient.length > 0 ? gradient : null
-  const grainJitter = active ? new Float32Array(n) : null
-  const grainOffset = active ? new Float32Array(n) : null
+  // and a small offset on the sample position. Both are always allocated so
+  // setGradient can move between flat and gradient coloring at runtime
+  // (local modification — upstream allocates them only with a gradient).
+  let activeGradient = gradient !== undefined && gradient.length > 0 ? gradient : null
+  const grainJitter = new Float32Array(n)
+  const grainOffset = new Float32Array(n)
   for (let i = 0; i < n; i++) {
-    const jitter = 1 - COLOR_JITTER + Math.random() * COLOR_JITTER * 2
-    if (grainJitter && grainOffset) {
-      grainJitter[i] = jitter
-      grainOffset[i] = (Math.random() * 2 - 1) * GRADIENT_NOISE
-    } else {
-      baseColors[i * 3 + 0] = Math.min(1, SAND_COLOR[0] * jitter)
-      baseColors[i * 3 + 1] = Math.min(1, SAND_COLOR[1] * jitter)
-      baseColors[i * 3 + 2] = Math.min(1, SAND_COLOR[2] * jitter)
-    }
+    grainJitter[i] = 1 - COLOR_JITTER + Math.random() * COLOR_JITTER * 2
+    grainOffset[i] = (Math.random() * 2 - 1) * GRADIENT_NOISE
     phases[i] = Math.random() * Math.PI * 2
     depthShade[i] = DEPTH_MIN + (1 - DEPTH_MIN) * Math.random()
     if (Math.random() < GLINT_FRACTION) {
@@ -208,15 +210,28 @@ export function makeGlyphSlabModel(
   // before the first update.
   function refreshGradientColors(stops: readonly GradientStop[]): void {
     for (let i = 0; i < n; i++) {
-      const t = (positions[i * 3 + 1] + GLYPH_SCALE) / (2 * GLYPH_SCALE) + grainOffset![i]
+      const t = (positions[i * 3 + 1] + GLYPH_SCALE) / (2 * GLYPH_SCALE) + grainOffset[i]
       sampleGradient(stops, t, baseColors, i * 3)
-      const jitter = grainJitter![i]
+      const jitter = grainJitter[i]
       baseColors[i * 3 + 0] = Math.min(1, baseColors[i * 3 + 0] * jitter)
       baseColors[i * 3 + 1] = Math.min(1, baseColors[i * 3 + 1] * jitter)
       baseColors[i * 3 + 2] = Math.min(1, baseColors[i * 3 + 2] * jitter)
     }
   }
-  if (active) refreshGradientColors(active)
+
+  // The flat warm-sand default; position-independent, so one refresh suffices
+  // until the next setGradient.
+  function refreshFlatColors(): void {
+    for (let i = 0; i < n; i++) {
+      const jitter = grainJitter[i]
+      baseColors[i * 3 + 0] = Math.min(1, SAND_COLOR[0] * jitter)
+      baseColors[i * 3 + 1] = Math.min(1, SAND_COLOR[1] * jitter)
+      baseColors[i * 3 + 2] = Math.min(1, SAND_COLOR[2] * jitter)
+    }
+  }
+
+  if (activeGradient) refreshGradientColors(activeGradient)
+  else refreshFlatColors()
 
   const geometry = new THREE.BufferGeometry()
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
@@ -297,7 +312,7 @@ export function makeGlyphSlabModel(
     }
     // The loop below already rewrites all n grain colors per frame, so the
     // gradient re-read is not a new cost class.
-    if (active) refreshGradientColors(active)
+    if (activeGradient) refreshGradientColors(activeGradient)
     for (let i = 0; i < n; i++) {
       const s = sparkle(t, phases[i])
       if (isGlint[i]) {
@@ -378,6 +393,13 @@ export function makeGlyphSlabModel(
         // from its neighborhood.
         plan: planFlight(positions, duration, DISMISS_RAMP, DISMISS_EXIT_X),
       }
+    },
+    setGradient(next?: readonly GradientStop[]) {
+      activeGradient = next !== undefined && next.length > 0 ? next : null
+      // Refresh base colors immediately; the next update() — the animated
+      // loop or the host's repaintStaticFrame() — renders them.
+      if (activeGradient) refreshGradientColors(activeGradient)
+      else refreshFlatColors()
     },
     setMorphTarget() {
       // Hover morph is a planet behavior — the displays are driven by data.
