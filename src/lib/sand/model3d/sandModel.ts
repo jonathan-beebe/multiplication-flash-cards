@@ -42,6 +42,14 @@ export interface WindSource {
    * is driven before the host updates the scene graph.
    */
   prepare?(): void
+  /**
+   * Optional per-grain sampling (local modification): fill `out` with the
+   * live world position of source grain `index` (0 ≤ index < weight). The
+   * wind field's `recall` latches airborne dust onto specific grains so
+   * stragglers ride a value morph back into the display. Sources without
+   * it don't participate in recall.
+   */
+  samplePoint?(index: number, out: THREE.Vector3): void
 }
 
 /**

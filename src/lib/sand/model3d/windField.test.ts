@@ -154,4 +154,142 @@ describe('createWindField — model-agnostic engine', () => {
       field.dispose()
     })
   })
+
+  // Local modification: refreshColors — a live recolor of the source display
+  // carries into dust already in the air, not only into future spawns.
+  describe('refreshColors', () => {
+    it('recolors airborne grains from the source without moving them', () => {
+      let tint: [number, number, number] = [1, 0, 0]
+      const source: WindSource = {
+        weight: 7200,
+        sampleSpawn(out: SpawnTarget) {
+          out.position.set(0, 0, 0)
+          out.color[0] = tint[0]
+          out.color[1] = tint[1]
+          out.color[2] = tint[2]
+        },
+      }
+      const field = createWindField([source])
+      const colors = field.points.geometry.attributes.color.array as Float32Array
+      const positions = field.points.geometry.attributes.position.array as Float32Array
+      const grains = colors.length / 3
+      // Sparkle grains paint white (equal channels), so channel dominance
+      // holds for the ~95% non-sparkle rest.
+      const dominantFraction = (channel: 0 | 1) => {
+        let count = 0
+        for (let i = 0; i < grains; i++) {
+          if (colors[i * 3 + channel] > colors[i * 3 + (1 - channel)]) count++
+        }
+        return count / grains
+      }
+
+      // One big tick clears every startup delay (respawn), then a normal
+      // tick puts the whole pool airborne with rendered colors.
+      field.update(0, 6)
+      field.update(6, 0.5)
+      expect(dominantFraction(0)).toBeGreaterThan(0.9)
+
+      // A tint change alone reaches only future spawns — the air stays red.
+      tint = [0, 1, 0]
+      field.update(6.5, 0.01)
+      expect(dominantFraction(0)).toBeGreaterThan(0.9)
+
+      const held = positions.slice()
+      field.refreshColors()
+      expect(positions).toEqual(held)
+      field.update(6.51, 0.01)
+      expect(dominantFraction(1)).toBeGreaterThan(0.9)
+      field.dispose()
+    })
+  })
+
+  // Local modification: recall — straggling dust latches onto live source
+  // grains and glides back, riding a value morph into the display.
+  describe('recall', () => {
+    it('glides airborne grains onto the source point and dissolves them soon after', () => {
+      const home: [number, number, number] = [5, 5, 0]
+      const source: WindSource = {
+        weight: 7200,
+        sampleSpawn(out: SpawnTarget) {
+          out.position.set(-1, 0, 0)
+          out.color[0] = 1
+          out.color[1] = 1
+          out.color[2] = 1
+        },
+        samplePoint(_index, out) {
+          out.set(home[0], home[1], home[2])
+        },
+      }
+      const field = createWindField([source])
+      const positions = field.points.geometry.attributes.position.array as Float32Array
+      const grains = positions.length / 3
+      const meanDistToHome = () => {
+        let sum = 0
+        for (let i = 0; i < grains; i++) {
+          sum += Math.hypot(positions[i * 3] - home[0], positions[i * 3 + 1] - home[1], positions[i * 3 + 2] - home[2])
+        }
+        return sum / grains
+      }
+
+      // Everyone airborne, drifted for a while off the spawn point.
+      field.update(0, 6)
+      field.update(6, 0.5)
+      const before = meanDistToHome()
+
+      // One second of recall at the morph's damping closes most of the gap.
+      field.recall()
+      for (let i = 1; i <= 60; i++) field.update(6.5 + i / 60, 1 / 60)
+      expect(meanDistToHome()).toBeLessThan(before * 0.2)
+
+      // Recalled grains dissolve and respawn as fresh shed off the source —
+      // after their capped lifetime (and the sweep window closing) the pool
+      // drifts near the spawn point, not parked at the recall target.
+      for (let i = 1; i <= 120; i++) field.update(7.5 + i / 60, 1 / 60)
+      expect(meanDistToHome()).toBeGreaterThan(4)
+      field.dispose()
+    })
+
+    it('keeps sweeping through the window: grains that respawn mid-transition are latched too', () => {
+      const home: [number, number, number] = [5, 5, 0]
+      const makeSource = (): WindSource => ({
+        weight: 7200,
+        sampleSpawn(out: SpawnTarget) {
+          out.position.set(-1, 0, 0)
+          out.color[0] = 1
+          out.color[1] = 1
+          out.color[2] = 1
+        },
+        samplePoint(_index, out) {
+          out.set(home[0], home[1], home[2])
+        },
+      })
+      const meanDistToHome = (field: ReturnType<typeof createWindField>) => {
+        const p = field.points.geometry.attributes.position.array as Float32Array
+        let sum = 0
+        for (let i = 0; i < p.length; i += 3) {
+          sum += Math.hypot(p[i] - home[0], p[i + 1] - home[1], p[i + 2] - home[2])
+        }
+        return sum / (p.length / 3)
+      }
+
+      // Tiny lifespans (0.15–0.5 s): the pool churns fast, so within the
+      // sweep window every originally latched grain dies and respawns.
+      const swept = createWindField([makeSource()], { lifespanScale: 0.1 })
+      const control = createWindField([makeSource()], { lifespanScale: 0.1 })
+      swept.update(0, 6)
+      control.update(0, 6)
+
+      swept.recall()
+      // 0.6 s > the longest scaled lifespan: only the open window re-latching
+      // respawned grains can keep the pool pulled toward the display.
+      for (let i = 1; i <= 36; i++) {
+        swept.update(6 + i / 60, 1 / 60)
+        control.update(6 + i / 60, 1 / 60)
+      }
+      expect(meanDistToHome(control)).toBeGreaterThan(6.5)
+      expect(meanDistToHome(swept)).toBeLessThan(4.5)
+      swept.dispose()
+      control.dispose()
+    })
+  })
 })

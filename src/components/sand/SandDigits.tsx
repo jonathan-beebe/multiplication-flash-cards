@@ -134,14 +134,20 @@ export default function SandDigits({
       return
     }
     // Live swaps: a gradient change rides any in-flight morph, so a color
-    // change and a text change in the same commit animate together.
+    // change and a text change in the same commit animate together. Dust
+    // already in the air recolors with the display, so the wind is part of
+    // the transition rather than a trail of the old palette.
     if (lastGradientRef.current !== gradient) {
       model.setGradient(gradient)
       lastGradientRef.current = gradient
+      renderer.refreshWindColors()
       renderer.repaintStaticFrame()
     }
     if (model.getText() !== text) {
       model.setText(text)
+      // Stragglers the wind carried off glide back onto live grains, so
+      // every drifting particle rides the morph into the new value.
+      renderer.recallWind()
       if (resolveMotionMode(motionModeRef.current) === 'static') model.snap()
       renderer.repaintStaticFrame()
     }

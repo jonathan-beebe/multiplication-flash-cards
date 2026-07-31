@@ -36,6 +36,18 @@ const MAX_ATTEMPTS = 4
 
 const DRIFT_POINT_SIZE = 1.1
 
+// Recall (local modification): a recalled grain glides onto its latched
+// source grain at this exponential rate — matched to the display's damped
+// morph, so swept dust arrives with the glyph it is joining.
+const RECALL_RATE = 6
+// Remaining lifespan cap at recall: the swept grain dissolves into the
+// display shortly after it arrives instead of noodling there for seconds.
+const RECALL_REMAINING_MAX = 1.2
+// One recall() keeps sweeping for this long: grains that spawn, respawn, or
+// emerge from their startup stagger mid-transition are latched as they
+// appear, so nothing is left loose while the display reforms.
+const RECALL_WINDOW = 1.5
+
 // Fraction of wind grains painted white instead of base color — bright glints
 // in the trailing dust. Boost is fixed per slot (variety, no flicker);
 // respawns rotate the visible sparkles over time.
@@ -133,6 +145,26 @@ export interface WindField {
    * sand along its path rather than a downwind plume. Default on.
    */
   setBlowing(on: boolean): void
+  /**
+   * Re-draw every airborne grain's base color from the sources (local
+   * modification). Positions and lifetimes are untouched — only color — so
+   * a live recolor of the source display (`setGradient`) carries into dust
+   * already in the air instead of only into future spawns.
+   */
+  refreshColors(): void
+  /**
+   * Sweep airborne grains back into the display (local modification). Each
+   * latches onto one live source grain (`WindSource.samplePoint`) and
+   * glides to its current position every frame — through a value morph the
+   * latched grain is itself flying into the new glyph, so straggling dust
+   * rides the transition instead of hanging where it drifted. The sweep
+   * stays open for a short window, latching grains that spawn or emerge
+   * mid-transition, so nothing is left loose while the display reforms.
+   * Remaining lifetimes clamp short, so swept grains dissolve into the
+   * display and respawn as fresh shed. Grains of sources without
+   * `samplePoint` are left alone.
+   */
+  recall(): void
   dispose(): void
 }
 
@@ -185,6 +217,31 @@ export function createWindField(sources: WindSource[], options: WindFieldOptions
   // zero, so they stay where emitted and the body leaves a trail (FEAT-010).
   let blowing = true
 
+  // Recall state (local modification): which grains are gliding home, the
+  // (source, grain) they latched onto, and how much of the sweep window is
+  // left — while it runs, anything newly airborne is latched on sight.
+  const recalled = new Uint8Array(poolSize)
+  const recallSource = new Int16Array(poolSize)
+  const recallIndex = new Int32Array(poolSize)
+  let recallRemaining = 0
+
+  function latch(i: number) {
+    const s = pickSourceIndex()
+    if (!sources[s].samplePoint) return
+    recalled[i] = 1
+    recallSource[i] = s
+    recallIndex[i] = (Math.random() * sources[s].weight) | 0
+    // Dissolve shortly after arrival instead of noodling on the glyph:
+    // shrink the remaining lifetime while preserving life/lifespan, so
+    // the fade alpha stays continuous — no visible dimming pop.
+    const remaining = pool.lifespan[i] - pool.life[i]
+    if (remaining > RECALL_REMAINING_MAX) {
+      const p = pool.life[i] / pool.lifespan[i]
+      pool.lifespan[i] = RECALL_REMAINING_MAX / (1 - p)
+      pool.life[i] = p * pool.lifespan[i]
+    }
+  }
+
   function update(t: number, delta: number) {
     // Let each source refresh its world transform so spawns read current
     // matrices even if this field is driven before the host updates the scene.
@@ -194,7 +251,13 @@ export function createWindField(sources: WindSource[], options: WindFieldOptions
     // settling near where the body shed them rather than blowing downwind.
     const { wx, wy, wz } = blowing ? computeWindVector(t, speedScale) : { wx: 0, wy: 0, wz: 0 }
 
+    const sweeping = recallRemaining > 0
+    if (sweeping) recallRemaining = Math.max(0, recallRemaining - delta)
+
     for (let i = 0; i < poolSize; i++) {
+      // Mid-window latecomers — fresh respawns, startup-stagger emergers —
+      // are latched the frame they appear, so the sweep misses nothing.
+      if (sweeping && pool.life[i] >= 0 && !recalled[i]) latch(i)
       const prevLife = pool.life[i]
       const li = prevLife + delta
       const ls = pool.lifespan[i]
@@ -212,12 +275,22 @@ export function createWindField(sources: WindSource[], options: WindFieldOptions
         respawn(i)
       } else {
         pool.life[i] = li
-        const vx = wx + pool.velJitter[i * 3 + 0]
-        const vy = wy + pool.velJitter[i * 3 + 1]
-        const vz = wz + pool.velJitter[i * 3 + 2]
-        pool.positions[i * 3 + 0] += vx * delta
-        pool.positions[i * 3 + 1] += vy * delta
-        pool.positions[i * 3 + 2] += vz * delta
+        if (recalled[i]) {
+          // Glide onto the latched grain's live position — mid-morph that
+          // target is itself flying to the new glyph, so the dust rides in.
+          sources[recallSource[i]].samplePoint!(recallIndex[i], tmp)
+          const k = Math.min(1, delta * RECALL_RATE)
+          pool.positions[i * 3 + 0] += (tmp.x - pool.positions[i * 3 + 0]) * k
+          pool.positions[i * 3 + 1] += (tmp.y - pool.positions[i * 3 + 1]) * k
+          pool.positions[i * 3 + 2] += (tmp.z - pool.positions[i * 3 + 2]) * k
+        } else {
+          const vx = wx + pool.velJitter[i * 3 + 0]
+          const vy = wy + pool.velJitter[i * 3 + 1]
+          const vz = wz + pool.velJitter[i * 3 + 2]
+          pool.positions[i * 3 + 0] += vx * delta
+          pool.positions[i * 3 + 1] += vy * delta
+          pool.positions[i * 3 + 2] += vz * delta
+        }
         const a = fade(li / ls)
         if (pool.isSparkle[i]) {
           // Sparkle: white with a per-particle boost so each glint has its own
@@ -280,10 +353,37 @@ export function createWindField(sources: WindSource[], options: WindFieldOptions
     pool.colors[i * 3 + 2] = 0
     pool.life[i] = 0
     pool.lifespan[i] = lifespanMin + Math.random() * (lifespanMax - lifespanMin)
+    recalled[i] = 0
   }
 
   function setBlowing(on: boolean) {
     blowing = on
+  }
+
+  function refreshColors() {
+    if (totalWeight <= 0) return
+    for (let i = 0; i < poolSize; i++) {
+      // Still in startup delay — it will sample fresh colors at spawn.
+      if (pool.life[i] < 0) continue
+      // Color-only re-draw through the existing spawn seam; the sampled
+      // position is discarded.
+      sources[pickSourceIndex()].sampleSpawn(spawnOut)
+      pool.baseColors[i * 3 + 0] = spawnOut.color[0]
+      pool.baseColors[i * 3 + 1] = spawnOut.color[1]
+      pool.baseColors[i * 3 + 2] = spawnOut.color[2]
+    }
+  }
+
+  function recall() {
+    if (totalWeight <= 0) return
+    recallRemaining = RECALL_WINDOW
+    for (let i = 0; i < poolSize; i++) {
+      // Startup-delay grains haven't shed yet (the window latches them the
+      // frame they emerge); already-recalled grains keep their latch
+      // (re-latching mid-glide would make them dart sideways).
+      if (pool.life[i] < 0 || recalled[i]) continue
+      latch(i)
+    }
   }
 
   function dispose() {
@@ -291,5 +391,5 @@ export function createWindField(sources: WindSource[], options: WindFieldOptions
     material.dispose()
   }
 
-  return { points, update, setBlowing, dispose }
+  return { points, update, setBlowing, refreshColors, recall, dispose }
 }

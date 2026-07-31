@@ -375,6 +375,13 @@ export function makeGlyphSlabModel(
       out.color[1] = baseColors[i * 3 + 1]
       out.color[2] = baseColors[i * 3 + 2]
     },
+    // Recall seam (local modification): the live world position of one
+    // grain, so recalled dust can ride that grain through a morph.
+    samplePoint(index: number, out: THREE.Vector3) {
+      out
+        .set(positions[index * 3 + 0], positions[index * 3 + 1], positions[index * 3 + 2])
+        .applyMatrix4(points.matrixWorld)
+    },
   }
 
   return {

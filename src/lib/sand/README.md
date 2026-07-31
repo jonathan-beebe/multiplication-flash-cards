@@ -37,6 +37,15 @@ Diff against the upstream commit before re-syncing. Changes from upstream:
   display scale from the model's `getBounds` and the stage aspect, re-evaluated
   per frame (animated frames glide toward it, static frames snap), so the value
   fills the stage across resizes and value-width changes.
+- `model3d/windField.ts` — added `refreshColors` (color-only re-draw of airborne
+  grains through the spawn seam) and `createSandRenderer.ts` exposes it as
+  `refreshWindColors`, so a live recolor (`setGradient`) carries into dust
+  already in the air. Added `recall` (exposed as `recallWind`, target seam
+  `WindSource.samplePoint`): straggling dust latches onto live model grains and
+  glides to them, riding a value morph into the new glyph instead of hanging
+  where it drifted; recalled grains dissolve shortly after arrival. The sweep
+  holds a ~1.5 s window that also latches grains spawning or emerging
+  mid-transition, so no dust is left loose while the display reforms.
 - `number/digitField.test.ts` — coverage for the extended alphabet and
   `splitByWeightSparse`.
 - `number/makeGlyphSlabModel.test.ts` — coverage for `setGradient` and

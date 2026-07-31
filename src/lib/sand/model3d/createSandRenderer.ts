@@ -53,6 +53,20 @@ export interface SandRenderer extends MotionSwappable {
   /** Enable/disable the wind field; persists across `setModel` and motion swaps. */
   setWindEnabled(on: boolean): void
   /**
+   * Re-draw airborne wind-grain colors from the model (local modification).
+   * Call after a live recolor (`setGradient`) so dust already in the air
+   * rides the color change with the display instead of fading out in the
+   * old palette.
+   */
+  refreshWindColors(): void
+  /**
+   * Sweep airborne wind grains back into the display (local modification).
+   * Call at the start of a value morph: each straggler latches onto a live
+   * model grain and glides to it, riding the morph into the new glyph
+   * instead of hanging where it drifted.
+   */
+  recallWind(): void
+  /**
    * Repaint the single static frame after the caller mutates the model's
    * data (e.g. a clock advancing its displayed time). No-op in animated
    * mode, where the loop repaints every frame anyway.
@@ -341,6 +355,13 @@ export function createSandRenderer(container: HTMLElement, options: SandRenderer
       // In reduced-motion mode nothing else redraws, so repaint the static
       // frame to reflect the change.
       if (prefersReducedMotion) render(timer.getElapsed(), 0)
+    },
+    refreshWindColors() {
+      wind.refreshColors()
+      if (prefersReducedMotion) render(timer.getElapsed(), 0)
+    },
+    recallWind() {
+      wind.recall()
     },
     repaintStaticFrame() {
       if (prefersReducedMotion) render(timer.getElapsed(), 0)
