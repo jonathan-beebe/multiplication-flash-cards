@@ -1,8 +1,13 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect, lazy, Suspense } from 'react'
+import Card from '@/components/Card'
 import QuizButton from '@/components/quiz/QuizButton'
 import type { QuestionGenerator } from '@/lib/engine/gameEngine'
+import { isSandCardsEnabled } from '@/lib/featureFlags'
 import { useAnnouncement } from '@/lib/useAnnouncement'
 import { useQuizAnimation } from '@/lib/useQuizAnimation'
+
+// Lazy: the sand card pulls in three.js — flag-off users never fetch it.
+const SandQuestionCard = lazy(() => import('@/components/sand/SandQuestionCard'))
 
 export interface CardAnimationProps {
   className?: string
@@ -15,6 +20,8 @@ interface QuizBoardProps<Q> {
   generator: QuestionGenerator<Q>
   getNextQuestion: () => Q
   renderQuestion: (question: Q, animProps: CardAnimationProps) => React.ReactNode
+  /** Enables the #sand experiment for this board (see OperationConfig.sandDisplayText). */
+  sandDisplayText?: (question: Q) => string
   onCorrect?: () => void
   onWrong?: () => void
   onAnswer?: (question: Q, correct: boolean, durationMs: number) => void
@@ -25,6 +32,7 @@ export default function QuizBoard<Q>({
   generator,
   getNextQuestion,
   renderQuestion,
+  sandDisplayText,
   onCorrect,
   onWrong,
   onAnswer,
@@ -37,13 +45,14 @@ export default function QuizBoard<Q>({
   const questionStartRef = useRef<number>(now())
   const mountedRef = useRef(false)
 
-  const { nextQuestion, showCorrect, isAnimating, frontCardProps, backCardProps, triggerCorrect } = useQuizAnimation({
-    getNextQuestion,
-    onSettled: (nextQ) => {
-      setQuestion(nextQ)
-      setWrongAnswers(new Set())
-    },
-  })
+  const { nextQuestion, showCorrect, isAnimating, frontCardProps, backCardProps, triggerCorrect, settleExit } =
+    useQuizAnimation({
+      getNextQuestion,
+      onSettled: (nextQ) => {
+        setQuestion(nextQ)
+        setWrongAnswers(new Set())
+      },
+    })
 
   const choices = useMemo(() => {
     return generator.generateChoices(question)
@@ -86,6 +95,7 @@ export default function QuizBoard<Q>({
   }, [question, announce, generator, now])
 
   const backQuestion = nextQuestion ?? question
+  const sandMode = isSandCardsEnabled() && sandDisplayText !== undefined
 
   return (
     <div className="flex w-full flex-col items-center gap-8">
@@ -93,8 +103,24 @@ export default function QuizBoard<Q>({
         {announcement}
       </span>
       <div className="card-stack">
-        {renderQuestion(backQuestion, backCardProps)}
-        {renderQuestion(question, frontCardProps)}
+        {sandMode ? (
+          // One persistent renderer instead of the two-card stack: the wind
+          // dismissal empties the display, settleExit promotes the question,
+          // and the text change swaps in a fresh sand model.
+          <Suspense fallback={<Card display={sandDisplayText(question)} srText={generator.displayText(question)} />}>
+            <SandQuestionCard
+              display={sandDisplayText(question)}
+              srText={generator.displayText(question)}
+              dismissing={isAnimating}
+              onDismissComplete={settleExit ?? undefined}
+            />
+          </Suspense>
+        ) : (
+          <>
+            {renderQuestion(backQuestion, backCardProps)}
+            {renderQuestion(question, frontCardProps)}
+          </>
+        )}
       </div>
       <div
         ref={choicesRef}

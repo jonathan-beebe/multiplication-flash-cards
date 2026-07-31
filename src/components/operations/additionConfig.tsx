@@ -11,4 +11,5 @@ export const additionConfig: OperationConfig<AdditionQuestion> = {
     return createAdditionGenerator(aMin, aMax, bMin, bMax)
   },
   renderQuestion: makeStackedCardRenderer('+', 'plus'),
+  sandDisplayText: (q) => `${q.a} + ${q.b}`,
 }

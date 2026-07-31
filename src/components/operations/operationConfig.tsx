@@ -19,6 +19,12 @@ export interface OperationConfig<Q> {
   color: 'green' | 'rose' | 'amber'
   makeGenerator: (level: OperationLevel) => QuestionGenerator<Q>
   renderQuestion: (question: Q, animProps: CardAnimationProps) => ReactNode
+  /**
+   * Single-line question string for the #sand experiment's particle display
+   * ("7 × 8" — alphabet: digits, × + − ÷, space). Omitted, the flag has no
+   * effect on this operation.
+   */
+  sandDisplayText?: (question: Q) => string
 }
 
 /** NavBar props leading back to the operation's level menu. */

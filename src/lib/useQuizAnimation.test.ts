@@ -119,6 +119,38 @@ describe('useQuizAnimation', () => {
     expect(result.current.backCardProps.style?.transform).toBeUndefined()
   })
 
+  it('exposes settleExit only while animating', () => {
+    const { result } = renderHook(() =>
+      useQuizAnimation({ getNextQuestion: () => 'q2', onSettled: vi.fn(), delayMs: 0 }),
+    )
+    expect(result.current.settleExit).toBeNull()
+    act(() => {
+      result.current.triggerCorrect()
+    })
+    act(() => {
+      vi.advanceTimersByTime(0)
+    })
+    expect(result.current.settleExit).toBeTypeOf('function')
+  })
+
+  it('settleExit settles like transitionEnd: promotes the question and stops animating', () => {
+    const onSettled = vi.fn()
+    const { result } = renderHook(() => useQuizAnimation({ getNextQuestion: () => 'q2', onSettled, delayMs: 0 }))
+    act(() => {
+      result.current.triggerCorrect()
+    })
+    act(() => {
+      vi.advanceTimersByTime(0)
+    })
+    act(() => {
+      result.current.settleExit!()
+    })
+    expect(onSettled).toHaveBeenCalledWith('q2')
+    expect(result.current.isAnimating).toBe(false)
+    expect(result.current.nextQuestion).toBeNull()
+    expect(result.current.settleExit).toBeNull()
+  })
+
   it('clears pending timeout on unmount so it does not fire after teardown', () => {
     const getNextQuestion = vi.fn(() => 'q2')
     const { result, unmount } = renderHook(() =>

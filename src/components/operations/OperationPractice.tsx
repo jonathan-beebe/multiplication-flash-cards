@@ -37,6 +37,7 @@ function OperationPractice<Q>({ config }: OperationPracticeProps<Q>) {
         generator={generator}
         getNextQuestion={engine.getNextQuestion}
         renderQuestion={config.renderQuestion}
+        sandDisplayText={config.sandDisplayText}
         onAnswer={handleAnswer}
       />
     </main>

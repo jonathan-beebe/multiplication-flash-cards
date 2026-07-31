@@ -14,6 +14,13 @@ interface UseQuizAnimationResult<Q> {
   frontCardProps: CardAnimationProps
   backCardProps: CardAnimationProps
   triggerCorrect: () => void
+  /**
+   * Settle the exit animation and promote the next question — what
+   * `transitionend` does for the CSS card. Non-null only while animating;
+   * alternative exit effects (the sand dismissal) call it from their own
+   * completion signal.
+   */
+  settleExit: (() => void) | null
 }
 
 export function useQuizAnimation<Q>({
@@ -47,15 +54,19 @@ export function useQuizAnimation<Q>({
     }, delayMs)
   }, [getNextQuestion, delayMs])
 
+  const settleExit = useCallback(() => {
+    const settled = nextQuestion!
+    setNextQuestion(null)
+    setIsAnimating(false)
+    onSettledRef.current(settled)
+  }, [nextQuestion])
+
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent) => {
       if (e.propertyName !== 'transform') return
-      const settled = nextQuestion!
-      setNextQuestion(null)
-      setIsAnimating(false)
-      onSettledRef.current(settled)
+      settleExit()
     },
-    [nextQuestion],
+    [settleExit],
   )
 
   const frontCardProps: CardAnimationProps = {
@@ -75,5 +86,13 @@ export function useQuizAnimation<Q>({
     style: { zIndex: 1, transform: isAnimating ? undefined : 'scale(0.8)' },
   }
 
-  return { nextQuestion, showCorrect, isAnimating, frontCardProps, backCardProps, triggerCorrect }
+  return {
+    nextQuestion,
+    showCorrect,
+    isAnimating,
+    frontCardProps,
+    backCardProps,
+    triggerCorrect,
+    settleExit: isAnimating ? settleExit : null,
+  }
 }

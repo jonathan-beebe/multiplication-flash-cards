@@ -11,4 +11,5 @@ export const subtractionConfig: OperationConfig<SubtractionQuestion> = {
     return createSubtractionGenerator(aMin, aMax, bMin, bMax)
   },
   renderQuestion: makeStackedCardRenderer('−', 'minus'),
+  sandDisplayText: (q) => `${q.a} − ${q.b}`,
 }

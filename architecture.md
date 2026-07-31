@@ -56,6 +56,12 @@ Rules that bind:
   receive both read-only.
 - **The view is replaceable.** Rendering is I/O; components never own domain
   logic. `lib/pwa` is the one non-DOM adapter (service-worker updates).
+- **Vendored libraries.** `lib/sand` is a vendored copy of the sand-effect
+  playground's number display (see `lib/sand/README.md`): a pure layout/
+  kinematics core plus its own imperative shell (three.js + DOM renderer). It is
+  the second sanctioned adapter exception in `lib`. It never imports app code;
+  only `components/sand/` may import it. It loads exclusively through
+  `React.lazy` so three.js stays out of the entry chunk.
 
 ## Feature pattern: config-driven screens
 
@@ -91,6 +97,11 @@ flowchart LR
   Legacy["legacy: /division-practice[/:level],\npre-level /multiplication/…"] -.->|redirect| DivMode & OpPractice
   Home --> DS["/design-system (component playground)"]
 ```
+
+One URL flag exists outside the route map: `#sand` in the hash at load enables
+the sand-particle flashcard experiment on multiple-choice practice
+(`lib/featureFlags`, read once — session-sticky because in-app navigations drop
+the hash).
 
 ## Where new code belongs
 

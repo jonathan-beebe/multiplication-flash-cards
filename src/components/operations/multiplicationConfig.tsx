@@ -12,4 +12,5 @@ export const multiplicationConfig: OperationConfig<Question> = {
     return createMultiplicationGenerator(aMin, aMax, bMin, bMax)
   },
   renderQuestion: (q, animProps) => <Card display={`${q.a} × ${q.b}`} srText={`${q.a} times ${q.b}`} {...animProps} />,
+  sandDisplayText: (q) => `${q.a} × ${q.b}`,
 }

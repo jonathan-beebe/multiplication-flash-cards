@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, lazy, Suspense } from 'react'
 import NavBar from '@/components/NavBar'
 import HomeButton from '@/components/atoms/HomeButton'
 import QuizButton from '@/components/quiz/QuizButton'
@@ -21,6 +21,10 @@ import AreaModelRect from '@/components/division/areaMode/AreaModelRect'
 import { ErrorFallback } from '@/components/ErrorBoundary'
 import { DrillCompleteContent } from '@/components/operations/DrillComplete'
 import { UpdateBannerContent } from '@/components/UpdateBanner'
+import type { GradientStop } from '@/lib/sand/number/gradientPalette'
+
+// Lazy: the sand display pulls in three.js — keep it out of the main chunk.
+const SandDigits = lazy(() => import('@/components/sand/SandDigits'))
 
 // ─── Scaffold ─────────────────────────────────────────────────────────────────
 
@@ -343,6 +347,103 @@ function AreaModelRectFixtures() {
   )
 }
 
+// ─── Sand display (experiment) ────────────────────────────────────────────────
+
+const SAND_GRADIENTS: Record<string, readonly GradientStop[] | undefined> = {
+  'warm sand': undefined,
+  fire: [
+    [0.85, 0.1, 0.05],
+    [0.98, 0.45, 0.05],
+    [1.0, 0.85, 0.25],
+  ],
+  ocean: [
+    [0.02, 0.15, 0.55],
+    [0.15, 0.75, 0.75],
+  ],
+}
+
+const SAND_PRESETS = ['7 × 8', '3 + 4', '9 − 5', '12 ÷ 4', '999 × 9', '12:34']
+
+function SandDigitsFixtures() {
+  const [presetIndex, setPresetIndex] = useState(0)
+  const [gradientName, setGradientName] = useState('warm sand')
+  const [forceStatic, setForceStatic] = useState(false)
+  const [dismissing, setDismissing] = useState(false)
+  const text = SAND_PRESETS[presetIndex]
+
+  function blowAway() {
+    setDismissing(true)
+  }
+
+  function handleDismissComplete() {
+    // A dismissed model is spent; advancing the text swaps in a fresh one.
+    setDismissing(false)
+    setPresetIndex((i) => (i + 1) % SAND_PRESETS.length)
+  }
+
+  return (
+    <Stack>
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-slate-900">
+        <Suspense
+          fallback={<div className="flex h-full items-center justify-center text-slate-500">Loading sand…</div>}>
+          <SandDigits
+            text={text}
+            gradient={SAND_GRADIENTS[gradientName]}
+            cameraDistance={7}
+            motionMode={forceStatic ? 'static' : 'auto'}
+            dismissing={dismissing}
+            onDismissComplete={handleDismissComplete}
+          />
+        </Suspense>
+      </div>
+      <Group>
+        <Title>Display string</Title>
+        <Row>
+          {SAND_PRESETS.map((preset, i) => (
+            <button
+              key={preset}
+              onClick={() => setPresetIndex(i)}
+              aria-pressed={i === presetIndex}
+              className={`rounded-xl px-3 py-2 text-sm font-semibold tabular-nums text-text ${
+                i === presetIndex ? 'bg-indigo-200 dark:bg-indigo-900' : 'bg-slate-200 dark:bg-slate-700'
+              }`}>
+              {preset}
+            </button>
+          ))}
+        </Row>
+      </Group>
+      <Group>
+        <Title>Gradient</Title>
+        <Row>
+          {Object.keys(SAND_GRADIENTS).map((name) => (
+            <button
+              key={name}
+              onClick={() => setGradientName(name)}
+              aria-pressed={name === gradientName}
+              className={`rounded-xl px-3 py-2 text-sm font-semibold text-text ${
+                name === gradientName ? 'bg-indigo-200 dark:bg-indigo-900' : 'bg-slate-200 dark:bg-slate-700'
+              }`}>
+              {name}
+            </button>
+          ))}
+        </Row>
+      </Group>
+      <Group>
+        <Title>Actions</Title>
+        <Row className="items-center">
+          <PrimaryButton onClick={blowAway} disabled={dismissing}>
+            Blow away
+          </PrimaryButton>
+          <label className="flex items-center gap-2 text-sm text-text">
+            <input type="checkbox" checked={forceStatic} onChange={(e) => setForceStatic(e.target.checked)} />
+            Force static (reduced-motion preview)
+          </label>
+        </Row>
+      </Group>
+    </Stack>
+  )
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function DesignSystem() {
@@ -405,6 +506,9 @@ export default function DesignSystem() {
 
         {/* ── Demos ──────────────────────────────────────────────── */}
         <Category title="Demos">
+          <Subsection title="SandDigits — WebGL sand number (experiment)">
+            <SandDigitsFixtures />
+          </Subsection>
           <Subsection title="DrillComplete — 42 correct, 8 wrong">
             <div className="flex items-center justify-center py-8">
               <DrillCompleteContent correctCount={42} wrongCount={8} />
