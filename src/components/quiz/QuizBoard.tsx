@@ -40,8 +40,6 @@ export default function QuizBoard<Q>({
 }: QuizBoardProps<Q>) {
   const [question, setQuestion] = useState<Q>(() => getNextQuestion())
   const [wrongAnswers, setWrongAnswers] = useState<Set<number>>(new Set())
-  // Monotonic across questions — the sand card flashes ✗ on each increment.
-  const [wrongCount, setWrongCount] = useState(0)
   const { announcement, announce } = useAnnouncement()
   const choicesRef = useRef<HTMLDivElement>(null)
   const questionStartRef = useRef<number>(now())
@@ -77,7 +75,6 @@ export default function QuizBoard<Q>({
           announce(`${answer} is incorrect. Try again.`)
         }
         setWrongAnswers((prev) => new Set(prev).add(answer))
-        setWrongCount((c) => c + 1)
       }
     },
     [generator, question, wrongAnswers, onCorrect, onWrong, onAnswer, triggerCorrect, announce, now],
@@ -108,29 +105,29 @@ export default function QuizBoard<Q>({
       <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {announcement}
       </span>
-      <div className="card-stack">
-        {sandMode ? (
-          // One persistent renderer instead of the two-card stack. The cloud
-          // morphs question → ✓/✗ → next (or same) question; the card's
-          // advance timer calls settleExit to promote the question. During
-          // 'advancing', backQuestion is already the next one, so the text
-          // prop drives the morph.
+      {sandMode ? (
+        // One persistent renderer on an open stage — no card shell, no
+        // two-card stack. The stage spans the full width and most of the
+        // free height so the sand has room. The cloud morphs question → ✓ →
+        // next question; the display's advance timer calls settleExit to
+        // promote the question. During 'advancing', backQuestion is already
+        // the next one, so the text prop drives the morph.
+        <div className="sand-stage relative flex h-[45vh] min-h-[350px] w-full items-center justify-center">
           <Suspense fallback={<Card display={sandDisplayText(question)} srText={generator.displayText(question)} />}>
             <SandQuestionCard
               display={sandDisplayText(backQuestion)}
               srText={generator.displayText(backQuestion)}
               phase={isAnimating ? 'advancing' : showCorrect ? 'correct' : 'idle'}
-              wrongSignal={wrongCount}
               onAdvanceDone={settleExit ?? undefined}
             />
           </Suspense>
-        ) : (
-          <>
-            {renderQuestion(backQuestion, backCardProps)}
-            {renderQuestion(question, frontCardProps)}
-          </>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="card-stack">
+          {renderQuestion(backQuestion, backCardProps)}
+          {renderQuestion(question, frontCardProps)}
+        </div>
+      )}
       <div
         ref={choicesRef}
         className={`flex flex-wrap justify-center gap-3 transition-opacity duration-150 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>

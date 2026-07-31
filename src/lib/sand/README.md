@@ -30,6 +30,15 @@ Diff against the upstream commit before re-syncing. Changes from upstream:
 - `number/makeGlyphSlabModel.ts` — added `setGradient` (live gradient swap so a
   color change can ride an in-flight morph); grain jitter/offset arrays are
   always allocated to support switching between flat and gradient coloring.
+  Added `getBounds` (target-sheet extent in world units — stable mid-morph and
+  mid-dismissal), the seam behind the renderer's `fitToView`.
+- `model3d/sandModel.ts` — optional `getBounds` on the `SandModel` contract.
+- `model3d/createSandRenderer.ts` — added `fitToView` option: a contain-fit
+  display scale from the model's `getBounds` and the stage aspect, re-evaluated
+  per frame (animated frames glide toward it, static frames snap), so the value
+  fills the stage across resizes and value-width changes.
 - `number/digitField.test.ts` — coverage for the extended alphabet and
   `splitByWeightSparse`.
-- `number/makeGlyphSlabModel.test.ts` — coverage for `setGradient`.
+- `number/makeGlyphSlabModel.test.ts` — coverage for `setGradient` and
+  `getBounds`.
+- `model3d/createSandRenderer.test.ts` — coverage for the `fitViewScale` math.

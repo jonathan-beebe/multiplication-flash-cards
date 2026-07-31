@@ -239,6 +239,34 @@ describe('makeGlyphSlabModel dismissal', () => {
   })
 })
 
+// Local modification: target-sheet bounds (getBounds), the seam behind the
+// renderer's fitToView.
+describe('makeGlyphSlabModel getBounds', () => {
+  it('reports the target extent, tracks plan changes, and holds steady mid-dismissal', () => {
+    const half = SLAB_PARTICLE_COUNT / 2
+    const model = makeGlyphSlabModel(fakeMetrics, singleSlot())
+    const single = model.getBounds()
+    // The fake metrics ride the unit-disc fallback: one slot spans ~2 units.
+    expect(single.width).toBeGreaterThan(0)
+    expect(single.height).toBeGreaterThan(0)
+
+    model.setPlan([
+      { glyph: '0', x: 0, count: half },
+      { glyph: '1', x: 4, count: half },
+    ])
+    const wide = model.getBounds()
+    expect(wide.width).toBeGreaterThan(single.width + 2)
+
+    // Bounds read the layout targets, not flying grains.
+    model.update(0, 0.016)
+    model.dismiss({ duration: 0.5 })
+    model.update(1, 0.016)
+    model.update(2, 0.016)
+    expect(model.getBounds()).toEqual(wide)
+    model.dispose()
+  })
+})
+
 // Local modification: live gradient swap (setGradient), so a color change can
 // ride an in-flight morph instead of forcing a model swap.
 describe('makeGlyphSlabModel setGradient', () => {

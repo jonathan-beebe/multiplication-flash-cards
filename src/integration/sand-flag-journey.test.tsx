@@ -45,9 +45,10 @@ describe('#sand flag journey', () => {
     })
 
     const { correct } = readQuestion()
-    // The sand path replaces the two-card stack: exactly one card, no
-    // slide-out CSS seam.
-    expect(document.querySelectorAll('.card-stack > *')).toHaveLength(1)
+    // The sand path replaces the two-card stack with the open sand stage:
+    // one renderer, no card shell, no slide-out CSS seam.
+    expect(document.querySelector('.card-stack')).toBeNull()
+    expect(document.querySelectorAll('.sand-stage > *')).toHaveLength(1)
 
     const correctBtn = answerButtons().find((b) => Number(b.textContent) === correct)!
     fireEvent.click(correctBtn)
@@ -72,7 +73,7 @@ describe('#sand flag journey', () => {
     expect(readQuestion()).toBeTruthy()
   })
 
-  it('flashes ✗ on a wrong answer and returns to the same question', async () => {
+  it('keeps the question in place on a wrong answer', async () => {
     render(
       <MemoryRouter initialEntries={['/multiplication/ones/practice/multiple-choice']}>
         <AppRoutes />
@@ -86,12 +87,7 @@ describe('#sand flag journey', () => {
     const wrongBtn = answerButtons().find((btn) => Number(btn.textContent) !== correct)!
     fireEvent.click(wrongBtn)
 
-    expect(screen.getByText('✗')).toBeInTheDocument()
-
-    // After the flash the same question morphs back; the quiz did not advance.
-    act(() => {
-      vi.advanceTimersByTime(700)
-    })
+    // No ✗ morph — the question stays put; feedback is the disabled button.
     expect(screen.queryByText('✗')).not.toBeInTheDocument()
     expect(readQuestion()).toEqual({ a, b, correct })
     expect(wrongBtn).toBeDisabled()

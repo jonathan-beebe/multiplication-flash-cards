@@ -3,7 +3,7 @@ import { render, screen, act } from '@testing-library/react'
 import SandQuestionCard from './SandQuestionCard'
 
 // jsdom has no WebGL, so these tests exercise the real no-WebGL fallback:
-// the phase-driven text (question / ✓ / ✗) renders as plain text and the
+// the phase-driven text (question / ✓) renders as plain text and the
 // choreography timers still run.
 describe('SandQuestionCard (no-WebGL fallback)', () => {
   beforeEach(() => {
@@ -24,18 +24,6 @@ describe('SandQuestionCard (no-WebGL fallback)', () => {
     render(<SandQuestionCard display="7 × 8" srText="7 times 8" phase="correct" />)
     expect(screen.getByText('✓')).toBeInTheDocument()
     expect(screen.queryByText('7 × 8')).not.toBeInTheDocument()
-  })
-
-  it('flashes the ✗ on a wrong answer, then returns to the same question', () => {
-    const { rerender } = render(<SandQuestionCard display="7 × 8" srText="7 times 8" phase="idle" wrongSignal={0} />)
-    rerender(<SandQuestionCard display="7 × 8" srText="7 times 8" phase="idle" wrongSignal={1} />)
-    expect(screen.getByText('✗')).toBeInTheDocument()
-
-    act(() => {
-      vi.advanceTimersByTime(700)
-    })
-    expect(screen.queryByText('✗')).not.toBeInTheDocument()
-    expect(screen.getByText('7 × 8')).toBeInTheDocument()
   })
 
   it('calls onAdvanceDone exactly once after the advancing morph window', () => {

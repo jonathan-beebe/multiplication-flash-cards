@@ -103,6 +103,13 @@ export interface GlyphSlabModel extends SandModel {
    * default. Takes effect on the current frame (static frames included).
    */
   setGradient(gradient?: readonly GradientStop[]): void
+  /**
+   * The current target sheet's extent in world units (local modification) —
+   * the seam behind the renderer's `fitToView`. Reads the layout targets,
+   * not live grain positions, so it holds steady mid-morph and
+   * mid-dismissal.
+   */
+  getBounds(): { width: number; height: number }
 }
 
 /**
@@ -169,7 +176,28 @@ export function makeGlyphSlabModel(
       return slot
     })
     slots = nextSlots
+    boundsDirty = true
     return sampled
+  }
+
+  // Target-sheet bounds (local modification): recomputed lazily after each
+  // compose. Surplus grains park on-glyph, so the full sheet is the extent.
+  let boundsDirty = true
+  let bounds = { width: 0, height: 0 }
+  function refreshBounds(): void {
+    let minX = Infinity
+    let maxX = -Infinity
+    let minY = Infinity
+    let maxY = -Infinity
+    for (let i = 0; i < n; i++) {
+      const x = sampled[i * 3]
+      const y = sampled[i * 3 + 1]
+      if (x < minX) minX = x
+      if (x > maxX) maxX = x
+      if (y < minY) minY = y
+      if (y > maxY) maxY = y
+    }
+    bounds = maxX >= minX ? { width: maxX - minX, height: maxY - minY } : { width: 0, height: 0 }
   }
 
   const transition = makeTransition(composeTarget(initialPlan))
@@ -400,6 +428,13 @@ export function makeGlyphSlabModel(
       // loop or the host's repaintStaticFrame() — renders them.
       if (activeGradient) refreshGradientColors(activeGradient)
       else refreshFlatColors()
+    },
+    getBounds() {
+      if (boundsDirty) {
+        refreshBounds()
+        boundsDirty = false
+      }
+      return bounds
     },
     setMorphTarget() {
       // Hover morph is a planet behavior — the displays are driven by data.

@@ -18,6 +18,12 @@ export interface SandDigitsProps {
   gradient?: readonly GradientStop[]
   /** Camera distance from the origin; larger fits wider strings. */
   cameraDistance?: number
+  /**
+   * Contain-fit: scale the digits so they span this fraction of the stage
+   * (e.g. 0.9), tracking container resizes and value-width changes.
+   * Omitted: fixed scale 1.
+   */
+  fitToView?: number
   motionMode?: MotionMode
   windEnabled?: boolean
   /** Rising edge blows the sand off to the right. One-shot; a later `text` change resets the display. */
@@ -53,6 +59,7 @@ export default function SandDigits({
   srText,
   gradient,
   cameraDistance,
+  fitToView,
   motionMode = 'auto',
   windEnabled = true,
   dismissing = false,
@@ -96,6 +103,7 @@ export default function SandDigits({
     const renderer = createSandRenderer(container, {
       model,
       cameraDistance,
+      fitToView,
       motionMode: motionModeRef.current,
       windEnabled: windEnabledRef.current,
     })
@@ -105,7 +113,7 @@ export default function SandDigits({
       rendererRef.current = null
       modelRef.current = null
     }
-  }, [supported, cameraDistance])
+  }, [supported, cameraDistance, fitToView])
 
   useEffect(() => {
     const renderer = rendererRef.current

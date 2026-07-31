@@ -66,6 +66,14 @@ export interface SandModel {
    * (planets, plants) omit it and leave naming to the consumer's host.
    */
   getAccessibleText?(): string
+  /**
+   * The target layout's extent in world units, for models that lay out
+   * glyphs (local modification). The renderer's `fitToView` reads it to
+   * frame the value; it reflects the layout targets, not in-flight grain
+   * positions, so it is stable mid-morph and mid-dismissal. Shape models
+   * (planets, plants) omit it, which leaves `fitToView` inert.
+   */
+  getBounds?(): { width: number; height: number }
   /** Release GPU resources owned by the model's renderable clouds. */
   dispose(): void
 }

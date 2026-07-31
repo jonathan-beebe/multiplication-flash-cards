@@ -20,6 +20,15 @@ export interface SandRendererOptions {
    */
   displayScale?: number
   /**
+   * Fit the model to the view (local modification): a uniform contain-fit
+   * scale so the model's target bounds span this fraction of the visible
+   * stage at z = 0. Needs a model exposing `getBounds`; without one the
+   * option is inert. Re-evaluated every frame — animated frames glide
+   * toward the fit, static frames snap — so it tracks both container
+   * resizes and value-width changes. Overrides `displayScale` while active.
+   */
+  fitToView?: number
+  /**
    * Presentation mode. `'auto'` (default) reads `prefers-reduced-motion:
    * reduce` and paints a single static frame when set; `'animated'`
    * always runs the loop; `'static'` always paints one frame and skips
@@ -70,10 +79,28 @@ function selectionTouches(el: HTMLElement): boolean {
   return !!sel && !sel.isCollapsed && sel.containsNode(el, true)
 }
 
+/** Damping rate for the animated glide toward the fitted scale (per second). */
+const FIT_DAMPING = 4
+
+/**
+ * Contain-fit (local modification): the uniform scale at which `bounds`
+ * spans `fraction` of the view in its tighter dimension. Null when either
+ * extent is degenerate — callers keep their current scale.
+ */
+export function fitViewScale(
+  bounds: { width: number; height: number },
+  view: { width: number; height: number },
+  fraction: number,
+): number | null {
+  if (!(bounds.width > 0) || !(bounds.height > 0)) return null
+  return Math.min((fraction * view.width) / bounds.width, (fraction * view.height) / bounds.height)
+}
+
 export function createSandRenderer(container: HTMLElement, options: SandRendererOptions): SandRenderer {
   const cameraDistance = options.cameraDistance ?? 4.2
   const fov = options.fov ?? 50
   const maxPixelRatio = options.maxPixelRatio ?? 2
+  const fitToView = options.fitToView
   let currentDisplayScale = options.displayScale ?? 1
   // Whether the wind blows; persists across model swaps and motion rebuilds, so
   // it's re-applied to each freshly-built field in addModelToScene.
@@ -150,7 +177,27 @@ export function createSandRenderer(container: HTMLElement, options: SandRenderer
     wind.dispose()
   }
 
+  function applyScale(scale: number) {
+    currentDisplayScale = scale
+    for (const obj of model.objects) obj.scale.setScalar(scale)
+  }
+
+  /** The fitToView target for the current bounds/aspect; null → keep the current scale. */
+  function fitTarget(): number | null {
+    if (fitToView === undefined) return null
+    const bounds = model.getBounds?.()
+    if (!bounds) return null
+    const visibleHeight = 2 * cameraDistance * Math.tan(THREE.MathUtils.degToRad(fov / 2))
+    return fitViewScale(bounds, { width: visibleHeight * camera.aspect, height: visibleHeight }, fitToView)
+  }
+
   function render(t: number, delta: number) {
+    const fit = fitTarget()
+    if (fit !== null && fit !== currentDisplayScale) {
+      // Static frames (delta 0) snap; animated frames glide, so a
+      // value-width change rescales as smoothly as the morph it rides.
+      applyScale(delta > 0 ? currentDisplayScale + (fit - currentDisplayScale) * Math.min(1, delta * FIT_DAMPING) : fit)
+    }
     model.setMorphTarget(morphTarget)
     model.update(t, delta)
     wind.update(t, delta)
@@ -226,6 +273,10 @@ export function createSandRenderer(container: HTMLElement, options: SandRenderer
 
     resize()
 
+    // First paint lands at the fitted size; later fits glide via the loop.
+    const fit = fitTarget()
+    if (fit !== null) applyScale(fit)
+
     resizeObserver = new ResizeObserver(resize)
     resizeObserver.observe(container)
 
@@ -270,6 +321,9 @@ export function createSandRenderer(container: HTMLElement, options: SandRenderer
       model = next
       morphTarget = 0
       addModelToScene()
+      // A swap is a fresh display — land at its fitted size, no glide.
+      const fit = fitTarget()
+      if (fit !== null) applyScale(fit)
       // The new model may carry different (or no) accessible text.
       syncReadout()
       if (prefersReducedMotion) render(timer.getElapsed(), 0)
