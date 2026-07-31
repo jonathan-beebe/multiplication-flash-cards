@@ -11,9 +11,7 @@ export interface SessionState {
 }
 
 export type SessionAction =
-  | { type: 'SUBMIT_BUILDING'; partialQuotient: number }
-  | { type: 'SUBMIT_SUMMING' }
-  | { type: 'NEXT'; level: Level }
+  { type: 'SUBMIT_BUILDING'; partialQuotient: number } | { type: 'SUBMIT_SUMMING' } | { type: 'NEXT'; level: Level }
 
 export function createSession(level: Level): SessionState {
   const problem = generateProblem(level)

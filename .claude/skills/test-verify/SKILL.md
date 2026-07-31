@@ -10,9 +10,9 @@ Run tests and interpret the results.
 
 Steps:
 
-1. If $ARGUMENTS is provided, run `npm run test:run -- $ARGUMENTS` (Vitest
-   treats positional args as a file pattern). Otherwise run `npm run test:run`
-   for the full suite.
+1. If
+   $ARGUMENTS is provided, run `npm run test:run -- $ARGUMENTS`(Vitest treats positional args as a file pattern). Otherwise run`npm
+   run test:run` for the full suite.
 2. If everything is green, report counts (test files, tests, duration) and stop.
 3. If anything is red, for each failure:
    - Read the assertion and the source file:line it points to.

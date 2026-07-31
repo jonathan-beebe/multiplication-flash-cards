@@ -12,9 +12,7 @@ export interface AreaModelSessionState {
 }
 
 export type AreaModelAction =
-  | { type: 'SUBMIT_BUILDING'; partialQuotient: number }
-  | { type: 'SUBMIT_SUMMING' }
-  | { type: 'NEXT'; level: Level }
+  { type: 'SUBMIT_BUILDING'; partialQuotient: number } | { type: 'SUBMIT_SUMMING' } | { type: 'NEXT'; level: Level }
 
 export function createAreaModelSession(level: Level): AreaModelSessionState {
   const problem = generateProblem(level)
